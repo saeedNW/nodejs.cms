@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="/css/general.css">
+    <%- style %>
+    <title><%- defineContent("title") || "مجله آموزشی راکت" %></title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">مجله آموزشی راکت</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02"
+                aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample02">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">صفحه اصلی</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">دوره ها</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">درباره ما</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <% if(auth.loginCheck){ %>
+                    <% if (auth.user.admin){ %>
+                        <li class="nav-item"><a class="btn btn-secondary btn-sm me-3" href="/admin/panel">پنل
+                                مدیریتی</a>
+                        </li>
+                    <% } %>
+                    <li class="nav-item"><a class="btn btn-success btn-sm me-3" href="/user/panel">پنل کاربری</a></li>
+                    <li class="nav-item"><a class="btn btn-danger btn-sm" href="/auth/logout">خروج</a></li>
+                <% }else { %>
+                    <li class="nav-item"><a class="btn btn-success btn-sm me-3" href="/auth/login">ورود</a></li>
+                    <li class="nav-item"><a class="btn btn-primary btn-sm" href="/auth/register">ثبت نام</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <%- body %>
+</div>
+
+<!-- Footer -->
+<footer class="card-footer mt-3">
+    footer
+</footer>
+<!-- Footer -->
+
+<!-- Copyright Footer -->
+<footer class="bg-light text-center text-lg-start">
+    <div class="text-center p-1 bg-dark text-white">
+        <span>&copy; 2021 Copyright:</span>
+        <a class="text-white" href="https://codding.ir/">codding.ir</a>
+    </div>
+</footer>
+<!-- Copyright Footer-->
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<%- script %>
+</body>
+</html>

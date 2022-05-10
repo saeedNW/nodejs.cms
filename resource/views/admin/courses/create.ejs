@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h2>ایجاد دوره</h2>
+</div>
+<form class="form-horizontal" action="/admin/panel/courses/create" method="post" novalidate>
+
+    <%- include(viewDir("layouts/showMessage")) -%>
+
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="title" class="control-label font-weight-bold mb-1">عنوان دوره</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="دوره پروژه محور node js"
+                   value="<%= oldData('title') %>" required>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="slug" class="control-label font-weight-bold mb-1">نامک دوره</label>
+            <input type="text" class="form-control" name="slug" id="slug"
+                   placeholder="node-js-course" value="<%= oldData('slug') %>" required>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="paymentType" class="control-label font-weight-bold mb-1">نوع دوره</label>
+            <select name="paymentType" id="paymentType" class="form-control" required>
+                <option value="none">انتخاب نوع پرداخت</option>
+                <option value="vip" <%= oldData('paymentType') === 'vip' ? 'selected' : '' %>>اعضای ویژه</option>
+                <option value="cash" <%= oldData('paymentType') === 'vip' ? 'selected' : '' %>>نقدی</option>
+                <option value="free" <%= oldData('paymentType') === 'vip' ? 'selected' : '' %>>رایگان</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="description" class="control-label font-weight-bold mb-1">توضیحات</label>
+            <textarea rows="5" class="form-control" name="description" id="description"
+                      placeholder="توضیحات دوره" required><%= oldData('description') %></textarea>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="images" class="control-label font-weight-bold mb-1">تصویر دوره</label>
+            <input type="file" class="form-control" name="images" id="images">
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="price" class="control-label font-weight-bold mb-1">قیمت</label>
+            <input type="text" class="form-control" name="price" id="price"
+                   value="<%= oldData('price') %>" placeholder="قیمت ها را وارد کنید" required>
+        </div>
+        <div class="col">
+            <label for="tags" class="control-label font-weight-bold mb-1">تگ ها</label>
+            <input type="text" class="form-control text-end dir-ltr" name="tags" id="tags"
+                   placeholder="nodejs, backend, programming" value="<%= oldData('tags') %>" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="submit" class="btn btn-danger">ارسال</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="/js/admin/createCourse.js"></script>

@@ -1,0 +1,19 @@
+body {
+    font-family: 'iranyekan', Tahoma, Arial, sans-serif !important;
+    font-size: .875rem;
+    font-weight: normal;
+    direction: rtl;
+    text-align: right;
+}
+
+.dir-ltr {
+    direction: ltr !important;
+}
+
+.dir-rtl {
+    direction: rtl !important;
+}
+
+a {
+    text-decoration: none !important;
+}

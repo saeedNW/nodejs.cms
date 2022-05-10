@@ -1,0 +1,27 @@
+<% if (errors.length > 0){ %>
+    <div class="alert alert-danger alert-dismissible dir-ltr text-end">
+        <button type="button" class="close btn-close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true"></span>
+        </button>
+
+        <div class="dir-rtl text-start">
+            <% errors.forEach(error=> { %>
+                <p><%= error %></p>
+            <% }) %>
+        </div>
+    </div>
+<% } %>
+
+<% if (success.length > 0){ %>
+    <div class="alert alert-success alert-dismissible dir-ltr text-end">
+        <button type="button" class="close btn-close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true"></span>
+        </button>
+
+        <div class="dir-rtl text-start">
+            <% success.forEach(message=> { %>
+                <p><%= message %></p>
+            <% }) %>
+        </div>
+    </div>
+<% } %>

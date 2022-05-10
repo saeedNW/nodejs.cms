@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="/css/general.css">
+    <link rel="stylesheet" href="/css/admin/panel.css">
+    <%- style %>
+    <title><%- defineContent('title') || 'پنل مدیریت' %></title>
+</head>
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap">
+    <div class="container-fluid">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">مجله آموزشی راکت</a>
+        <input class="form-control form-control-dark w-100" type="text" placeholder="جستجو" aria-label="Search">
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/auth/logout">خروج</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid mb-4">
+    <div class="row dir-ltr">
+
+        <main role="main" class="col-md-9 mr-sm-auto col-lg-10 pt-3 px-4 dir-rtl">
+            <%- body %>
+        </main>
+
+
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar dir-rtl">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/panel/">
+                            <span data-feather="home"></span>
+                            داشبورد
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file"></span>
+                            سفارشات
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/panel/courses">
+                            <span data-feather="shopping-cart"></span>
+                            دورها
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="users"></span>
+                            کاربران
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="bar-chart-2"></span>
+                            گزارشات
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="layers"></span>
+                            نظرات
+                        </a>
+                    </li>
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>گزارشات ذخیره شده</span>
+                    <a class="d-flex align-items-center text-muted" href="#">
+                        <span data-feather="plus-circle"></span>
+                    </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            این ماه
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            ماه گذشته
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            شبکه های اجتماعی
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="file-text"></span>
+                            فروش سالانه
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<!-- Copyright Footer -->
+<footer class="bg-light text-center text-lg-start">
+    <div class="text-center p-1 bg-dark text-white">
+        <span>&copy; 2021 Copyright:</span>
+        <a class="text-white" href="https://codding.ir/">codding.ir</a>
+    </div>
+</footer>
+<!-- Copyright Footer-->
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/admin/holder.min.js"></script>
+
+<!-- Icons -->
+<script src="/js/admin/feather.min.js"></script>
+<script>
+    feather.replace();
+</script>
+
+<%- script %>
+</body>
+</html>

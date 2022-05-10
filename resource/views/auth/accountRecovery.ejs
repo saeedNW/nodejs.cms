@@ -1,0 +1,32 @@
+<div class="row pt-3 justify-content-center">
+    <div class="col-8">
+        <div class="card card-default">
+            <div class="card-header"><h5>بازیابی حساب کاربری</h5></div>
+            <div class="card-body">
+                <form class="form-horizontal" role="form" method="POST" action="/auth/recovery/process">
+
+                    <%- include(viewDir("layouts/showMessage")) -%>
+
+                    <div class="form-group">
+                        <label for="email" class="control-label">آدرس ایمیل</label>
+                        <input id="email" type="email" class="form-control" name="email"
+                               value="<%= oldData('email') %>" required autofocus>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <%- captcha %>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            ارسال ایمیل بازیابی
+                        </button>
+                        <a class="btn btn-link" href="/auth/login">
+                            بازگشت به صفحه ورود
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
