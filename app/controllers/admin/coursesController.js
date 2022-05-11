@@ -62,8 +62,15 @@ class CoursesController extends Controller {
      */
     async newCourseValidation(req) {
         try {
+            /**
+             * create custom feed for user inputs validation.
+             * this feed contains request body and request file infos.
+             * @type {*&{images}}
+             */
+            const validationFields = {...req.body, images: req.file}
+
             /** user input validation */
-            await newCourseValidator.validate(req.body, {abortEarly: false});
+            await newCourseValidator.validate(validationFields, {abortEarly: false});
 
             /** escape and trim user input */
             escapeAndTrim(req);

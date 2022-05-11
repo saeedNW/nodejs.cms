@@ -34,6 +34,15 @@ exports.newCourseValidator = yup.object().shape({
             }
         ),
     images: yup.object().shape({
-
+        originalname: yup.string()
+            .required("تصویر دوره الزامی می باشد"),
+        size: yup.number()
+            .required("تصویر دوره الزامی می باشد")
+            .max(3000000, "تصویر نباید بیشتر از 3 مگابایت باشد"),
+        mimetype: yup.mixed()
+            .oneOf(
+                mimetype,
+                "تنها پسوندهای jpeg, png, jpg و svg پشتیبانی می شوند"
+            )
     })
 });
