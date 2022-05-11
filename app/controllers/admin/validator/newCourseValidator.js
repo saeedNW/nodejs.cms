@@ -25,7 +25,6 @@ exports.newCourseValidator = yup.object().shape({
             "is-unique",
             "نامک وارد شده تکراری می باشد",
             async (slug, testContext) => {
-                console.log(slug);
                 /** check database for same slug existence */
                 const findSlug = await courseModel.findOne({slug});
 
@@ -37,7 +36,6 @@ exports.newCourseValidator = yup.object().shape({
         originalname: yup.string()
             .required("تصویر دوره الزامی می باشد"),
         size: yup.number()
-            .required("تصویر دوره الزامی می باشد")
             .max(3145728, "تصویر نباید بیشتر از 3 مگابایت باشد"),
         mimetype: yup.mixed()
             .oneOf(

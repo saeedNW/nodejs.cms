@@ -8,6 +8,8 @@ const {courseModel} = require("../../models").model;
 const {getHashId} = require("../../core/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants").identifierConstants;
+/** import file system module */
+const fs = require("fs");
 
 /** import main controller file */
 const Controller = require("../controller");
@@ -43,12 +45,23 @@ class CoursesController extends Controller {
             /** user input validation */
             const validationResult = await this.newCourseValidation(req);
 
-            /** redirect to previous page if there was any validation errors */
-            if (!validationResult)
+            /**
+             * remove uploaded image if there was any validation errors.
+             * redirect to previous page if there was any validation errors.
+             */
+            if (!validationResult) {
+                /** remove uploaded file if request file exists */
+                if (req.file)
+                    fs.unlinkSync(req.file.path);
+
+                /** redirect to previous page */
                 return this.redirectURL(req, res);
+            }
 
-            /** todo@ image uploader */
+            /** image uploader */
+            this.createImageLink(req);
 
+            /** create new course */
             await this.createCourse(req, res, next);
         } catch (err) {
             next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
@@ -114,6 +127,12 @@ class CoursesController extends Controller {
         }
     }
 
+    /**
+     * ajax call method for checking slug existence in database
+     * @param req
+     * @param res
+     * @return {Promise<void>}
+     */
     async slugExistence(req, res) {
         try {
             /** extract slug from request body */
@@ -130,6 +149,18 @@ class CoursesController extends Controller {
         } catch (err) {
             res.status(err.status).json({...err.message});
         }
+    }
+
+    /**
+     * set image path (link) into request body as images
+     * @param req
+     */
+    createImageLink(req) {
+        /** extract image path from request file */
+        let {path} = req.file;
+
+        /** set images path in request body */
+        req.body.images = path.slice(6);
     }
 }
 
