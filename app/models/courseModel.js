@@ -32,7 +32,7 @@ const CourseSchema = new Schema({
         required: true
     },
     images: {
-        type: String,
+        type: Schema.Types.Mixed,
         required: true
     },
     price: {
