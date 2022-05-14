@@ -20,12 +20,51 @@ const Controller = require("../controller");
 
 class CoursesController extends Controller {
     /**
-     * rendering admin panel page
+     * rendering courses index page
      * @param req
      * @param res
+     * @param next
      */
-    index(req, res) {
-        res.render("admin/courses/index", {title: "مدیریت دوره ها"});
+    async index(req, res, next) {
+        /** extract page number from request query */
+        const page = +req.query.page || 1;
+
+        try {
+            /**
+             * getting all courses from database with mongoose paginate plugin.
+             * paginate plugin needs some options to initialize pagination based on them.
+             */
+            let courses = await courseModel.paginate({}, {
+                /**
+                 * page option:
+                 * this option define the requested page. and originally
+                 * receives from request query
+                 */
+                page,
+                /**
+                 * limit option:
+                 * this option define how many items should be in each page
+                 */
+                limit: 2,
+                /**
+                 * sort option:
+                 * this options allows you to sort data before receiving them from database.
+                 */
+                sort: {createdAt: 1}
+            })
+
+            /** rendering courses page */
+            res.render("admin/courses/index", {
+                title: "مدیریت دوره ها",
+                courses
+            });
+        } catch (err) {
+            console.log(err)
+            const error = new Error("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            error.status = 500
+            error.pageLoad = true
+            next(error);
+        }
     }
 
     /**

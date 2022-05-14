@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-center">
+    <!-- check if pagination is required or not -->
+    <% if (pagination.totalPages > 1) { %>
+        <ul class="pagination">
+            <!-- show back to first page icon if current page wasn't first page -->
+            <% if (pagination.page > 1) { %>
+                <li class="page-item"><a class="page-link" href="?page=1">first</a></li>
+            <% } %>
+            <!-- show previous page bottom if it exists -->
+            <% if (pagination.hasPrevPage) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= pagination.prevPage %>">&laquo;</a></li>
+            <% } %>
+            <!-- check if user is in a page above page 5 -->
+            <%
+                let i = 1;
+                if (pagination.page > 5) {
+                    i = +pagination.page - 4;
+                }
+            %>
+            <!-- show "..." bottom if user was in a page above page 5 -->
+            <% if (i !== 1) { %>
+                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+            <% } %>
+            <!-- show previous and next pages -->
+            <% for (i; i <= pagination.totalPages; i++) { %>
+                <% if (pagination.page == i) { %>
+                    <li class="page-item active"><a class="page-link" href="#"><span><%= i %></span></a></li>
+                <% } else { %>
+                    <li class="page-item"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
+                <% } %>
+                <!-- show "..." bottom if there was more than 5 pages left -->
+                <% if (i == (+pagination.page + 5)) { %>
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                <% break; } %>
+            <% } %>
+            <!-- show next page bottom if it exists -->
+            <% if (pagination.hasNextPage) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= pagination.nextPage %>">&laquo;</a></li>
+            <% } %>
+            <!-- show go to last page icon if current page wasn't last page -->
+            <% if (pagination.page != pagination.totalPages) { %>
+                <li class="page-item"><a class="page-link" href="?page=<%= pagination.totalPages %>">last</a>
+                </li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>
