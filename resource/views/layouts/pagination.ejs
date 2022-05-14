@@ -29,7 +29,7 @@
                     <li class="page-item"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
                 <% } %>
                 <!-- show "..." bottom if there was more than 5 pages left -->
-                <% if (i == (+pagination.page + 5)) { %>
+                <% if (i == (+pagination.page + 4)) { %>
                     <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
                 <% break; } %>
             <% } %>

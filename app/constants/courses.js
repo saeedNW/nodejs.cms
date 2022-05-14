@@ -3,5 +3,10 @@ module.exports = {
         vip: "vip",
         cash: "cash",
         free: "free"
+    },
+    PersianPaymentType: {
+        vip: "اعضای ویژه",
+        cash: "نقدی",
+        free: "رایگان"
     }
 };

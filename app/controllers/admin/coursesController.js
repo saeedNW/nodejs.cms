@@ -18,6 +18,8 @@ const sharp = require("sharp");
 /** import main controller file */
 const Controller = require("../controller");
 
+const CoursesTransform = require("../../transform/coursesTransform");
+
 class CoursesController extends Controller {
     /**
      * rendering courses index page
@@ -28,13 +30,15 @@ class CoursesController extends Controller {
     async index(req, res, next) {
         /** extract page number from request query */
         const page = +req.query.page || 1;
+        /** extract limit number from request query */
+        const limit = +req.query.limit || 10;
 
         try {
             /**
              * getting all courses from database with mongoose paginate plugin.
              * paginate plugin needs some options to initialize pagination based on them.
              */
-            let courses = await courseModel.paginate({}, {
+            const courses = await courseModel.paginate({}, {
                 /**
                  * page option:
                  * this option define the requested page. and originally
@@ -43,9 +47,10 @@ class CoursesController extends Controller {
                 page,
                 /**
                  * limit option:
-                 * this option define how many items should be in each page
+                 * this option define how many items should be in each page.
+                 * it originally receives from request query
                  */
-                limit: 2,
+                limit,
                 /**
                  * sort option:
                  * this options allows you to sort data before receiving them from database.
@@ -53,10 +58,13 @@ class CoursesController extends Controller {
                 sort: {createdAt: 1}
             })
 
+            /** transforming data to remove unneeded info */
+            const transformedData = new CoursesTransform().withPaginate().transformCollection(courses);
+
             /** rendering courses page */
             res.render("admin/courses/index", {
                 title: "مدیریت دوره ها",
-                courses
+                courses: transformedData
             });
         } catch (err) {
             console.log(err)
