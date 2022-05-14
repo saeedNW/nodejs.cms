@@ -15,8 +15,8 @@ class CustomError extends Error {
 
     constructor(message, status, pageLoad = false) {
         super(message);
-        this.status = status;
-        this.pageLoad = pageLoad;
+        this.#status = status;
+        this.#pageLoad = pageLoad;
     }
 }
 
