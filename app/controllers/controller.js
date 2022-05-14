@@ -58,8 +58,9 @@ module.exports = class Controller {
      *
      * @param message
      * @param status
+     * @param pageLoad
      */
-    sendError(message, status = 500) {
-        error(message, status);
+    sendError(message, status = 500, pageLoad = false) {
+        error(message, status, pageLoad);
     }
 }

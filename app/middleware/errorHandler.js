@@ -12,7 +12,11 @@ exports.notFound = (req, res, next) => {
     } else {
         const status = 404;
         const message = 'Page not found';
-        res.render("public/error", {status, message});
+        res.render("public/error", {
+            layout: "./layouts/mainLayout",
+            status,
+            message
+        });
     }
 }
 
@@ -26,12 +30,17 @@ exports.notFound = (req, res, next) => {
 exports.errorHandler = (error, req, res, next) => {
     const status = error.status || 500;
     const message = error.message;
+    const pageLoad = error.pageLoad;
 
     if (req.url.includes('/api')) {
         res.status(status).json({message});
     } else {
-        if (error.status === 403) {
-            res.render("public/error", {status, message});
+        if (pageLoad) {
+            res.render("public/error", {
+                layout: "./layouts/mainLayout",
+                status,
+                message
+            });
         } else {
             req.flash("errors", message);
             res.redirect(req.header("Referer") || "/");

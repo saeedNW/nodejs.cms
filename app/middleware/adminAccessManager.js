@@ -14,7 +14,7 @@ exports.adminAccessManager = (req, res, next) => {
             return next();
 
         /** denied access if user is not admin*/
-        sendError("access denied", 403);
+        sendError("access denied", 403, true);
     } catch (err) {
         next(err)
     }
