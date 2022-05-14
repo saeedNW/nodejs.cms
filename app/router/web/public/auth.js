@@ -14,15 +14,18 @@ const accountRecoveryController = require("../../../controllers/auth/accountReco
 const resetPasswordController = require("../../../controllers/auth/resetPasswordController");
 
 
-/** login form route */
-router.get('/login', preventReEntry, loginController.loginForm);
-/** login processor route */
-router.post('/login', preventReEntry, loginController.loginProcess);
+router.route("/login")
+    /** login form route */
+    .get(preventReEntry, loginController.loginForm)
+    /** login processor route */
+    .post(preventReEntry, loginController.loginProcess);
 
-/** register form route */
-router.get('/register', preventReEntry, registerController.registerForm);
-/** register processor route */
-router.post("/register", preventReEntry, registerController.registerProcess);
+router.route("/register")
+    /** register form route */
+    .get(preventReEntry, registerController.registerForm)
+    /** register processor route */
+    .post(preventReEntry, registerController.registerProcess);
+
 
 /** google login processor route */
 router.get("/google", preventReEntry, googleController.process);
