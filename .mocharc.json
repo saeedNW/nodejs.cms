@@ -1,9 +1,0 @@
-{
-  "spec": "./app/**/*.test.js",
-  "require": [
-    "dotenv/config"
-  ],
-  "recursive": true,
-  "exit": true,
-  "timeout": 12000
-}
