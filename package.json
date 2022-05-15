@@ -2,10 +2,10 @@
   "name": "cms",
   "version": "1.0.0",
   "description": "",
-  "main": "./app/app.js",
+  "main": "./server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./app/app.js",
-    "dev": "cross-env NODE_ENV=development nodemon -e js,env -L ./app/app.js",
+    "start": "cross-env NODE_ENV=production node ./server.js",
+    "dev": "cross-env NODE_ENV=development nodemon -e js,env -L ./server.js"
   },
   "author": "Saeed Noroozi",
   "license": "ISC",
@@ -14,7 +14,6 @@
     "auto-bind": "^4.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
-    "bson": "^4.6.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
@@ -25,7 +24,6 @@
     "express-ejs-layouts": "^2.5.1",
     "express-recaptcha": "^5.1.0",
     "express-session": "^1.17.2",
-    "geoip-lite": "^1.4.5",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
@@ -43,10 +41,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "chai": "^4.3.6",
-    "mocha": "^9.2.1",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.15",
-    "supertest": "^6.2.2"
+    "nodemon": "^2.0.15"
   }
 }

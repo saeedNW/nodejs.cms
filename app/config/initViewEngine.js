@@ -1,13 +1,14 @@
 /** import express-ejs-layouts module */
 const expressLayouts = require("express-ejs-layouts");
+/** import path module */
+const path = require('path');
 
 /**
  * view engine and ejs middleware initializer
  * @param app
  * @param express
- * @param path
  */
-exports.initViewEngine = (app, express, path) => {
+exports.initViewEngine = (app, express) => {
     /** initialize static files */
     app.use(express.static('public'));
 

@@ -1,9 +1,5 @@
 /** import express module */
 const express = require('express');
-/** import dotenv module */
-const dotenv = require('dotenv');
-/** import path module */
-const path = require('path');
 /** import body-parser module */
 const bodyParser = require("body-parser");
 /** import cookie parser */
@@ -12,11 +8,14 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 /** import morgan module */
 const morgan = require('morgan');
+/** import method-override module */
+const methodOverride = require("method-override");
 /** create app instance */
 const app = express();
-
-/** config .env file */
-dotenv.config({path: path.resolve('./.env')});
+/** import express session module */
+const session = require("express-session");
+/** import passport module */
+const passport = require("passport");
 
 /** import mongoose connection method */
 const {DBConnection} = require('./config/db');
@@ -26,13 +25,16 @@ const {initializeApiRoutes} = require('./router/api');
 const {initializeWebRoutes} = require('./router/web');
 /** import error handler and url not found middleware */
 const {notFound, errorHandler} = require("./middleware/errorHandler");
-/** import session initializer */
-const {initSession} = require("./config/initSession");
 /** import view engine and ejs config initializer */
 const {initViewEngine} = require("./config/initViewEngine");
 /** import unique identifier core */
 const {identifierInitializer} = require("./core/initIdentifierCollection");
-
+/** import session configs */
+const sessionConfigs = require("./config/sessionConfig");
+/** import login remember middleware */
+const {rememberLogin} = require("./middleware/rememberLogin");
+/** import vies global info configuration */
+const {viewsGlobalInfo} = require("./config/viewsGlobalInfo");
 
 /**
  * define server port
@@ -47,54 +49,92 @@ console.log(`application running in ${process.env.NODE_ENV} environment`);
 if (process.env.NODE_ENV === 'development')
     app.use(morgan('dev'));
 
-/** initialize passport local strategy */
-require("./passport/passportLocal");
-require("./passport/passportGoogle");
 
-/** initialize view engine and ejs config */
-initViewEngine(app, express, path)
+module.exports = class Application {
+    constructor() {
+        this.applicationConfigs();
 
-/** initialize bodyparser module */
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-app.use(bodyParser.text());
-app.use(bodyParser.json({type: 'application/json'}));
+        /**
+         * initialize database connection
+         */
+        DBConnection()
+            .then(conn => {
+                console.log(`MongoDB Connected: ${conn.connection.host}`);
 
+                /** starting application */
+                this.startApplication();
 
-/** initialize cookieParser module */
-app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
+                /** initialize routers */
+                this.setRouters();
 
-/** initialize flash message */
-app.use(flash());
+                /** Initialize identifier collection */
+                return  identifierInitializer();
+            })
+            .catch(err => {
+                console.log(err);
+                process.exit(1);
+            });
+    }
 
-/** initialize database connection */
-DBConnection()
-    .then(async conn => {
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    /**
+     * middlewares configuration
+     */
+    applicationConfigs() {
+        /** initialize passport local strategy */
+        require("./passport/passportLocal");
+        require("./passport/passportGoogle");
 
-        /** Initialize express session modules that depends on it */
-        initSession(app, conn);
+        /** initialize view engine and ejs config */
+        initViewEngine(app, express);
 
+        /** initialize bodyparser module */
+        app.use(bodyParser.urlencoded({extended: false}));
+        app.use(bodyParser.json());
+        app.use(bodyParser.text());
+        app.use(bodyParser.json({type: 'application/json'}));
+
+        /** initialize method-override module */
+        app.use(methodOverride("_method"));
+
+        /** initialize express session */
+        app.use(session({...sessionConfigs}));
+
+        /** initialize cookieParser module */
+        app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
+
+        /** initialize flash message */
+        app.use(flash());
+
+        /** initialize passport module */
+        app.use(passport.initialize());
+        app.use(passport.session());
+
+        /** initialize remember login */
+        app.use(rememberLogin);
+
+        /** initialize global values for views */
+        viewsGlobalInfo(app);
+    }
+
+    /**
+     * starting application
+     */
+    startApplication() {
         /** Starting application */
         app.listen(PORT, () => {
             console.log(`Application Running On Port: ${PORT}`);
         });
+    }
 
+    /**
+     * initialize application routers
+     */
+    setRouters() {
         /** Initialize web api */
         initializeWebRoutes(app);
         /** Initialize rest api */
         initializeApiRoutes(app);
         /** Initialize ErrorHandler class route not found method */
         app.use(errorHandler, notFound);
-
-        /** Initialize identifier collection */
-        return identifierInitializer();
-    })
-    .catch(err => {
-        console.log(err);
-        process.exit(1);
-    })
-
-
-module.exports = app;
-
+    }
+}

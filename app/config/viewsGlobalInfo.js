@@ -12,7 +12,7 @@ let formData;
  * config global values for ejs views
  * @param app
  */
-exports.initVGInfo = (app) => {
+exports.viewsGlobalInfo = (app) => {
     app.use((req, res, next) => {
         /** set form data */
         formData = req.flash("formData")[0];

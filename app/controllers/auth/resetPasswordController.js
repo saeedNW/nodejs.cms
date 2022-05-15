@@ -5,7 +5,6 @@ const {resetPasswordValidator} = require("./validator/resetPasswordValidator");
 
 /** import main controller file */
 const Controller = require("../controller");
-const {next} = require("lodash/seq");
 
 class ResetPasswordController extends Controller {
     /**

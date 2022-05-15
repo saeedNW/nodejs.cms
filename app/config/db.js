@@ -2,10 +2,10 @@
 const mongoose = require('mongoose');
 
 /** connect to mongodb using mongoose */
-exports.DBConnection =async () => {
+exports.DBConnection = async () => {
     return new Promise((resolve, reject) => {
         if (process.env.NODE_ENV === 'test') {
-            mongoose.connect(`mongodb://${process.env.MONGODB_TEST_URL}`).then(
+            mongoose.connect(process.env.MONGODB_TEST_URL).then(
                 (conn) => {
                     resolve(conn);
                 }
@@ -13,7 +13,7 @@ exports.DBConnection =async () => {
                 reject(err);
             });
         } else if (process.env.NODE_ENV === 'development') {
-            mongoose.connect(`mongodb://${process.env.MONGODB_DEV_URL}`).then(
+            mongoose.connect(process.env.MONGODB_DEV_URL).then(
                 (conn) => {
                     resolve(conn);
                 }
@@ -21,7 +21,7 @@ exports.DBConnection =async () => {
                 reject(err);
             });
         } else {
-            mongoose.connect(`mongodb://${process.env.MONGODB_PROD_URL}`).then(
+            mongoose.connect(process.env.MONGODB_PROD_URL).then(
                 (conn) => {
                     resolve(conn);
                 }
