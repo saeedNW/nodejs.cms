@@ -13,9 +13,12 @@ const imageUploader = require("../../../middleware/imageUploader");
 router.get('/', coursesController.index);
 
 /** new course form route */
-router.get("/create", coursesController.newCourseForm)
+router.get("/create", coursesController.newCourseForm);
 /** new course process route */
-router.post("/create", imageUploader.single("images"), coursesController.newCourseProcess)
+router.post("/create", imageUploader.single("images"), coursesController.newCourseProcess);
+
+/** course removal process route */
+router.delete("/delete/:_id", coursesController.deleteCourseProcess);
 
 /** check course slug existence */
 router.post('/slug/existence', coursesController.slugExistence);

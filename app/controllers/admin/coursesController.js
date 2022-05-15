@@ -321,6 +321,50 @@ class CoursesController extends Controller {
             next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
         }
     }
+
+    /**
+     * course removal process manager
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<void>}
+     */
+    async deleteCourseProcess(req, res, next) {
+        /** extract course id from request params */
+        const {_id} = req.params
+
+        try {
+            const course = await courseModel.findById(_id);
+
+            if (!course) {
+                return res.json("چنین دوره ای وجود ندارد")
+            }
+
+            /** todo@ delete course episodes */
+
+            /** get course image addresses as na array */
+            const images = Object.values(course.images);
+
+            /**
+             * loop over images addresses.
+             * deleting course images
+             */
+            for (const image of images) {
+                fs.unlinkSync(`./public${image}`);
+            }
+
+            /**
+             * deleting course from database
+             */
+            await course.remove();
+
+            /** redirect to courses index page */
+            res.redirect("/admin/panel/courses");
+        } catch (err) {
+            console.log(err)
+            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+        }
+    }
 }
 
 module.exports = new CoursesController();

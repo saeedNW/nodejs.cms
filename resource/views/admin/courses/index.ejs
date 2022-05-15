@@ -32,11 +32,10 @@
                         <%= course.paymentType %>
                     </td>
                     <td>
-                        <form action="/admin/panel/courses/delete/2" method="post">
-                            <input type="hidden" name="_method" value="delete">
+                        <form action="/admin/panel/courses/delete/<%= course._id %>?_method=DELETE" method="post">
                             <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
                             <div class="btn-group btn-group-sm">
-                                <a href="/admin/panel/courses/edit/2" class="btn btn-primary me-1">ویرایش</a>
+                                <a href="/admin/panel/courses/edit/<%= course._id %>" class="btn btn-primary me-1">ویرایش</a>
                                 <button type="submit" class="btn btn-danger">حذف</button>
                             </div>
                         </form>
