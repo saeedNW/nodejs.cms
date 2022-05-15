@@ -15,10 +15,11 @@ const path = require("path");
 /** import sharp module */
 const sharp = require("sharp");
 
-/** import main controller file */
-const Controller = require("../controller");
-
+/** import course transformer class */
 const CoursesTransform = require("../../transform/coursesTransform");
+
+/** import main controller class */
+const Controller = require("../controller");
 
 class CoursesController extends Controller {
     /**
@@ -310,6 +311,11 @@ class CoursesController extends Controller {
              * set imagesAddress object in request body
              */
             req.body.images = imagesAddress;
+
+            /**
+             * set 480p image as thumbnail in request body
+             */
+            req.body.thumbnail = imagesAddress[480];
         } catch (err) {
             console.log(err)
             next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");

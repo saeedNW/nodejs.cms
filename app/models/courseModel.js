@@ -34,7 +34,11 @@ const CourseSchema = new Schema({
         required: true
     },
     images: {
-        type: Schema.Types.Mixed,
+        type: Object,
+        required: true
+    },
+    thumbnail: {
+        type: String,
         required: true
     },
     price: {
