@@ -3,6 +3,6 @@ const express = require('express');
 /** create express Router instance */
 const router = express.Router();
 
-/** @todo create and define api public routers */
+/** todo@ create and define api public routers */
 
 module.exports = router;
