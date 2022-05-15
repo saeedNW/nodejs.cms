@@ -6,17 +6,17 @@ class CustomError extends Error {
      * that error page need to be loaded or not.
      * Note: this variable only usable for apps with server side rendering (SSR).
      */
-    #pageLoad;
+    pageLoad;
 
     /**
      * set error status
      */
-    #status
+    status
 
     constructor(message, status, pageLoad = false) {
         super(message);
-        this.#status = status;
-        this.#pageLoad = pageLoad;
+        this.status = status;
+        this.pageLoad = pageLoad;
     }
 }
 
