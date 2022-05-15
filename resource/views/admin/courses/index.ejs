@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
     <h2>دوره ها</h2>
     <div class="btn-group">
-        <a href="/admin/panel/courses/create" class="btn btn-sm btn-primary" style="margin-left: 5px !important;">ایجاد
+        <a href="/admin/panel/courses/create" class="btn btn-sm btn-primary me-1">ایجاد
             دوره جدید</a>
         <a href="/admin/panel/courses/episodes" class="btn btn-sm btn-danger">بخش ویدیوها</a>
     </div>
@@ -10,6 +10,7 @@
     <table class="table table-striped table-bordered">
         <thead>
         <tr>
+            <th>#</th>
             <th>کد شناسایی دوره</th>
             <th>عنوان دوره</th>
             <th>تعداد نظرات</th>
@@ -19,27 +20,34 @@
         </tr>
         </thead>
         <tbody>
-        <% for (const course of courses.docs) { %>
-            <tr>
-                <td><%= course.hashId %></td>
-                <td><a href="<%= course.slug %>"><%= course.title %></a></td>
-                <td><%= course.commentCount %></td>
-                <td><%= course.viewCount %></td>
-                <td>
-                    <%= course.paymentType %>
-                </td>
-                <td>
-                    <form action="#" method="post">
-                        <input type="hidden" name="_method" value="delete">
-                        <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                        <div class="btn-group btn-group-sm">
-                            <a href="/admin/courses/2/edit" class="btn btn-primary"
-                               style="margin-left: 5px !important;">ویرایش</a>
-                            <button type="submit" class="btn btn-danger">حذف</button>
-                        </div>
-                    </form>
-                </td>
-            </tr>
+        <% if (courses.docs.length > 0){ %>
+            <% for (const course of courses.docs) { %>
+                <tr>
+                    <th scope="row"><%= courses.pagingCounter %></th>
+                    <th><%= course.hashId %></th>
+                    <td><a href="<%= course.slug %>"><%= course.title %></a></td>
+                    <td><%= course.commentCount %></td>
+                    <td><%= course.viewCount %></td>
+                    <td>
+                        <%= course.paymentType %>
+                    </td>
+                    <td>
+                        <form action="/admin/panel/courses/delete/2" method="post">
+                            <input type="hidden" name="_method" value="delete">
+                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin/panel/courses/edit/2" class="btn btn-primary me-1">ویرایش</a>
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            <%
+                +courses.pagingCounter++
+            }
+            %>
+        <% }else { %>
+            <tr>دوره ای برای نمایش وجود ندارد</tr>
         <% } %>
         </tbody>
     </table>
