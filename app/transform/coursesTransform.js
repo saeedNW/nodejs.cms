@@ -33,11 +33,17 @@ module.exports = class CoursesTransform extends Transform {
                 paymentType = coursesConstants.PersianPaymentType.free;
         }
 
+        /**
+         * create course URL
+         * @type {string}
+         */
+        const slug = `/courses/${item.slug}`;
+
         return {
             _id: item._id,
             hashId: item.hashId,
             title: item.title,
-            slug: item.slug,
+            slug,
             paymentType,
             viewCount: item.viewCount,
             commentCount: item.commentCount,
