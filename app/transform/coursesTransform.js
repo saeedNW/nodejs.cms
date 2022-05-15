@@ -18,13 +18,15 @@ module.exports = class CoursesTransform extends Transform {
      * @return {{images: *, description: *, title, hashId: (number|*), paymentType: string, commentCount: ({default: number, type: Number | NumberConstructor}|*), tags: *, createdAt: *, price: *, _id, viewCount: ({default: number, type: Number | NumberConstructor}|*), time: *, user: *, slug: (string|((str: string) => string)|string|*), updatedAt: *}}
      */
     transform(item) {
+        /** define payment type */
         let paymentType;
-
-        switch (item) {
-            case item.paymentType === coursesConstants.PaymentType.cash:
+        
+        /** set payment type value */
+        switch (item.paymentType) {
+            case coursesConstants.PaymentType.cash:
                 paymentType = coursesConstants.PersianPaymentType.cash;
                 break;
-            case item.paymentType === coursesConstants.PaymentType.vip:
+            case coursesConstants.PaymentType.vip:
                 paymentType = coursesConstants.PersianPaymentType.vip;
                 break;
             default:
