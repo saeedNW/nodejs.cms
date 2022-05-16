@@ -2,8 +2,6 @@
 const autoBind = require("auto-bind");
 /** import express-recaptcha version 2 */
 const Recaptcha = require('express-recaptcha').RecaptchaV2
-/** import error thrower */
-const {sendError: error} = require("../utils/sendError");
 
 module.exports = class Controller {
     constructor() {
@@ -52,15 +50,5 @@ module.exports = class Controller {
     redirectURL(req, res) {
         req.flash("formData", req.body);
         return res.redirect(req.header("Referer") || "/");
-    }
-
-    /**
-     *
-     * @param message
-     * @param status
-     * @param pageLoad
-     */
-    sendError(message, status = 500, pageLoad = false) {
-        error(message, status, pageLoad);
     }
 }

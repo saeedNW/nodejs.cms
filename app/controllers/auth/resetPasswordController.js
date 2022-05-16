@@ -21,8 +21,11 @@ class ResetPasswordController extends Controller {
             /** check token existence in data base */
             const tokenExistence = await accountRecoveryModel.findOne({token, use: false});
             /** throw error if token was not found */
-            if (!tokenExistence)
-                this.sendError('صفحه پیدا نشد');
+            if (!tokenExistence){
+                const error = new Error("صفحه پیدا نشد")
+                error.status=404
+                throw error
+            }
 
             res.render("auth/resetPassword", {
                 captcha: this.recaptcha.render(),
@@ -30,10 +33,8 @@ class ResetPasswordController extends Controller {
                 token
             });
         } catch (err) {
-            /**
-             * without passing err to next method the result would be page not found error.
-             */
-            next()
+            console.log(err);
+            throw err
         }
     }
 
@@ -58,7 +59,8 @@ class ResetPasswordController extends Controller {
 
             await this.resetPassword(req, res);
         } catch (err) {
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 
@@ -98,15 +100,21 @@ class ResetPasswordController extends Controller {
             const recoveryToken = await accountRecoveryModel.findOne({token, email});
 
             /** throw error if recovery token was not found or if the token already has been used */
-            if (!recoveryToken || recoveryToken.use)
-                this.sendError("توکن فاقد اعتبار است", 422);
+            if (!recoveryToken || recoveryToken.use) {
+                const error = new Error("توکن فاقد اعتبار")
+                error.status=422
+                throw error
+            }
 
             /** find user in database */
             const user = await userModel.findOne({email});
 
             /** throw error if user was not found */
-            if (!user)
-                this.sendError("اطلاعات کاربر مورد نظر وجود ندارند.", 422);
+            if (!user) {
+                const error = new Error("اطلاعات کاربر مورد نظر وجود ندارد")
+                error.status=422
+                throw error
+            }
 
             /** update user password */
             user.password = password
@@ -120,11 +128,8 @@ class ResetPasswordController extends Controller {
             req.flash("success", "بازیابی حساب کاربری با موفقیت به انجام رسید");
             res.redirect("/auth/login");
         } catch (err) {
-            if (err.status === 422) {
-                next(err);
-            } else {
-                next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
-            }
+            console.log(err);
+            throw err
         }
     }
 

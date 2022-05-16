@@ -68,11 +68,8 @@ class CoursesController extends Controller {
                 courses: transformedData
             });
         } catch (err) {
-            console.log(err)
-            const error = new Error("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
-            error.status = 500
-            error.pageLoad = true
-            next(error);
+            console.log(err);
+            throw err
         }
     }
 
@@ -81,8 +78,13 @@ class CoursesController extends Controller {
      * @param req
      * @param res
      */
-    newCourseForm(req, res) {
-        res.render("admin/courses/create", {title: "ایجاد دوره جدید"});
+    async newCourseForm(req, res) {
+        try {
+            res.render("admin/courses/create", {title: "ایجاد دوره جدید"});
+        } catch (e) {
+            console.log(err);
+            throw err
+        }
     }
 
     /**
@@ -121,8 +123,8 @@ class CoursesController extends Controller {
             /** create new course */
             await this.createCourse(req, res, next);
         } catch (err) {
-            console.log(err)
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 
@@ -181,8 +183,8 @@ class CoursesController extends Controller {
             /** return user to the courses main page */
             res.redirect("/admin/panel/courses");
         } catch (err) {
-            console.log(err)
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 
@@ -201,8 +203,11 @@ class CoursesController extends Controller {
             const findSlug = await courseModel.findOne({slug});
 
             /** return error if slug already exists */
-            if (findSlug)
-                this.sendError("آدرس نامک تکراری می باشد", 422);
+            if (findSlug) {
+                const error = new Error("آدرس نامک تکراری می باشد");
+                error.status = 422
+                throw error
+            }
 
             res.json({message: "نامک قابل استفاده می باشد"});
         } catch (err) {
@@ -245,7 +250,7 @@ class CoursesController extends Controller {
             return `${imageInfo.dir.slice(6)}/${imageName}`;
         } catch (err) {
             console.log(err);
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            throw err
         }
     }
 
@@ -317,8 +322,8 @@ class CoursesController extends Controller {
              */
             req.body.thumbnail = imagesAddress[480];
         } catch (err) {
-            console.log(err)
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 
@@ -361,8 +366,8 @@ class CoursesController extends Controller {
             /** redirect to courses index page */
             res.redirect("/admin/panel/courses");
         } catch (err) {
-            console.log(err)
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 }

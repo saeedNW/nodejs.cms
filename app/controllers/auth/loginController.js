@@ -42,7 +42,8 @@ class LoginController extends Controller {
 
             await this.login(req, res, next);
         } catch (err) {
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 

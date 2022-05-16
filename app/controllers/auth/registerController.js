@@ -42,7 +42,8 @@ class RegisterController extends Controller {
 
             this.createUser(req, res, next);
         } catch (err) {
-            next("فرایند با مشکل مواجه شد لطفا مجددا تلاش نمایید");
+            console.log(err);
+            throw err
         }
     }
 

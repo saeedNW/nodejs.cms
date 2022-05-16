@@ -23,8 +23,6 @@ const {DBConnection} = require('./config/db');
 const {initializeApiRoutes} = require('./router/api');
 /** import web api router initializer */
 const {initializeWebRoutes} = require('./router/web');
-/** import error handler and url not found middleware */
-const {notFound, errorHandler} = require("./middleware/errorHandler");
 /** import view engine and ejs config initializer */
 const {initViewEngine} = require("./config/initViewEngine");
 /** import unique identifier core */
@@ -134,7 +132,5 @@ module.exports = class Application {
         initializeWebRoutes(app);
         /** Initialize rest api */
         initializeApiRoutes(app);
-        /** Initialize ErrorHandler class route not found method */
-        app.use(errorHandler, notFound);
     }
 }

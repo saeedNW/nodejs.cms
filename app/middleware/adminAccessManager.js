@@ -1,6 +1,3 @@
-/** import error sender */
-const {sendError} = require("../utils/sendError");
-
 /**
  * admin access manager handler method
  * @param req
@@ -13,8 +10,7 @@ exports.adminAccessManager = (req, res, next) => {
         if (req.isAuthenticated() && req.user.admin)
             return next();
 
-        /** denied access if user is not admin*/
-        sendError("access denied", 403, true);
+        res.redirect("/")
     } catch (err) {
         next(err)
     }
