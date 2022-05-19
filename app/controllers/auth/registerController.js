@@ -42,8 +42,7 @@ class RegisterController extends Controller {
 
             this.createUser(req, res, next);
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 

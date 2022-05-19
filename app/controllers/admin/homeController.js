@@ -6,9 +6,14 @@ class HomeController extends Controller {
      * rendering admin panel page
      * @param req
      * @param res
+     * @param next
      */
-    index(req, res) {
-        res.render("admin/index", {title: "پنل مدیریت"});
+    index(req, res, next) {
+        try {
+            res.render("admin/index", {title: "پنل مدیریت"});
+        } catch (err) {
+            next(err);
+        }
     }
 }
 

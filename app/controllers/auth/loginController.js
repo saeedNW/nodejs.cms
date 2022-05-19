@@ -42,8 +42,7 @@ class LoginController extends Controller {
 
             await this.login(req, res, next);
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 

@@ -69,8 +69,7 @@ class CoursesController extends Controller {
                 courses: transformedData
             });
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err)
         }
     }
 
@@ -79,13 +78,8 @@ class CoursesController extends Controller {
      * @param req
      * @param res
      */
-    async newCourseForm(req, res) {
-        try {
-            res.render("admin/courses/create", {title: "ایجاد دوره جدید"});
-        } catch (err) {
-            console.log(err);
-            throw err
-        }
+    newCourseForm(req, res) {
+        res.render("admin/courses/create", {title: "ایجاد دوره جدید"});
     }
 
     /**
@@ -98,13 +92,18 @@ class CoursesController extends Controller {
     async editCourseForm(req, res, next) {
         /** extract course id from request params */
         const {_id} = req.params
+
         try {
+            /** return error if given id is not a valid id */
+            if (!await courseModel.validId(_id))
+                this.sendError("چنین دوره ای وجود ندارد", 404);
+
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
 
             /** return error if course was not found */
             if (!course)
-                return res.json("چنین دوره ای وجود ندارد");
+                this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** transforming data to remove unneeded info */
             const transformedData = new CoursesTransform().withFullInfo().transform(course)
@@ -115,8 +114,7 @@ class CoursesController extends Controller {
                 course: transformedData
             });
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -156,8 +154,7 @@ class CoursesController extends Controller {
             /** create new course */
             await this.createCourse(req, res, next);
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -232,8 +229,7 @@ class CoursesController extends Controller {
             /** return user to the courses main page */
             res.redirect("/admin/panel/courses");
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -252,15 +248,11 @@ class CoursesController extends Controller {
             const findSlug = await courseModel.findOne({slug});
 
             /** return error if slug already exists */
-            if (findSlug) {
-                const error = new Error("آدرس نامک تکراری می باشد");
-                error.status = 422
-                throw error
-            }
+            if (findSlug)
+                this.sendError("آدرس نامک تکراری می باشد", 422);
 
             res.json({message: "نامک قابل استفاده می باشد"});
         } catch (err) {
-            console.log(err)
             res.status(err.status).json({...err.message});
         }
     }
@@ -298,8 +290,7 @@ class CoursesController extends Controller {
              */
             return `${imageInfo.dir.slice(6)}/${imageName}`;
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -371,8 +362,7 @@ class CoursesController extends Controller {
              */
             req.body.thumbnail = imagesAddress[480];
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -388,12 +378,16 @@ class CoursesController extends Controller {
         const {_id} = req.params
 
         try {
+            /** return error if given id is not a valid id */
+            if (!await courseModel.validId(_id))
+                this.sendError("چنین دوره ای وجود ندارد", 404);
+
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
 
             /** return error if course was not found */
             if (!course)
-                return res.json("چنین دوره ای وجود ندارد")
+                this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** todo@ delete course episodes */
 
@@ -416,12 +410,17 @@ class CoursesController extends Controller {
             /** redirect to courses index page */
             res.redirect("/admin/panel/courses");
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
-
+    /**
+     * edit course process
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
     async editCourseProcess(req, res, next) {
         /** extract course id from request params */
         const {_id} = req.params
@@ -429,12 +428,16 @@ class CoursesController extends Controller {
         const {imagesThumb} = req.body
 
         try {
+            /** return error if given id is not a valid id */
+            if (!await courseModel.validId(_id))
+                this.sendError("چنین دوره ای وجود ندارد", 404);
+
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
 
             /** return error if course was not found */
             if (!course)
-                return res.json("چنین دوره ای وجود ندارد");
+                this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** user input validation */
             const validationResult = await this.courseValidation(req);
@@ -455,7 +458,7 @@ class CoursesController extends Controller {
             /**
              * course update feed
              */
-            const updateObject={}
+            const updateObject = {}
 
             /** change thumbnail with selected one */
             updateObject.thumbnail = imagesThumb
@@ -479,8 +482,7 @@ class CoursesController extends Controller {
             /** return user to the courses main page */
             res.redirect("/admin/panel/courses");
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 }

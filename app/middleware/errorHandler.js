@@ -1,49 +1,63 @@
-/**
- * route not found handler
- * @param req
- * @param res
- * @param next
- */
-exports.notFound = (req, res, next) => {
-    if (req.url.includes('/api')) {
-        const status = 404;
-        const message = 'Requested API was not found';
-        res.status(status).json({message, status});
-    } else {
-        const status = 404;
-        const message = 'Page not found';
-        res.render("public/error", {
+/** import main middleware file */
+const Middleware = require("./middleware");
+
+
+class ErrorHandler extends Middleware {
+    notfound(req, res) {
+        /**
+         * rest api 404 route not found error
+         */
+        if (req.url.includes('/api'))
+            return res.status(404).json({message: "روت مورد نظر پیدا نشد", status: 404});
+
+        /**
+         * 404 page rendering
+         */
+        res.render("error/404", {
+            title: "خطا 404",
+            layout: "./layouts/mainLayout",
+        });
+    }
+
+    errorHandler(error, req, res, next) {
+        const status = error.status || 500
+        const message = error.message || "فرایند با مشکل مواجه شد";
+        const stack = error.stack || "";
+
+        if (status === 404)
+            return next();
+
+
+        if (req.url.includes('/api')) {
+            console.log(error)
+            return res.status(status).json({message, status});
+        }
+
+
+        /**
+         * error page rendering for developers
+         */
+        if (process.env.NODE_ENV === 'development') {
+            return res.render("error/stack", {
+                title: `خطا ${status}`,
+                layout: "./layouts/mainLayout",
+                status,
+                message,
+                stack
+            });
+        }
+
+        /**
+         * error page rendering for production
+         */
+        res.render("error/error", {
+            title: `خطا ${status}`,
             layout: "./layouts/mainLayout",
             status,
-            message
+            message,
+            stack
         });
     }
 }
 
-/**
- * error handler middleware
- * @param error
- * @param req
- * @param res
- * @param next
- */
-exports.errorHandler = (error, req, res, next) => {
-    const status = error.status || 500;
-    const message = error.message;
-    const pageLoad = error.pageLoad;
-
-    if (req.url.includes('/api')) {
-        res.status(status).json({message});
-    } else {
-        if (pageLoad) {
-            res.render("public/error", {
-                layout: "./layouts/mainLayout",
-                status,
-                message
-            });
-        } else {
-            req.flash("errors", message);
-            res.redirect(req.header("Referer") || "/");
-        }
-    }
-}
+module.exports = new ErrorHandler();

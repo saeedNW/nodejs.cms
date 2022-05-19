@@ -2,6 +2,8 @@
 const autoBind = require("auto-bind");
 /** import express-recaptcha version 2 */
 const Recaptcha = require('express-recaptcha').RecaptchaV2
+/** import error sender */
+const {sendError: error} = require("../utils/sendError");
 
 module.exports = class Controller {
     constructor() {
@@ -50,5 +52,14 @@ module.exports = class Controller {
     redirectURL(req, res) {
         req.flash("formData", req.body);
         return res.redirect(req.header("Referer") || "/");
+    }
+
+    /**
+     * method to use error sender function
+     * @param message
+     * @param status
+     */
+    sendError(message, status = 500) {
+        error(message, status)
     }
 }

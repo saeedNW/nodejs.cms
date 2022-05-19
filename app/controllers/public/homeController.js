@@ -6,8 +6,9 @@ class HomeController extends Controller {
      * rendering home page
      * @param req
      * @param res
+     * @param next
      */
-    index(req, res) {
+    index(req, res, next) {
         res.render("public/index", {title: "صفحه اصلی"});
     }
 }

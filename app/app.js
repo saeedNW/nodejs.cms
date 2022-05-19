@@ -33,6 +33,8 @@ const sessionConfigs = require("./config/sessionConfig");
 const {rememberLogin} = require("./middleware/rememberLogin");
 /** import vies global info configuration */
 const {viewsGlobalInfo} = require("./config/viewsGlobalInfo");
+/** import error handler */
+const {errorHandler, notfound} = require("./middleware/errorHandler");
 
 /**
  * define server port
@@ -66,7 +68,7 @@ module.exports = class Application {
                 this.setRouters();
 
                 /** Initialize identifier collection */
-                return  identifierInitializer();
+                return identifierInitializer();
             })
             .catch(err => {
                 console.log(err);
@@ -132,5 +134,7 @@ module.exports = class Application {
         initializeWebRoutes(app);
         /** Initialize rest api */
         initializeApiRoutes(app);
+        /** initialize error handlers */
+        app.use(errorHandler, notfound);
     }
 }

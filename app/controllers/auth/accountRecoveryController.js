@@ -42,8 +42,7 @@ class AccountRecoveryController extends Controller {
 
             await this.sendRecoveryLink(req, res, next);
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -90,10 +89,9 @@ class AccountRecoveryController extends Controller {
             const user = await userModel.findOne({email});
 
             /** return error if user was not found */
-            if (!user){
-                const error = new Error("چنین کاربری در سامانه وجود ندارد")
-                error.status = 422
-                throw error
+            if (!user) {
+                req.flash("errors", ["چنین کاربری در سامانه وجود ندارد"]);
+                return this.redirectURL(req, res);
             }
 
             /** remove recovery token if there is any unused one */
@@ -108,8 +106,7 @@ class AccountRecoveryController extends Controller {
             req.flash("success", "ایمیل بازیابی اکانت با موفقیت ارسال گردید");
             this.redirectURL(req, res);
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 }

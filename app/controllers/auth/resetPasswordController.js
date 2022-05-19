@@ -18,14 +18,13 @@ class ResetPasswordController extends Controller {
         try {
             /** extract token from request params */
             const token = req.params.token
+
             /** check token existence in data base */
             const tokenExistence = await accountRecoveryModel.findOne({token, use: false});
+
             /** throw error if token was not found */
-            if (!tokenExistence){
-                const error = new Error("صفحه پیدا نشد")
-                error.status=404
-                throw error
-            }
+            if (!tokenExistence)
+                this.sendError("صفحه پیدا نشد", 404);
 
             res.render("auth/resetPassword", {
                 captcha: this.recaptcha.render(),
@@ -33,8 +32,7 @@ class ResetPasswordController extends Controller {
                 token
             });
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -59,8 +57,7 @@ class ResetPasswordController extends Controller {
 
             await this.resetPassword(req, res);
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
 
@@ -88,6 +85,13 @@ class ResetPasswordController extends Controller {
         }
     }
 
+    /**
+     * update user password
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
     async resetPassword(req, res, next) {
         try {
             /** extract data from request */
@@ -99,21 +103,19 @@ class ResetPasswordController extends Controller {
             /** checking account recovery token existence in database */
             const recoveryToken = await accountRecoveryModel.findOne({token, email});
 
-            /** throw error if recovery token was not found or if the token already has been used */
+            /** return error if recovery token was not found or if the token already has been used */
             if (!recoveryToken || recoveryToken.use) {
-                const error = new Error("توکن فاقد اعتبار")
-                error.status=422
-                throw error
+                req.flash("errors", ["توکن فاقد اعتبار"]);
+                return this.redirectURL(req, res);
             }
 
             /** find user in database */
             const user = await userModel.findOne({email});
 
-            /** throw error if user was not found */
+            /** return error if user was not found */
             if (!user) {
-                const error = new Error("اطلاعات کاربر مورد نظر وجود ندارد")
-                error.status=422
-                throw error
+                req.flash("errors", ["اطلاعات کاربر مورد نظر وجود ندارد"]);
+                return this.redirectURL(req, res);
             }
 
             /** update user password */
@@ -128,11 +130,9 @@ class ResetPasswordController extends Controller {
             req.flash("success", "بازیابی حساب کاربری با موفقیت به انجام رسید");
             res.redirect("/auth/login");
         } catch (err) {
-            console.log(err);
-            throw err
+            next(err);
         }
     }
-
 }
 
 module.exports = new ResetPasswordController();
