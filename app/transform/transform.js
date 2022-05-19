@@ -38,7 +38,6 @@ module.exports = class Transform {
     /**
      * this method will be called from outside the transform file to
      * determined which pagination is requested or not
-     * @return {Transform}
      */
     withPaginate() {
         this.#paginateStatus = true;

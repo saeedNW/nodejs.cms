@@ -20,6 +20,11 @@ router.post("/create", imageUploader.single("images"), coursesController.newCour
 /** course removal process route */
 router.delete("/delete/:_id", coursesController.deleteCourseProcess);
 
+/** edit course form route */
+router.get("/edit/:_id", coursesController.editCourseForm);
+/** edit course process route */
+router.put("/edit/:_id", imageUploader.single("images"), coursesController.editCourseProcess);
+
 /** check course slug existence */
 router.post('/slug/existence', coursesController.slugExistence);
 

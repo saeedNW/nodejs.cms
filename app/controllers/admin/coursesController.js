@@ -1,7 +1,7 @@
 /** import escape and trim tool */
 const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import new course creation validator */
-const {newCourseValidator} = require("./validator/newCourseValidator");
+const {courseValidator} = require("./validator/courseValidator");
 /** import courses model */
 const {courseModel} = require("../../models").model;
 /** import general hashId generator method */
@@ -62,6 +62,7 @@ class CoursesController extends Controller {
             /** transforming data to remove unneeded info */
             const transformedData = new CoursesTransform().withPaginate().transformCollection(courses);
 
+
             /** rendering courses page */
             res.render("admin/courses/index", {
                 title: "مدیریت دوره ها",
@@ -81,7 +82,39 @@ class CoursesController extends Controller {
     async newCourseForm(req, res) {
         try {
             res.render("admin/courses/create", {title: "ایجاد دوره جدید"});
-        } catch (e) {
+        } catch (err) {
+            console.log(err);
+            throw err
+        }
+    }
+
+    /**
+     * rendering edit course page
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
+    async editCourseForm(req, res, next) {
+        /** extract course id from request params */
+        const {_id} = req.params
+        try {
+            /** read course data from database based on _id */
+            const course = await courseModel.findById(_id);
+
+            /** return error if course was not found */
+            if (!course)
+                return res.json("چنین دوره ای وجود ندارد");
+
+            /** transforming data to remove unneeded info */
+            const transformedData = new CoursesTransform().withFullInfo().transform(course)
+
+            /** rendering courses page */
+            res.render("admin/courses/edit", {
+                title: "ویرایش دوره",
+                course: transformedData
+            });
+        } catch (err) {
             console.log(err);
             throw err
         }
@@ -97,7 +130,7 @@ class CoursesController extends Controller {
     async newCourseProcess(req, res, next) {
         try {
             /** user input validation */
-            const validationResult = await this.newCourseValidation(req);
+            const validationResult = await this.courseValidation(req);
 
             /**
              * remove uploaded image if there was any validation errors.
@@ -133,17 +166,31 @@ class CoursesController extends Controller {
      * @param req
      * @returns {Promise<boolean>}
      */
-    async newCourseValidation(req) {
+    async courseValidation(req) {
         try {
             /**
-             * create custom feed for user inputs validation.
-             * this feed contains request body and request file infos.
-             * @type {*&{images}}
+             * create image feed for validation process
+             * @type {*&{_method: *, _id}}
              */
-            const validationFields = {...req.body, images: req.file}
+            let images = {
+                ...req.file,
+                _method: req.query._method,
+                _id: req.params._id
+            }
+            /**
+             * create custom feed for user inputs validation.
+             * this feed contains request body, method, query and file.
+             * @type {*&{images: (*&{_method: *, _id}), _method: *, _id}}
+             */
+            const validationFields = {
+                ...req.body,
+                images,
+                _method: req.query._method,
+                _id: req.params._id
+            }
 
             /** user input validation */
-            await newCourseValidator.validate(validationFields, {abortEarly: false});
+            await courseValidator.validate(validationFields, {abortEarly: false});
 
             /** escape and trim user input */
             escapeAndTrim(req);
@@ -151,6 +198,8 @@ class CoursesController extends Controller {
             /** return true if there wasn't any validation errors */
             return true
         } catch (err) {
+            console.log(err)
+
             /** get validation errors */
             const errors = err.errors;
 
@@ -339,11 +388,12 @@ class CoursesController extends Controller {
         const {_id} = req.params
 
         try {
+            /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
 
-            if (!course) {
+            /** return error if course was not found */
+            if (!course)
                 return res.json("چنین دوره ای وجود ندارد")
-            }
 
             /** todo@ delete course episodes */
 
@@ -364,6 +414,69 @@ class CoursesController extends Controller {
             await course.remove();
 
             /** redirect to courses index page */
+            res.redirect("/admin/panel/courses");
+        } catch (err) {
+            console.log(err);
+            throw err
+        }
+    }
+
+
+    async editCourseProcess(req, res, next) {
+        /** extract course id from request params */
+        const {_id} = req.params
+
+        const {imagesThumb} = req.body
+
+        try {
+            /** read course data from database based on _id */
+            const course = await courseModel.findById(_id);
+
+            /** return error if course was not found */
+            if (!course)
+                return res.json("چنین دوره ای وجود ندارد");
+
+            /** user input validation */
+            const validationResult = await this.courseValidation(req);
+
+            /**
+             * remove uploaded image if there was any validation errors.
+             * redirect to previous page if there was any validation errors.
+             */
+            if (!validationResult) {
+                /** remove uploaded file if request file exists */
+                if (req.file)
+                    fs.unlinkSync(req.file.path);
+
+                /** redirect to previous page */
+                return this.redirectURL(req, res);
+            }
+
+            /**
+             * course update feed
+             */
+            const updateObject={}
+
+            /** change thumbnail with selected one */
+            updateObject.thumbnail = imagesThumb
+
+            /**
+             * process if user uploaded any image during course update.
+             * upload multiply images.
+             * use createImageURL method if you planed to use only one original uploaded image.
+             * use imageResize method if you planed to create multiply images from uploaded image.
+             */
+            if (req.file) {
+                this.imageResize(req, next);
+                // this.createImageURL(req, next);
+                updateObject.images = req.body.images
+                updateObject.thumbnail = req.body.thumbnail
+            }
+
+            /** update course in database */
+            await courseModel.findByIdAndUpdate(_id, {...req.body, ...updateObject});
+
+            /** return user to the courses main page */
             res.redirect("/admin/panel/courses");
         } catch (err) {
             console.log(err);

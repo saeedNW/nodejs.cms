@@ -15,36 +15,31 @@ module.exports = class CoursesTransform extends Transform {
     /**
      * transforming the course data
      * @param item
-     * @return {{images: *, description: *, title, hashId: (number|*), paymentType: string, commentCount: ({default: number, type: Number | NumberConstructor}|*), tags: *, createdAt: *, price: *, _id, viewCount: ({default: number, type: Number | NumberConstructor}|*), time: *, user: *, slug: (string|((str: string) => string)|string|*), updatedAt: *}}
      */
     transform(item) {
         /** define payment type */
-        let paymentType;
-        
+        let PersianPaymentType;
+
         /** set payment type value */
         switch (item.paymentType) {
             case coursesConstants.PaymentType.cash:
-                paymentType = coursesConstants.PersianPaymentType.cash;
+                PersianPaymentType = coursesConstants.PersianPaymentType.cash;
                 break;
             case coursesConstants.PaymentType.vip:
-                paymentType = coursesConstants.PersianPaymentType.vip;
+                PersianPaymentType = coursesConstants.PersianPaymentType.vip;
                 break;
             default:
-                paymentType = coursesConstants.PersianPaymentType.free;
+                PersianPaymentType = coursesConstants.PersianPaymentType.free;
         }
 
-        /**
-         * create course URL
-         * @type {string}
-         */
-        const slug = `/courses/${item.slug}`;
+        console.log(PersianPaymentType)
 
         return {
             _id: item._id,
             hashId: item.hashId,
             title: item.title,
-            slug,
-            paymentType,
+            slug: item.slug,
+            PersianPaymentType,
             viewCount: item.viewCount,
             commentCount: item.commentCount,
             ...this.showFullInfo(item)
@@ -54,9 +49,8 @@ module.exports = class CoursesTransform extends Transform {
     /**
      * this method will be called from outside the transform file to
      * determined which course full info is requested or not
-     * @return {Transform}
      */
-    fullInfo() {
+    withFullInfo() {
         this.#fullInfoStatus = true;
         return this;
     }
@@ -71,6 +65,8 @@ module.exports = class CoursesTransform extends Transform {
             user: item.user,
             description: item.description,
             images: item.images,
+            thumbnail: item.thumbnail,
+            paymentType: item.paymentType,
             price: item.price,
             tags: item.tags,
             time: item.time,
