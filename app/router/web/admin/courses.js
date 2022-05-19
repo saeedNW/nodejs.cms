@@ -7,7 +7,7 @@ const router = express.Router();
 const coursesController = require("../../../controllers/admin/coursesController");
 
 /** import image uploader middleware */
-const imageUploader = require("../../../middleware/imageUploader");
+const {imageUploader} = require("../../../middleware/imageUploader");
 
 /** home page route */
 router.get('/', coursesController.index);

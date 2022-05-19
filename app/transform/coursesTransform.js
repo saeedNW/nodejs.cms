@@ -32,8 +32,6 @@ module.exports = class CoursesTransform extends Transform {
                 PersianPaymentType = coursesConstants.PersianPaymentType.free;
         }
 
-        console.log(PersianPaymentType)
-
         return {
             _id: item._id,
             hashId: item.hashId,

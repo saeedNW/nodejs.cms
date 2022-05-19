@@ -4,11 +4,11 @@
         <ul class="pagination">
             <!-- show back to first page icon if current page wasn't first page -->
             <% if (pagination.page > 1) { %>
-                <li class="page-item"><a class="page-link" href="?page=1">first</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1"><<</a></li>
             <% } %>
             <!-- show previous page bottom if it exists -->
             <% if (pagination.hasPrevPage) { %>
-                <li class="page-item"><a class="page-link" href="?page=<%= pagination.prevPage %>">&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pagination.prevPage %>"><</a></li>
             <% } %>
             <!-- check if user is in a page above page 5 -->
             <%
@@ -35,11 +35,11 @@
             <% } %>
             <!-- show next page bottom if it exists -->
             <% if (pagination.hasNextPage) { %>
-                <li class="page-item"><a class="page-link" href="?page=<%= pagination.nextPage %>">&laquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page=<%= pagination.nextPage %>">></a></li>
             <% } %>
             <!-- show go to last page icon if current page wasn't last page -->
             <% if (pagination.page != pagination.totalPages) { %>
-                <li class="page-item"><a class="page-link" href="?page=<%= pagination.totalPages %>">last</a>
+                <li class="page-item"><a class="page-link" href="?page=<%= pagination.totalPages %>">>></a>
                 </li>
             <% } %>
         </ul>
