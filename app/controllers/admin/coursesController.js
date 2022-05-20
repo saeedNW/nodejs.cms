@@ -95,7 +95,7 @@ class CoursesController extends Controller {
 
         try {
             /** return error if given id is not a valid id */
-            if (!await courseModel.validId(_id))
+            if (!this.objectIdValidation(_id))
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** read course data from database based on _id */
@@ -379,7 +379,7 @@ class CoursesController extends Controller {
 
         try {
             /** return error if given id is not a valid id */
-            if (!await courseModel.validId(_id))
+            if (!this.objectIdValidation(_id))
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** read course data from database based on _id */
@@ -429,7 +429,7 @@ class CoursesController extends Controller {
 
         try {
             /** return error if given id is not a valid id */
-            if (!await courseModel.validId(_id))
+            if (!this.objectIdValidation(_id))
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** read course data from database based on _id */

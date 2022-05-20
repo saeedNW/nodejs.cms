@@ -1,7 +1,9 @@
 /** import autoBind module */
 const autoBind = require("auto-bind");
 /** import express-recaptcha version 2 */
-const Recaptcha = require('express-recaptcha').RecaptchaV2
+const Recaptcha = require('express-recaptcha').RecaptchaV2;
+/** import mongoose */
+const mongoose = require("mongoose");
 /** import error sender */
 const {sendError: error} = require("../utils/sendError");
 
@@ -52,6 +54,15 @@ module.exports = class Controller {
     redirectURL(req, res) {
         req.flash("formData", req.body);
         return res.redirect(req.header("Referer") || "/");
+    }
+
+    /**
+     * validation of mongodb ObjectID structure
+     * @param _id
+     * @return {boolean}
+     */
+    objectIdValidation(_id) {
+        return mongoose.Types.ObjectId.isValid(_id);
     }
 
     /**

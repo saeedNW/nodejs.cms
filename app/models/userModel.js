@@ -73,15 +73,6 @@ userSchema.methods.comparePassword = function (password) {
 }
 
 /**
- * user schema static method for given id validation
- * @param id
- * @return {boolean}
- */
-userSchema.statics.validId = function (id) {
-    return mongoose.Types.ObjectId.isValid(id)
-}
-
-/**
  * user schema set remember me token method
  * @param res
  */

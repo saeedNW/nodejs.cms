@@ -66,13 +66,4 @@ const CourseSchema = new Schema({
 /** initialize mongoose paginate plugin for courses schema */
 CourseSchema.plugin(mongoosePaginate);
 
-/**
- * user schema static method for given id validation
- * @param id
- * @return {boolean}
- */
-CourseSchema.statics.validId = function (id) {
-    return mongoose.Types.ObjectId.isValid(id)
-}
-
 module.exports = mongoose.model("course", CourseSchema);
