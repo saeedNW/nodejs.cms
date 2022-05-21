@@ -12,6 +12,11 @@ module.exports = {
             modelName: 'courses',
             deps: ['courseModel'],
             isPartial: false
+        },
+        episodes: {
+            modelName: 'episodes',
+            deps: ['episodeModel'],
+            isPartial: false
         }
     }
 }

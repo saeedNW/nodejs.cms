@@ -4,9 +4,12 @@ const userConstants = require("./user");
 const identifierConstants = require("./identifier");
 /** import courses constants */
 const coursesConstants = require("./courses");
+/** import episodes constants */
+const episodesConstants = require("./episodes");
 
 module.exports = {
     userConstants,
     identifierConstants,
-    coursesConstants
+    coursesConstants,
+    episodesConstants
 }
