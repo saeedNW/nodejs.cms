@@ -6,10 +6,13 @@ const identifierModel = require("./identifierModel");
 const accountRecoveryModel = require("./accountRecoveryModel");
 /** import course model */
 const courseModel = require("./courseModel");
+/** import episodes model */
+const episodeModel = require("./episodeModel");
 
 exports.model = {
     userModel,
     identifierModel,
     accountRecoveryModel,
-    courseModel
+    courseModel,
+    episodeModel
 }

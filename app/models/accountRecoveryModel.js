@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
 /** define account recovery collection schema */
-const AccountRecoverySchema = new mongoose.Schema({
+const accountRecoverySchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
@@ -20,11 +20,11 @@ const AccountRecoverySchema = new mongoose.Schema({
 }, {timestamps: {updatedAt: false}});
 
 /** define collection indexes */
-AccountRecoverySchema.index({email: 1});
-AccountRecoverySchema.index({use: 1});
+accountRecoverySchema.index({email: 1});
+accountRecoverySchema.index({use: 1});
 
 /** account recovery schema pre save method */
-AccountRecoverySchema.pre("save", async function (next) {
+accountRecoverySchema.pre("save", async function (next) {
     try {
         const accountRecovery = this;
 
@@ -43,9 +43,9 @@ AccountRecoverySchema.pre("save", async function (next) {
     }
 });
 
-AccountRecoverySchema.statics.decodeToken = function (token) {
+accountRecoverySchema.statics.decodeToken = function (token) {
     return jwt.verify(token, process.env.JWT_SECRET);
 }
 
 
-module.exports = mongoose.model("accountRecovery", AccountRecoverySchema);
+module.exports = mongoose.model("AccountRecovery", accountRecoverySchema);

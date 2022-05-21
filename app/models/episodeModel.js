@@ -6,25 +6,20 @@ const {Schema} = mongoose
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 /** define course collection schema */
-const courseSchema = new Schema({
+const episodeSchema = new Schema({
     hashId: {
         type: Number,
         required: true,
         unique: true
     },
-    user: {
+    course: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: "User"
+        ref: "Course"
     },
     title: {
         type: String,
         required: true
-    },
-    slug: {
-        type: String,
-        required: true,
-        unique: true
     },
     paymentType: {
         type: String,
@@ -34,25 +29,21 @@ const courseSchema = new Schema({
         type: String,
         required: true
     },
-    images: {
-        type: Object,
-        required: true
-    },
-    thumbnail: {
+    episodeUrl: {
         type: String,
         required: true
     },
-    price: {
-        type: String,
-        required: true
-    },
-    tags: {
-        type: String,
+    episodeNumber: {
+        type: Number,
         required: true
     },
     time: {
         type: String,
         default: "00:00:00"
+    },
+    downloadCount: {
+        type: Number,
+        default: 0
     },
     viewCount: {
         type: Number,
@@ -65,14 +56,9 @@ const courseSchema = new Schema({
 }, {timestamps: true});
 
 /** define collection indexes */
-courseSchema.index({hashId: 1});
-courseSchema.index({user: 1});
-courseSchema.index({paymentType: 1});
-courseSchema.index({price: 1});
-courseSchema.index({tags: 1});
-courseSchema.index({commentCount: -1});
+episodeSchema.index({hashId: 1});
 
 /** initialize mongoose paginate plugin for courses schema */
-courseSchema.plugin(mongoosePaginate);
+episodeSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model("Course", courseSchema);
+module.exports = mongoose.model("episode", episodeSchema);
