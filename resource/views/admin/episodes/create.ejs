@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h2>افزودن جلسه</h2>
+</div>
+<form class="form-horizontal" action="/admin/panel/episodes/create" method="post" novalidate>
+
+    <%- include(viewDir("layouts/showMessage")) -%>
+
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="title" class="control-label font-weight-bold mb-1">عنوان جلسه</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="ایجاد سیستم error handler"
+                   value="<%= oldData('title') %>" required>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="course" class="control-label font-weight-bold mb-1">دوره مربوطه</label>
+            <select name="course" id="course" class="form-control" required>
+                <option value="none">انتخاب دوره</option>
+                <% for (const course of courses) { %>
+                    <option value="<%= course._id %>" <%= String(oldData('course')) === String(course._id) ? 'selected' : '' %>><%= course.title %></option>
+                <% } %>
+            </select>
+        </div>
+        <div class="col">
+            <label for="time" class="control-label font-weight-bold mb-1">زمان جلسه</label>
+            <input type="text" class="form-control" name="time" id="time" placeholder="02:15:35"
+                   value="<%= oldData('time') %>" required>
+        </div>
+    </div>
+     <div class="form-group row mb-3">
+        <div class="col">
+            <label for="episodeUrl" class="control-label font-weight-bold mb-1">لینک دانلود</label>
+            <input type="text" class="form-control dir-ltr text-end" name="episodeUrl" id="episodeUrl" placeholder="لینک دانلود جلسه"
+                   value="<%= oldData('episodeUrl') %>" required>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="description" class="control-label font-weight-bold mb-1">توضیحات</label>
+            <textarea rows="5" class="form-control" name="description" id="description"
+                      placeholder="توضیحات جلسه" required><%= oldData('description') %></textarea>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="paymentType" class="control-label font-weight-bold mb-1">نوع دوره</label>
+            <select name="paymentType" id="paymentType" class="form-control" required>
+                <option value="none">انتخاب نوع پرداخت</option>
+                <option value="vip" <%= oldData('paymentType') === 'vip' ? 'selected' : '' %>>اعضای ویژه</option>
+                <option value="cash" <%= oldData('paymentType') === 'cash' ? 'selected' : '' %>>نقدی</option>
+                <option value="free" <%= oldData('paymentType') === 'free' ? 'selected' : '' %>>رایگان</option>
+            </select>
+        </div>
+        <div class="col">
+            <label for="episodeNumber" class="control-label font-weight-bold mb-1">شماره جلسه</label>
+            <input type="text" class="form-control" name="episodeNumber" id="episodeNumber"
+                   value="<%= oldData('episodeNumber') %>" placeholder="شماره جلسه را وارد کنید" required>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="submit" class="btn btn-danger">ارسال</button>
+        </div>
+    </div>
+</form>

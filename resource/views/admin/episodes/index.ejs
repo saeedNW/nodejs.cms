@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>ویدئو ها</h2>
+    <div class="btn-group">
+        <a href="/admin/panel/episodes/create" class="btn btn-sm btn-primary me-1">افزودن جلسه جدید</a>
+        <a href="/admin/panel/courses" class="btn btn-sm btn-danger">بخش دوره ها</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>کد شناسایی جلسه</th>
+            <th>عنوان دوره</th>
+            <th>عنوان جلسه</th>
+            <th>تعداد نظرات</th>
+            <th>تعداد بازدید</th>
+            <th>وضعیت دوره</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if (episodes.docs.length > 0){ %>
+            <% for (const episode of episodes.docs) { %>
+                <tr>
+                    <th scope="row"><%= episodes.pagingCounter %></th>
+                    <th><%= episode.hashId %></th>
+                    <td><a href="<%= episode.course %>"><%= episode.course %></a></td>
+                    <td><a href="<%= episode.episodeUrl %>"><%= episode.title %></a></td>
+                    <td><%= episode.commentCount %></td>
+                    <td><%= episode.viewCount %></td>
+                    <td>
+                        <%= episode.PersianPaymentType %>
+                    </td>
+                    <td>
+                        <form action="/admin/panel/episodes/delete/<%= episode._id %>?_method=DELETE" method="post">
+                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin/panel/episodes/edit/<%= episode._id %>" class="btn btn-primary me-1">ویرایش</a>
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            <%
+                +episodes.pagingCounter++
+            }
+            %>
+        <% }else { %>
+            <tr>جلسه ای برای نمایش وجود ندارد</tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <%- include(viewDir("layouts/pagination"), {pagination:episodes}) -%>
+
+</div>
+

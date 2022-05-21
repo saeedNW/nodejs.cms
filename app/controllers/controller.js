@@ -61,8 +61,16 @@ module.exports = class Controller {
      * @param _id
      * @return {boolean}
      */
-    objectIdValidation(_id) {
-        return mongoose.Types.ObjectId.isValid(_id);
+    mongoObjectIdValidation(_id) {
+        /**
+         * validation of given mongodb object id
+         * @type {boolean}
+         */
+        const validate = mongoose.Types.ObjectId.isValid(_id);
+
+        /** return error if given id is not a valid id */
+        if (!validate)
+            this.sendError("چنین دوره ای وجود ندارد", 404);
     }
 
     /**

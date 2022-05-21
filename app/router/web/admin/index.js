@@ -12,10 +12,14 @@ changeDefaultLayout(router, "./layouts/adminLayout");
 const homeRouter = require('./home');
 /** import courses manager router */
 const coursesRouter = require("./courses");
+/** import episodes manager router */
+const episodesRouter = require("./episodes");
 
 /** initialize admin panel router */
 router.use(homeRouter);
 /** initialize courses manager router */
 router.use("/courses", coursesRouter);
+/** initialize episodes manager router */
+router.use("/episodes", episodesRouter);
 
 module.exports = router;
