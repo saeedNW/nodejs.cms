@@ -1,4 +1,6 @@
+/** import main transform file */
 const Transform = require("./transform");
+/** import courses constants */
 const {coursesConstants} = require("../constants");
 
 /**
@@ -59,17 +61,19 @@ module.exports = class CoursesTransform extends Transform {
      * @return {{createdAt: *, images: (string|HTMLCollectionOf<HTMLImageElement>|*), price: (number|*), description, time, user, tags, updatedAt: *}}
      */
     showFullInfo(item) {
-        return {
-            user: item.user,
-            description: item.description,
-            images: item.images,
-            thumbnail: item.thumbnail,
-            paymentType: item.paymentType,
-            price: item.price,
-            tags: item.tags,
-            time: item.time,
-            createdAt: item.createdAt,
-            updatedAt: item.updatedAt
+        if (this.#fullInfoStatus) {
+            return {
+                user: item.user,
+                description: item.description,
+                images: item.images,
+                thumbnail: item.thumbnail,
+                paymentType: item.paymentType,
+                price: item.price,
+                tags: item.tags,
+                time: item.time,
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt
+            }
         }
     }
 }
