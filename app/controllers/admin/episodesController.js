@@ -160,6 +160,40 @@ class EpisodesController extends Controller {
             next(err);
         }
     }
+
+    /**
+     * episode removal process manager
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<void>}
+     */
+    async deleteEpisodeProcess(req, res, next) {
+        /** extract episode id from request params */
+        const {_id} = req.params
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /** read episode data from database based on _id */
+            const episode = await episodeModel.findById(_id);
+
+            /** return error if episode was not found */
+            if (!episode)
+                this.sendError("چنین جلسه ای ای وجود ندارد", 404);
+
+            /**
+             * deleting episode from database
+             */
+            await episode.remove();
+
+            /** redirect to episodes index page */
+            res.redirect("/admin/panel/episodes");
+        } catch (err) {
+            next(err);
+        }
+    }
 }
 
 module.exports = new EpisodesController();

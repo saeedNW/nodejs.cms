@@ -14,4 +14,7 @@ router.get("/create", episodesController.newEpisodeForm);
 /** new episode process route */
 router.post("/create", episodesController.newEpisodeProcess);
 
+/** episode removal process route */
+router.delete("/delete/:_id", episodesController.deleteEpisodeProcess);
+
 module.exports = router;
