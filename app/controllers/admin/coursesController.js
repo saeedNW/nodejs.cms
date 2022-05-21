@@ -14,7 +14,6 @@ const fs = require("fs");
 const path = require("path");
 /** import sharp module */
 const sharp = require("sharp");
-
 /** import course transformer class */
 const CoursesTransform = require("../../transform/coursesTransform");
 
@@ -95,8 +94,7 @@ class CoursesController extends Controller {
 
         try {
             /** return error if given id is not a valid id */
-            if (!this.objectIdValidation(_id))
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+            this.mongoObjectIdValidation(_id);
 
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
@@ -379,8 +377,7 @@ class CoursesController extends Controller {
 
         try {
             /** return error if given id is not a valid id */
-            if (!this.objectIdValidation(_id))
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+            this.mongoObjectIdValidation(_id);
 
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
@@ -429,8 +426,7 @@ class CoursesController extends Controller {
 
         try {
             /** return error if given id is not a valid id */
-            if (!this.objectIdValidation(_id))
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+            this.mongoObjectIdValidation(_id);
 
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
