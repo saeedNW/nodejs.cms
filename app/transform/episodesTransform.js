@@ -49,8 +49,10 @@ module.exports = class EpisodesTransform extends Transform {
         return {
             _id: item._id,
             hashId: item.hashId,
+            episodeNumber: item.episodeNumber,
             title: item.title,
             episodeUrl: item.episodeUrl,
+            time: item.time,
             PersianPaymentType,
             viewCount: item.viewCount,
             commentCount: item.commentCount,
@@ -77,8 +79,6 @@ module.exports = class EpisodesTransform extends Transform {
     showFullInfo(item) {
         if (this.#fullInfoStatus) {
             return {
-                episodeNumber: item.episodeNumber,
-                time: item.time,
                 description: item.description,
                 downloadCount: item.downloadCount,
                 createdAt: item.createdAt,

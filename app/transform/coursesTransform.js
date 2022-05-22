@@ -15,6 +15,12 @@ module.exports = class CoursesTransform extends Transform {
     #fullInfoStatus = false;
     /**
      * this private variable will be used to determined
+     * which the slug should be transformed to full url or not
+     * @type {boolean}
+     */
+    #fullSlugStatus = false;
+    /**
+     * this private variable will be used to determined
      * which basic info of the episodes is requested or not
      * @type {boolean}
      */
@@ -60,6 +66,7 @@ module.exports = class CoursesTransform extends Transform {
             PersianPaymentType,
             viewCount: item.viewCount,
             commentCount: item.commentCount,
+            ...this.showFullSlug(item),
             ...this.showFullInfo(item),
             ...this.showEpisodeBasicInfo(item),
             ...this.showEpisodeFullInfo(item),
@@ -95,6 +102,30 @@ module.exports = class CoursesTransform extends Transform {
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt
             }
+        }
+    }
+
+    /**
+     * this method will be called from outside the transform file to
+     * determined which the slug should be transformed to full url or not
+     */
+    withFullSlug() {
+        this.#fullSlugStatus = true;
+        return this;
+    }
+
+    /**
+     * return transformed slug
+     * @param item
+     * @return {*}
+     */
+    showFullSlug(item) {
+        if (this.#fullSlugStatus) {
+            let {slug} = item;
+
+            slug = `/courses/${slug}`;
+
+            return {slug}
         }
     }
 

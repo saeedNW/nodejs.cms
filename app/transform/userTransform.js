@@ -70,9 +70,7 @@ module.exports = class UserTransform extends Transform {
                 email.slice(startIndex, endIndex).replace(/./g, '*') +
                 email.slice(endIndex);
 
-            item.email = email
-
-            return item
+            return {email}
         }
     }
 

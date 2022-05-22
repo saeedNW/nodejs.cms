@@ -26,7 +26,7 @@ module.exports = class Transform {
     transformCollection(items, CollectionName = "docs") {
         /** return data without pagination info */
         if (!this.#paginateStatus)
-            return items.docs.map(this.transform);
+            return items.map(this.transform);
 
         /** return data with pagination info */
         return {
