@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     }
-}, {timestamps: true});
+}, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
 userSchema.index({hashId: 1});
@@ -98,5 +98,16 @@ userSchema.methods.setRememberToken = async function (res) {
         console.log(err)
     }
 }
+
+/**
+ * create a virtual field to be used for
+ * user and course collections relation
+ * through populate method.
+ */
+userSchema.virtual("courses", {
+    ref: "Course",
+    localField: "_id",
+    foreignField: "user",
+});
 
 module.exports = mongoose.model("User", userSchema);

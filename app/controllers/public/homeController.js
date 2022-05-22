@@ -1,5 +1,5 @@
 /** import main controller file */
-const Controller = require("../controller")
+const Controller = require("../controller");
 
 class HomeController extends Controller {
     /**

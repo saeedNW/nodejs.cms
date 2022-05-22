@@ -2,8 +2,6 @@
 const Transform = require("./transform");
 /** import episodes constants */
 const {episodesConstants} = require("../constants");
-/** import courses transform */
-const CoursesTransform = require("./coursesTransform");
 
 /**
  * episodes data transformer
@@ -105,6 +103,9 @@ module.exports = class EpisodesTransform extends Transform {
      * @return {{images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, commentCount: *, tags, createdAt: *, price: (number|*), _id: *, viewCount: *, time, user, slug: *, updatedAt: *}}
      */
     showCourseBasicInfo(item) {
+        /** import courses transform */
+        const CoursesTransform = require("./coursesTransform");
+
         if (this.#courseBasicInfo) {
             return {course: new CoursesTransform().transform(item.course)}
         }
@@ -125,10 +126,11 @@ module.exports = class EpisodesTransform extends Transform {
      * @return {{images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, commentCount: *, tags, createdAt: *, price: (number|*), _id: *, viewCount: *, time, user, slug: *, updatedAt: *}}
      */
     showCourseFullInfo(item) {
+        /** import courses transform */
+        const CoursesTransform = require("./coursesTransform");
+
         if (this.#courseFullInfo) {
             return {course: new CoursesTransform().withFullInfo().transform(item.course)}
         }
     }
-
-
 }

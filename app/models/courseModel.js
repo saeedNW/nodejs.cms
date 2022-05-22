@@ -62,7 +62,7 @@ const courseSchema = new Schema({
         type: Number,
         default: 0
     },
-}, {timestamps: true});
+}, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
 courseSchema.index({hashId: 1});
@@ -74,5 +74,17 @@ courseSchema.index({commentCount: -1});
 
 /** initialize mongoose paginate plugin for courses schema */
 courseSchema.plugin(mongoosePaginate);
+
+/**
+ * create a virtual field to be used for
+ * course and episode collections relation
+ * through populate method.
+ */
+courseSchema.virtual("episodes", {
+    ref: "Episode",
+    localField: "_id",
+    foreignField: "course",
+});
+
 
 module.exports = mongoose.model("Course", courseSchema);

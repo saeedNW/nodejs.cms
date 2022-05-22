@@ -365,13 +365,16 @@ class CoursesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read course data from database based on _id */
-            const course = await courseModel.findById(_id);
+            const course = await courseModel.findById(_id).populate("episodes");
 
             /** return error if course was not found */
             if (!course)
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
-            /** todo@ delete course episodes */
+            /**  delete course episodes */
+            for (const episode of course.episodes) {
+                await episode.remove();
+            }
 
             /** get course image addresses as na array */
             const images = Object.values(course.images);

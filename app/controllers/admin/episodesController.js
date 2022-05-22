@@ -299,10 +299,9 @@ class EpisodesController extends Controller {
      * @return {Promise<void>}
      */
     async updateCourseTime(courseId) {
-        const course = await courseModel.findById(courseId);
-        const episodes = await episodeModel.find({course: courseId});
+        const course = await courseModel.findById(courseId).populate("episodes");
 
-        course.time = this.getTime(episodes);
+        course.time = this.getTime(course.episodes);
         await course.save();
     }
 }
