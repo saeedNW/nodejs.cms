@@ -2,6 +2,8 @@
 const {courseModel} = require("../../models").model;
 /** import courses transform */
 const CoursesTransform = require("../../transform/coursesTransform");
+/** import courses constants */
+const {PaymentType} = require("../../constants").coursesConstants;
 
 /** import main controller file */
 const Controller = require("../controller");
@@ -45,6 +47,9 @@ class CoursesController extends Controller {
                     path: "episodes",
                     options: {
                         sort: {episodeNumber: 1}
+                    },
+                    populate: {
+                        path: "course"
                     }
                 }
             ]);
@@ -57,12 +62,44 @@ class CoursesController extends Controller {
             const transformedData = new CoursesTransform().withFullSlug().withFullInfo()
                 .withEpisodeBasicInfo().withUserInfo().transform(course);
 
-            return res.json(transformedData)
+            const canUserUse = await this.canUse(req, course);
 
-            res.render("public/courses/single", {title: transformedData.title, course: transformedData});
+            res.render("public/courses/single", {
+                title: transformedData.title,
+                course: transformedData,
+                canUserUse
+            });
         } catch (err) {
             next(err);
         }
+    }
+
+    /**
+     * check if user can access to the course episodes or not
+     * @param req
+     * @param course
+     * @return {Promise<boolean>}
+     */
+    async canUse(req, course) {
+        let canUse = false;
+
+        if (req.isAuthenticated()) {
+            switch (course.paymentType) {
+                case PaymentType.vip:
+                    canUse = await req.user.isVip();
+                    break;
+                case PaymentType.cash:
+                    canUse = await req.user.haveBought(course);
+                    break;
+                default:
+                    canUse = true;
+            }
+        }
+
+        if (req.isAuthenticated() && req.user.admin)
+            canUse = true;
+
+        return canUse;
     }
 }
 

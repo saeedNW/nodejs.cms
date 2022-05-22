@@ -2,6 +2,7 @@
 const Transform = require("./transform");
 /** import episodes constants */
 const {episodesConstants} = require("../constants");
+const CoursesTransform = require("./coursesTransform");
 
 /**
  * episodes data transformer
@@ -51,11 +52,12 @@ module.exports = class EpisodesTransform extends Transform {
             hashId: item.hashId,
             episodeNumber: item.episodeNumber,
             title: item.title,
-            episodeUrl: item.episodeUrl,
             time: item.time,
             PersianPaymentType,
             viewCount: item.viewCount,
             commentCount: item.commentCount,
+            ...this.episodeLink(item),
+            ...this.downloadLink(item),
             ...this.showCourseBasicInfo(item),
             ...this.showCourseFullInfo(item),
             ...this.showFullInfo(item)
@@ -80,6 +82,7 @@ module.exports = class EpisodesTransform extends Transform {
         if (this.#fullInfoStatus) {
             return {
                 description: item.description,
+                episodeUrl: item.episodeUrl,
                 downloadCount: item.downloadCount,
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt,
@@ -132,5 +135,27 @@ module.exports = class EpisodesTransform extends Transform {
         if (this.#courseFullInfo) {
             return {course: new CoursesTransform().withFullInfo().transform(item.course)}
         }
+    }
+
+    /**
+     * create episode download link
+     * @param item
+     * @return {{downloadLink: string}}
+     */
+    downloadLink(item) {
+        return {downloadLink: "#"}
+    }
+
+    /**
+     * create episode page url
+     * Note: if you want to use this method
+     * you need to use populate between episode
+     * and course, so you have course info
+     * @param item
+     * @return {{episodeLink: string}}
+     */
+    episodeLink(item) {
+        if (item.course.slug)
+            return {episodeLink: `/courses/${item.course.slug}/${item.episodeNumber}`}
     }
 }

@@ -1,7 +1,222 @@
-<!-- Jumbotron Header -->
-<header class="jumbotron">
-    <h1><%= course.title %></h1>
-    <p class="justify">
-        <%= course.description %>
-    </p>
-</header>
+<div class="row">
+    <!-- Blog Post Content Column -->
+    <div class="col-lg-8">
+        <!-- Title -->
+        <h1 class="mb-3"><%= course.title %></h1>
+
+        <!-- Author -->
+        <p class="text-muted small">
+            <span> توسط <a href="#"><%= course.user.name %></a></span>
+            -
+            <span>ارسال شده در 21 خرداد 1397</span>
+        </p>
+
+        <hr>
+        <!-- Post Content -->
+        <div id="content" class="justify">
+            <%- course.description %>
+        </div>
+        <hr>
+
+        <!-- check payment status for course -->
+        <% if(auth.loginCheck) { %>
+            <% if(course.paymentType == 'vip') { %>
+                <% if (!canUserUse){ %>
+                    <div class="alert alert-danger">برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید</div>
+                <% } else { %>
+                    <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
+                <% } %>
+            <% } else if (course.paymentType == 'cash'){ %>
+                <% if (!canUserUse){ %>
+                    <div class="alert alert-danger">برای مشاهده این دوره نیاز است به صورت نقدی دوره راه تهیه کنید</div>
+                <% } else{ %>
+                    <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
+                <% } %>
+            <% } %>
+        <% } else { %>
+            <div class="alert alert-danger">برای مشاهده این دوره نیاز است ابتدا وارد سایت شوید</div>
+        <% } %>
+
+        <h3>قسمت های دوره</h3>
+        <table class="table table-condensed table-bordered">
+            <thead>
+            <tr>
+                <th>شماره قسمت</th>
+                <th>عنوان قسمت</th>
+                <th>زمان قسمت</th>
+                <th>دانلود</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(const episode of course.episodes){ %>
+                <tr>
+                    <th><%= episode.episodeNumber %></th>
+                    <td><a href="<%= episode.episodeLink %>"><%= episode.title %></a></td>
+                    <td><%= episode.time %></td>
+                    <td>
+                        <a href="<%= episode.downloadLink %>">دانلود</a>
+                    </td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+
+        <!-- Blog Comments -->
+        <hr>
+        <!-- Comments Form -->
+
+        <div class="card my-4">
+            <h5 class="card-header">ثبت نظر :</h5>
+            <div class="card-body">
+
+                <form role="form" action="/comment" method="post">
+                    <input type="hidden" name="parent_id" value="0">
+                    <input type="hidden" name="course" value="5b1e4a0ac4cf2d675052a78a">
+                    <div class="form-group mb-3">
+                        <textarea name="comment" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ارسال</button>
+                </form>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="media mb-4">
+            <!--            <img class="d-flex ml-3 rounded-circle" src="http://placehold.it/50x50" alt="">-->
+            <div class="media-body">
+                <h5 class="mt-0">
+                    حسام موسوی
+                    <button class="float-left btn-sm btn btn-xs btn-success" data-toggle="modal"
+                            data-target="#sendCommentModal" data-parent="5b30616db2f8293ca4cad0b9">
+                        پاسخ
+                    </button>
+                </h5>
+                <span>دوره مناسبی بود</span>
+                <div class="media mt-4">
+                    <!--                    <img class="d-flex ml-3 rounded-circle" src="http://placehold.it/50x50" alt="">-->
+                    <div class="media-body">
+                        <h5 class="mt-0">
+                            حسام موسوی
+                        </h5>
+                        <span>نبود</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment -->
+
+        <div class="modal fade" id="sendCommentModal" tabindex="-1" role="dialog"
+             aria-labelledby="sendCommentModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalLabel">ارسال پاسخ</h4>
+                        <button type="button" class="close" style="margin-left: -1rem;" data-dismiss="modal"
+                                aria-label="Close"><span aria-hidden="true">×</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/comment" method="post">
+
+                            <input type="hidden" name="parent" value="5b30616db2f8293ca4cad0b9">
+                            <input type="hidden" name="course" value="5b1e4a0ac4cf2d675052a78a">
+
+                            <div class="form-group">
+                                <label for="message-text" class="control-label">متن پاسخ:</label>
+                                <textarea class="form-control" id="message-text" name="comment"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">ارسال</button>
+                                <button type="button" class="btn btn-default mr-2 ml-0" data-dismiss="modal">انصراف
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blog Sidebar Widgets Column -->
+
+    <div class="col-md-4">
+
+        <div class="card my-4">
+            <div class="card-body">
+                <% if(auth.loginCheck) { %>
+                    <% if(course.paymentType == 'vip') { %>
+                        <% if (!canUserUse){ %>
+                            <p>برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید</p>
+                            <a class="btn btn-success btn-sm" href="#">شارژ اکانت</a>
+                    <% } else { %>
+                            <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
+                        <% } %>
+                    <% } else if (course.paymentType == 'cash'){ %>
+                        <% if (!canUserUse){ %>
+                                <p>برای استفاده از این دوره نیاز است این دوره را با مبلغ 60000 تومان خریداری کنید</p>
+                                <form action="/course/payment" method="post">
+                                    <input type="hidden" name="course_id" value="5b1e4a0ac4cf2d675052a78a">
+                                    <button type="submit" class="btn btn-success">خرید دوره</button>
+                                </form>
+                        <% } else{ %>
+                            <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
+                        <% } %>
+                    <% } %>
+                <% } else { %>
+                        <p>برای تهیه این دوره نیاز است ابتدا وارد سایت شوید</p>
+                        <a class="btn btn-success btn-sm" href="/auth/login">ورود</a>
+                <% } %>
+            </div>
+        </div>
+
+
+        <!-- Search Widget -->
+        <div class="card my-4">
+            <h5 class="card-header">جستجو</h5>
+            <div class="card-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="دنبال چی میگردی ؟">
+                    <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button">جستجو!</button>
+                </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="card my-4">
+            <h5 class="card-header">دسته بندی ها</h5>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <a href="#">طراحی وب</a>
+                            </li>
+                            <li>
+                                <a href="#">HTML</a>
+                            </li>
+                            <li>
+                                <a href="#">برنامه نویسی</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <a href="#">جاوااسکریپت</a>
+                            </li>
+                            <li>
+                                <a href="#">سی اس اس</a>
+                            </li>
+                            <li>
+                                <a href="#">آموزش تخصصی</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

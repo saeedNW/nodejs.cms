@@ -110,4 +110,16 @@ userSchema.virtual("courses", {
     foreignField: "user",
 });
 
+/**
+ * check if user is a vip user or not
+ * @return {Promise<boolean>}
+ */
+userSchema.methods.isVip = async function () {
+    return false;
+}
+
+userSchema.methods.haveBought = async function (course) {
+    return false;
+}
+
 module.exports = mongoose.model("User", userSchema);
