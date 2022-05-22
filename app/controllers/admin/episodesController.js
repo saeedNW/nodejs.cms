@@ -49,12 +49,17 @@ class EpisodesController extends Controller {
                  * sort option:
                  * this options allows you to sort data before receiving them from database.
                  */
-                sort: {createdAt: 1}
+                sort: {createdAt: 1},
+                /**
+                 * populate option:
+                 * Paths which should be populated with other documents
+                 */
+                populate: "course"
             })
 
 
             /** transforming data to remove unneeded info */
-            const transformedData = new EpisodeTransform().withPaginate().transformCollection(episodes);
+            const transformedData = new EpisodeTransform().withPaginate().withCourseBasicInfo().transformCollection(episodes);
 
             /** rendering courses page */
             res.render("admin/episodes/index", {
@@ -145,6 +150,9 @@ class EpisodesController extends Controller {
      * @return {Promise<void>}
      */
     async createEpisode(req, res, next) {
+        /** extract course id from request body */
+        const {course} = req.body;
+
         try {
             /** generate new course hash id */
             const hashId = await getHashId(identifierModels.episodes.modelName);
@@ -152,8 +160,8 @@ class EpisodesController extends Controller {
             /** save new course in database */
             await episodeModel.create({...req.body, hashId});
 
-            /** todo@ update course time */
-
+            /** update course time */
+            await this.updateCourseTime(course)
             /** return user to the courses main page */
             res.redirect("/admin/panel/episodes");
         } catch (err) {
@@ -188,11 +196,114 @@ class EpisodesController extends Controller {
              */
             await episode.remove();
 
+            /** update course time */
+            await this.updateCourseTime(episode.course);
+
             /** redirect to episodes index page */
             res.redirect("/admin/panel/episodes");
         } catch (err) {
             next(err);
         }
+    }
+
+    /**
+     * rendering edit episode page
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
+    async editEpisodeForm(req, res, next) {
+        /** extract episode id from request params */
+        const {_id} = req.params
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /** read course data from database based on _id */
+            const episode = await episodeModel.findById(_id).populate("course");
+
+
+            /** return error if course was not found */
+            if (!episode)
+                this.sendError("چنین جلسه ای وجود ندارد", 404);
+
+            /** get courses title */
+            const courses = await courseModel.find({}, {title: 1});
+
+            /** transforming data to remove unneeded info */
+            const transformedData = new EpisodeTransform().withFullInfo().withCourseBasicInfo().transform(episode)
+
+
+            /** rendering courses page */
+            res.render("admin/episodes/edit", {
+                title: "ویرایش جلسه",
+                episode: transformedData,
+                courses
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /**
+     * edit course process
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
+    async editEpisodeProcess(req, res, next) {
+        /** extract course id from request params */
+        const {_id} = req.params
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /** read course data from database based on _id */
+            const episode = await episodeModel.findById(_id);
+
+            /** return error if course was not found */
+            if (!episode)
+                this.sendError("چنین دوره ای وجود ندارد", 404);
+
+            /** user input validation */
+            const validationResult = await this.episodeValidation(req);
+
+            /**
+             * redirect to previous page if there was an1y validation errors.
+             */
+            if (!validationResult)
+                return this.redirectURL(req, res);
+
+            /** update course in database */
+            await episodeModel.findByIdAndUpdate(_id, {...req.body});
+
+            /** update previous course time */
+            await this.updateCourseTime(episode.course);
+            /** update new course time */
+            await this.updateCourseTime(req.body.course);
+
+            /** return user to the courses main page */
+            res.redirect("/admin/panel/episodes");
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /**
+     * update course time
+     * @param courseId
+     * @return {Promise<void>}
+     */
+    async updateCourseTime(courseId) {
+        const course = await courseModel.findById(courseId);
+        const episodes = await episodeModel.find({course: courseId});
+
+        course.time = this.getTime(episodes);
+        await course.save();
     }
 }
 

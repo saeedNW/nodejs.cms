@@ -10,14 +10,14 @@
         <div class="col">
             <label for="title" class="control-label font-weight-bold mb-1">عنوان دوره</label>
             <input type="text" class="form-control" name="title" id="title" placeholder="دوره پروژه محور node js"
-                   value="<%= course.title %>" required>
+                   value="<%= oldData('title', course.title) %>" required>
         </div>
     </div>
     <div class="form-group row mb-3">
         <div class="col">
             <label for="slug" class="control-label font-weight-bold mb-1">نامک دوره</label>
             <input type="text" class="form-control" name="slug" id="slug"
-                   placeholder="node-js-course" value="<%= course.slug %>" required>
+                   placeholder="node-js-course" value="<%= oldData('slug', course.slug) %>" required>
         </div>
     </div>
     <div class="form-group row mb-3">
@@ -25,9 +25,15 @@
             <label for="paymentType" class="control-label font-weight-bold mb-1">نوع دوره</label>
             <select name="paymentType" id="paymentType" class="form-control" required>
                 <option value="none">انتخاب نوع پرداخت</option>
-                <option value="vip" <%= course.paymentType === 'vip' ? 'selected' : '' %>>اعضای ویژه</option>
-                <option value="cash" <%= course.paymentType === 'cash' ? 'selected' : '' %>>نقدی</option>
-                <option value="free" <%= course.paymentType === 'free' ? 'selected' : '' %>>رایگان</option>
+                <option value="vip" <%= oldData('paymentType', course.paymentType) === 'vip' ? 'selected' : '' %>>اعضای
+                    ویژه
+                </option>
+                <option value="cash" <%= oldData('paymentType', course.paymentType) === 'cash' ? 'selected' : '' %>>
+                    نقدی
+                </option>
+                <option value="free" <%= oldData('paymentType', course.paymentType) === 'free' ? 'selected' : '' %>>
+                    رایگان
+                </option>
             </select>
         </div>
     </div>
@@ -35,7 +41,7 @@
         <div class="col">
             <label for="description" class="control-label font-weight-bold mb-1">توضیحات</label>
             <textarea rows="5" class="form-control" name="description" id="description"
-                      placeholder="توضیحات دوره" required><%= course.description %></textarea>
+                      placeholder="توضیحات دوره" required><%= oldData('description', course.description) %></textarea>
         </div>
     </div>
     <div class="form-group row mb-3">
@@ -60,12 +66,12 @@
         <div class="col">
             <label for="price" class="control-label font-weight-bold mb-1">قیمت</label>
             <input type="text" class="form-control" name="price" id="price"
-                   value="<%= course.price %>" placeholder="قیمت ها را وارد کنید" required>
+                   value="<%= oldData('price', course.price) %>" placeholder="قیمت ها را وارد کنید" required>
         </div>
         <div class="col">
             <label for="tags" class="control-label font-weight-bold mb-1">تگ ها</label>
             <input type="text" class="form-control text-end dir-ltr" name="tags" id="tags"
-                   placeholder="nodejs, backend, programming" value="<%= course.tags %>" required>
+                   placeholder="nodejs, backend, programming" value="<%= oldData('tags', course.tags) %>" required>
         </div>
     </div>
     <div class="form-group row">

@@ -61,4 +61,4 @@ episodeSchema.index({hashId: 1});
 /** initialize mongoose paginate plugin for courses schema */
 episodeSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model("episode", episodeSchema);
+module.exports = mongoose.model("Episode", episodeSchema);

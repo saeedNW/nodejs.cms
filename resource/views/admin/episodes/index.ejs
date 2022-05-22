@@ -25,7 +25,7 @@
                 <tr>
                     <th scope="row"><%= episodes.pagingCounter %></th>
                     <th><%= episode.hashId %></th>
-                    <td><a href="<%= episode.course %>"><%= episode.course %></a></td>
+                    <td><a href="<%= episode.course.slug %>"><%= episode.course.title %></a></td>
                     <td><a href="<%= episode.episodeUrl %>"><%= episode.title %></a></td>
                     <td><%= episode.commentCount %></td>
                     <td><%= episode.viewCount %></td>

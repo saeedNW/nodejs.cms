@@ -48,8 +48,6 @@ module.exports = class EpisodesTransform extends Transform {
                 PersianPaymentType = episodesConstants.PersianPaymentType.free;
         }
 
-        console.log(1000, item.hashId)
-
         return {
             _id: item._id,
             hashId: item.hashId,
@@ -108,7 +106,7 @@ module.exports = class EpisodesTransform extends Transform {
      */
     showCourseBasicInfo(item) {
         if (this.#courseBasicInfo) {
-            return new CoursesTransform().transform(item.course)
+            return {course: new CoursesTransform().transform(item.course)}
         }
     }
 
@@ -128,7 +126,7 @@ module.exports = class EpisodesTransform extends Transform {
      */
     showCourseFullInfo(item) {
         if (this.#courseFullInfo) {
-            return new CoursesTransform().withFullInfo().transform(item.course);
+            return {course: new CoursesTransform().withFullInfo().transform(item.course)}
         }
     }
 

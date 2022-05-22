@@ -6,6 +6,8 @@ const Recaptcha = require('express-recaptcha').RecaptchaV2;
 const mongoose = require("mongoose");
 /** import error sender */
 const {sendError: error} = require("../utils/sendError");
+/** import sprintf module */
+const {sprintf} = require("sprintf-js");
 
 module.exports = class Controller {
     constructor() {
@@ -80,5 +82,50 @@ module.exports = class Controller {
      */
     sendError(message, status = 500) {
         error(message, status)
+    }
+
+    /**
+     * calc course duration based on episodes time
+     * @param episodes
+     * @return {string}
+     */
+    getTime(episodes) {
+        /**
+         * total seconds
+         * @type {number}
+         */
+        let seconds = 0;
+
+        for (const episode of episodes) {
+            /** brake episode time to an array */
+            let time = episode.time.split(":");
+
+            /**
+             * continue based on episode duration array.
+             * if episode duration is more than an hour time length would be 3,
+             * else it would be 2
+             */
+            if (time.length === 2) {
+                /** convert minutes to seconds */
+                seconds += parseInt(time[0]) * 60;
+                seconds += parseInt(time[1]);
+            } else {
+                /** convert hours to seconds */
+                seconds += parseInt(time[0]) * 3600;
+                /** convert minutes to seconds */
+                seconds += parseInt(time[1]) * 60;
+                seconds += parseInt(time[2]);
+            }
+        }
+
+        let minutes = Math.floor(seconds / 60);
+
+        let hours = Math.floor(minutes / 60);
+
+        minutes -= hours * 60;
+
+        seconds = Math.floor(((seconds / 60) % 1) * 60);
+
+        return sprintf("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }

@@ -146,11 +146,11 @@ class CoursesController extends Controller {
              * use createImageURL method if you planed to use only one original uploaded image.
              * use imageResize method if you planed to create multiply images from uploaded image.
              */
-            this.imageResize(req, next);
-            // this.createImageURL(req, next);
+            this.imageResize(req);
+            // this.createImageURL(req);
 
             /** create new course */
-            await this.createCourse(req, res, next);
+            await this.createCourse(req, res);
         } catch (err) {
             next(err);
         }
@@ -210,25 +210,20 @@ class CoursesController extends Controller {
      * create new course
      * @param req
      * @param res
-     * @param next
      * @return {Promise<void>}
      */
-    async createCourse(req, res, next) {
-        try {
-            /** get current user ObjectId from request */
-            const {_id: user} = req.user;
+    async createCourse(req, res) {
+        /** get current user ObjectId from request */
+        const {_id: user} = req.user;
 
-            /** generate new course hash id */
-            const hashId = await getHashId(identifierModels.courses.modelName);
+        /** generate new course hash id */
+        const hashId = await getHashId(identifierModels.courses.modelName);
 
-            /** save new course in database */
-            await courseModel.create({...req.body, user, hashId});
+        /** save new course in database */
+        await courseModel.create({...req.body, user, hashId});
 
-            /** return user to the courses main page */
-            res.redirect("/admin/panel/courses");
-        } catch (err) {
-            next(err);
-        }
+        /** return user to the courses main page */
+        res.redirect("/admin/panel/courses");
     }
 
     /**
@@ -258,110 +253,100 @@ class CoursesController extends Controller {
     /**
      * create uploaded image URL
      * @param req
-     * @param next
      * @param {boolean} multiImages set this to true if you want to create multiply images from original image
      * @param imageName image name for multiply images
      */
-    createImageURL(req, next, multiImages = false, imageName = null) {
-        try {
-            /** extract file from request file */
-            let file = req.file;
+    createImageURL(req, multiImages = false, imageName = null) {
+        /** extract file from request file */
+        let file = req.file;
 
-            /**
-             * extract image info from file.
-             * use for multiply images creation process
-             * @type {ParsedPath}
-             */
-            const imageInfo = path.parse(file.path);
+        /**
+         * extract image info from file.
+         * use for multiply images creation process
+         * @type {ParsedPath}
+         */
+        const imageInfo = path.parse(file.path);
 
-            /**
-             * set images URL in request body.
-             * if you need only one original uploaded image
-             */
-            if (!multiImages)
-                return req.body.images = file.path.slice(6);
+        /**
+         * set images URL in request body.
+         * if you need only one original uploaded image
+         */
+        if (!multiImages)
+            return req.body.images = file.path.slice(6);
 
-            /**
-             * return image URL.
-             * if you planed to use multiply images
-             * EX => /uploads/images/.../2022/5/12/imageOriginalName-720.png
-             */
-            return `${imageInfo.dir.slice(6)}/${imageName}`;
-        } catch (err) {
-            next(err);
-        }
+        /**
+         * return image URL.
+         * if you planed to use multiply images
+         * EX => /uploads/images/.../2022/5/12/imageOriginalName-720.png
+         */
+        return `${imageInfo.dir.slice(6)}/${imageName}`;
     }
 
     /**
      * multiply images creation process
      * @param req
-     * @param next
      */
-    imageResize(req, next) {
-        try {
-            /** extract file from request file */
-            const file = req.file
+    imageResize(req) {
+        /** extract file from request file */
+        const file = req.file
 
+        /**
+         * extract image info from file.
+         * use for multiply images creation
+         * @type {ParsedPath}
+         */
+        const imageInfo = path.parse(file.path);
+
+        /**
+         * this object will be used to save multiply images addresses
+         * @type {any}
+         */
+        let imagesAddress = {};
+
+        /**
+         * add original image URL to imagesAddress object
+         * @type {*|string}
+         */
+        imagesAddress.orginal = this.createImageURL(req, true, file.filename);
+
+        /**
+         * creating multiply files from original file.
+         * new files resolution will be coming from environment variable.
+         * default resolutions are 1080, 720 and 480.
+         */
+        JSON.parse(process.env.IMAGES_SIZE).map(async (size) => {
             /**
-             * extract image info from file.
-             * use for multiply images creation
-             * @type {ParsedPath}
+             * set image name.
+             * EX => imageOriginalName-720.png
+             * @type {string}
              */
-            const imageInfo = path.parse(file.path);
+            let imageName = `${imageInfo.name}-${size}${imageInfo.ext}`;
 
             /**
-             * this object will be used to save multiply images addresses
-             * @type {any}
-             */
-            let imagesAddress = {};
-
-            /**
-             * add original image URL to imagesAddress object
+             * add new image URL to imagesAddress object.
+             * EX => /uploads/images/.../2022/5/12/imageOriginalName-720.png
              * @type {*|string}
              */
-            imagesAddress.orginal = this.createImageURL(req, next, true, file.filename);
+            imagesAddress[size] = this.createImageURL(req, true, imageName);
 
             /**
-             * creating multiply files from original file.
-             * new files resolution will be coming from environment variable.
-             * default resolutions are 1080, 720 and 480.
+             * resize original uploaded image to given resolution
+             * and upload new image
              */
-            JSON.parse(process.env.IMAGES_SIZE).map(async (size) => {
-                /**
-                 * set image name.
-                 * EX => imageOriginalName-720.png
-                 * @type {string}
-                 */
-                let imageName = `${imageInfo.name}-${size}${imageInfo.ext}`;
+            await sharp(file.path)
+                .resize(size, null)
+                .toFile(`${file.destination}/${imageName}`)
+        })
 
-                /**
-                 * add new image URL to imagesAddress object.
-                 * EX => /uploads/images/.../2022/5/12/imageOriginalName-720.png
-                 * @type {*|string}
-                 */
-                imagesAddress[size] = this.createImageURL(req, next, true, imageName);
+        /**
+         * set imagesAddress object in request body
+         */
+        req.body.images = imagesAddress;
 
-                /**
-                 * resize original uploaded image to given resolution
-                 * and upload new image
-                 */
-                await sharp(file.path)
-                    .resize(size, null)
-                    .toFile(`${file.destination}/${imageName}`)
-            })
-
-            /**
-             * set imagesAddress object in request body
-             */
-            req.body.images = imagesAddress;
-
-            /**
-             * set 480p image as thumbnail in request body
-             */
-            req.body.thumbnail = imagesAddress[480];
-        } catch (err) {
-            next(err);
-        }
+        /**
+         * set 480p image as thumbnail in request body
+         */
+        req.body.thumbnail = imagesAddress[480];
     }
 
     /**
@@ -466,8 +451,8 @@ class CoursesController extends Controller {
              * use imageResize method if you planed to create multiply images from uploaded image.
              */
             if (req.file) {
-                this.imageResize(req, next);
-                // this.createImageURL(req, next);
+                this.imageResize(req);
+                // this.createImageURL(req);
                 updateObject.images = req.body.images
                 updateObject.thumbnail = req.body.thumbnail
             }
