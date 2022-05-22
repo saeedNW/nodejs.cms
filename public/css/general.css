@@ -14,6 +14,16 @@ body {
     direction: rtl !important;
 }
 
+.justify {
+    text-align: justify !important;
+}
+
+.jumbotron {
+    background: #ccc;
+    padding: 2%;
+    margin-bottom: 2%;
+}
+
 a {
     text-decoration: none !important;
 }
