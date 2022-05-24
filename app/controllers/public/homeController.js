@@ -18,7 +18,7 @@ class HomeController extends Controller {
             const courses = await courseModel.find({}).sort({createdAt: -1}).limit(8);
 
             /** transforming data to remove unneeded info */
-            const transformedData = new CoursesTransform().withFullSlug().withFullInfo().transformCollection(courses);
+            const transformedData = new CoursesTransform().withFullInfo().transformCollection(courses);
 
             res.render("public/index", {title: "صفحه اصلی", courses: transformedData});
         } catch (err) {

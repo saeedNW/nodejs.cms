@@ -29,7 +29,7 @@ passport.use(new GoogleStrategy({
             const {email, name, sub} = profile._json
 
             /** check user existence */
-            const findUser = await userModel.findOne({email});
+            const findUser = await userModel.findOne({email}, {passport: 0});
 
             /** continue on user login */
             if (findUser) return done(null, findUser);

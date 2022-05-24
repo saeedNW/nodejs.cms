@@ -20,9 +20,9 @@
             <div class="card">
                 <img class="card-img-top" src="<%= course.thumbnail %>" alt="<%= course.title %>">
                 <div class="card-body">
-                    <h3><a href="<%= course.slug %>"><%= course.title %></a></h3>
+                    <h3><a href="<%= course.fullSlug %>"><%= course.title %></a></h3>
                     <p class="card-text justify"><%= course.description.substr(0, 100) %></p>
-                    <a href="<%= course.slug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a>
+                    <a href="<%= course.fullSlug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a>
                 </div>
                 <div class="card-footer text-muted">
                     <%= course.viewCount %> بازدید

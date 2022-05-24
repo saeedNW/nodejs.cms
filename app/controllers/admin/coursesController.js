@@ -59,7 +59,7 @@ class CoursesController extends Controller {
             })
 
             /** transforming data to remove unneeded info */
-            const transformedData = new CoursesTransform().withFullSlug().withPaginate().transformCollection(courses);
+            const transformedData = new CoursesTransform().withPaginate().transformCollection(courses);
 
 
             /** rendering courses page */

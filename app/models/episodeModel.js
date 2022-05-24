@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose
 /** import mongoose paginate module */
 const mongoosePaginate = require('mongoose-paginate-v2');
+/** import episodes constants */
+const {episodesConstants} = require("../constants");
+/** import bcryptjs */
+const bcrypt = require("bcryptjs");
 
 /** define course collection schema */
 const episodeSchema = new Schema({
@@ -60,5 +64,31 @@ episodeSchema.index({hashId: 1});
 
 /** initialize mongoose paginate plugin for courses schema */
 episodeSchema.plugin(mongoosePaginate);
+
+/**
+ * create episode secure download link
+ * @param auth
+ * @param canUserUse
+ * @return {string|string}
+ */
+episodeSchema.methods.episodeDownload = function (auth, canUserUse) {
+    if (!auth.loginCheck) return "#"
+
+    let status = false;
+
+    if (this.paymentType === episodesConstants.PaymentType.free)
+        status = true;
+    else if (this.paymentType === episodesConstants.PaymentType.vip || this.paymentType === episodesConstants.PaymentType.cash)
+        status = canUserUse;
+
+
+    const timestamp = new Date().getTime() + 12 * 3600 * 1000;
+
+    let secretMac = `${process.env.EPISODE_SECRET_MAC}${this._id}${timestamp}${auth.user._id}`;
+
+    secretMac = bcrypt.hashSync(secretMac, 10);
+
+    return status ? `/courses/download/${this._id}?mac=${secretMac}&t=${timestamp}` : "#";
+}
 
 module.exports = mongoose.model("Episode", episodeSchema);

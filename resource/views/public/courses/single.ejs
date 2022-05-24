@@ -54,7 +54,7 @@
                     <td><a href="<%= episode.episodeLink %>"><%= episode.title %></a></td>
                     <td><%= episode.time %></td>
                     <td>
-                        <a href="<%= episode.downloadLink %>">دانلود</a>
+                        <a href="<%= episode.episodeDownload(auth, canUserUse) %>">دانلود</a>
                     </td>
                 </tr>
             <% } %>
@@ -73,7 +73,8 @@
                     <input type="hidden" name="parent_id" value="0">
                     <input type="hidden" name="course" value="5b1e4a0ac4cf2d675052a78a">
                     <div class="form-group mb-3">
-                        <textarea name="comment" class="form-control" rows="3"></textarea>
+                        <label for="form-control" class="mb-2">متن نظر</label>
+                        <textarea name="comment" id="form-control" class="form-control" rows="3"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">ارسال</button>
                 </form>
@@ -83,7 +84,6 @@
         <hr>
 
         <div class="media mb-4">
-            <!--            <img class="d-flex ml-3 rounded-circle" src="http://placehold.it/50x50" alt="">-->
             <div class="media-body">
                 <h5 class="mt-0">
                     حسام موسوی
@@ -94,7 +94,6 @@
                 </h5>
                 <span>دوره مناسبی بود</span>
                 <div class="media mt-4">
-                    <!--                    <img class="d-flex ml-3 rounded-circle" src="http://placehold.it/50x50" alt="">-->
                     <div class="media-body">
                         <h5 class="mt-0">
                             حسام موسوی
@@ -149,23 +148,23 @@
                         <% if (!canUserUse){ %>
                             <p>برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید</p>
                             <a class="btn btn-success btn-sm" href="#">شارژ اکانت</a>
-                    <% } else { %>
+                        <% } else { %>
                             <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
                         <% } %>
                     <% } else if (course.paymentType == 'cash'){ %>
                         <% if (!canUserUse){ %>
-                                <p>برای استفاده از این دوره نیاز است این دوره را با مبلغ 60000 تومان خریداری کنید</p>
-                                <form action="/course/payment" method="post">
-                                    <input type="hidden" name="course_id" value="5b1e4a0ac4cf2d675052a78a">
-                                    <button type="submit" class="btn btn-success">خرید دوره</button>
-                                </form>
+                            <p>برای استفاده از این دوره نیاز است این دوره را با مبلغ 60000 تومان خریداری کنید</p>
+                            <form action="/course/payment" method="post">
+                                <input type="hidden" name="course_id" value="5b1e4a0ac4cf2d675052a78a">
+                                <button type="submit" class="btn btn-success">خرید دوره</button>
+                            </form>
                         <% } else{ %>
                             <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
                         <% } %>
                     <% } %>
                 <% } else { %>
-                        <p>برای تهیه این دوره نیاز است ابتدا وارد سایت شوید</p>
-                        <a class="btn btn-success btn-sm" href="/auth/login">ورود</a>
+                    <p>برای تهیه این دوره نیاز است ابتدا وارد سایت شوید</p>
+                    <a class="btn btn-success btn-sm" href="/auth/login">ورود</a>
                 <% } %>
             </div>
         </div>

@@ -57,7 +57,6 @@ module.exports = class EpisodesTransform extends Transform {
             viewCount: item.viewCount,
             commentCount: item.commentCount,
             ...this.episodeLink(item),
-            ...this.downloadLink(item),
             ...this.showCourseBasicInfo(item),
             ...this.showCourseFullInfo(item),
             ...this.showFullInfo(item)
@@ -135,15 +134,6 @@ module.exports = class EpisodesTransform extends Transform {
         if (this.#courseFullInfo) {
             return {course: new CoursesTransform().withFullInfo().transform(item.course)}
         }
-    }
-
-    /**
-     * create episode download link
-     * @param item
-     * @return {{downloadLink: string}}
-     */
-    downloadLink(item) {
-        return {downloadLink: "#"}
     }
 
     /**
