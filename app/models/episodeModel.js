@@ -81,14 +81,15 @@ episodeSchema.methods.episodeDownload = function (auth, canUserUse) {
     else if (this.paymentType === episodesConstants.PaymentType.vip || this.paymentType === episodesConstants.PaymentType.cash)
         status = canUserUse;
 
+    if (!status) return "#"
 
     const timestamp = new Date().getTime() + 12 * 3600 * 1000;
 
     let secretMac = `${process.env.EPISODE_SECRET_MAC}${this._id}${timestamp}${auth.user._id}`;
 
-    secretMac = bcrypt.hashSync(secretMac, 10);
+    secretMac = bcrypt.hashSync(secretMac, 15);
 
-    return status ? `/courses/download/${this._id}?mac=${secretMac}&t=${timestamp}` : "#";
+    return `/episodes/download/${this._id}?mac=${secretMac}&t=${timestamp}`;
 }
 
 module.exports = mongoose.model("Episode", episodeSchema);

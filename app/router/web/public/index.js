@@ -9,6 +9,8 @@ const homeRouter = require('./home');
 const authRouter = require('./auth');
 /** import courses router */
 const coursesRouter = require('./courses');
+/** import episodes router */
+const episodesRouter = require('./episodes');
 
 /** initialize home router */
 router.use(homeRouter);
@@ -16,5 +18,7 @@ router.use(homeRouter);
 router.use("/auth", authRouter);
 /** initialize courses router */
 router.use("/courses", coursesRouter);
+/** initialize episodes router */
+router.use("/episodes", episodesRouter);
 
 module.exports = router;

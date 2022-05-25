@@ -32,6 +32,8 @@
                 <% } else{ %>
                     <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
                 <% } %>
+            <% } else { %>
+                <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
             <% } %>
         <% } else { %>
             <div class="alert alert-danger">برای مشاهده این دوره نیاز است ابتدا وارد سایت شوید</div>
@@ -44,6 +46,7 @@
                 <th>شماره قسمت</th>
                 <th>عنوان قسمت</th>
                 <th>زمان قسمت</th>
+                <th>وضعیت</th>
                 <th>دانلود</th>
             </tr>
             </thead>
@@ -53,9 +56,31 @@
                     <th><%= episode.episodeNumber %></th>
                     <td><a href="<%= episode.episodeLink %>"><%= episode.title %></a></td>
                     <td><%= episode.time %></td>
-                    <td>
-                        <a href="<%= episode.episodeDownload(auth, canUserUse) %>">دانلود</a>
-                    </td>
+                    <% if(auth.loginCheck) { %>
+                        <% if(episode.paymentType == 'vip') { %>
+                            <% if (!canUserUse){ %>
+                                <td><span data-feather="lock"></span></td>
+                                <td><a href="#">دانلود</a></td>
+                            <% } else { %>
+                                <td><span data-feather="unlock"></span></td>
+                                <td><a href="/episodes/download?e=<%= episode._id %>">دانلود</a></td>
+                            <% } %>
+                        <% } else if (episode.paymentType == 'cash'){ %>
+                            <% if (!canUserUse){ %>
+                                <td><span data-feather="lock"></span></td>
+                                <td><a href="#">دانلود</a></td>
+                            <% } else{ %>
+                                <td><span data-feather="unlock"></span></td>
+                                <td><a href="/episodes/download?e=<%= episode._id %>">دانلود</a></td>
+                            <% } %>
+                        <% } else { %>
+                            <td><span data-feather="unlock"></span></td>
+                            <td><a href="/episodes/download?e=<%= episode._id %>">دانلود</a></td>
+                        <% } %>
+                    <% } else { %>
+                        <td><span data-feather="lock"></span></td>
+                        <td><a href="#">دانلود</a></td>
+                    <% } %>
                 </tr>
             <% } %>
             </tbody>

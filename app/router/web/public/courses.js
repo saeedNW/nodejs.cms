@@ -12,7 +12,4 @@ router.get('/', coursesController.index);
 /** single course page route */
 router.get('/:slug', coursesController.singleCourse);
 
-/** episode download link */
-router.get("/download/:episode", coursesController.downloadProcess);
-
 module.exports = router;
