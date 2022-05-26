@@ -2,7 +2,6 @@
 const Transform = require("./transform");
 /** import episodes constants */
 const {episodesConstants} = require("../constants");
-const CoursesTransform = require("./coursesTransform");
 
 /**
  * episodes data transformer

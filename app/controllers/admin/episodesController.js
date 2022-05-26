@@ -191,6 +191,8 @@ class EpisodesController extends Controller {
             if (!episode)
                 this.sendError("چنین جلسه ای ای وجود ندارد", 404);
 
+            /** todo@ remove episode video */
+
             /**
              * deleting episode from database
              */

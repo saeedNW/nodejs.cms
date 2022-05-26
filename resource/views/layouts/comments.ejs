@@ -1,0 +1,106 @@
+<% if (auth.loginCheck){ %>
+    <hr>
+
+    <div class="card my-4">
+        <h5 class="card-header">ثبت نظر :</h5>
+        <div class="card-body">
+            <%- include(viewDir("layouts/showMessage")) -%>
+            <form role="form" action="/comments" method="post">
+                <input type="hidden" name="<%= section %>" value="<%= subject._id %>">
+                <div class="form-group mb-3">
+                    <label for="form-control" class="mb-2">متن نظر</label>
+                    <textarea name="comment" id="form-control" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group mb-3">
+                    <%- captcha %>
+                </div>
+                <button type="submit" class="btn btn-primary">ارسال</button>
+            </form>
+        </div>
+    </div>
+<% } %>
+
+<hr>
+
+<!-- show comments -->
+<% for (const comment of comments){ %>
+    <div class="media mb-4 border border-secondary p-3">
+        <div class="media-body">
+            <h5 class="mt-0">
+                <!-- comment author -->
+                <span><%= comment.user.name %></span>
+                <% if (auth.loginCheck){ %>
+                    <button class="float-left btn-sm btn btn-xs btn-success" data-toggle="modal"
+                            data-target="#sendCommentModal" data-parent="<%= comment._id %>">
+                        پاسخ
+                    </button>
+                <% } %>
+            </h5>
+            <!-- comment text -->
+            <%- comment.comment %>
+
+            <!-- show answers to the comment -->
+            <% for (const answer of comment.comments){ %>
+                <div class="media mt-4 ms-5">
+                    <div class="media-body">
+                        <h5 class="mt-0">
+                            <!-- answer author -->
+                            <%= answer.user.name %>
+                        </h5>
+                        <!-- answer text -->
+                        <%- answer.comment %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+<% } %>
+
+
+<% if (auth.loginCheck){ %>
+    <div class="modal fade" id="sendCommentModal" tabindex="-1" role="dialog"
+         aria-labelledby="sendCommentModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">ارسال پاسخ</h4>
+                    <button type="button" class="close btn-close" data-dismiss="modal"
+                            aria-label="Close"><span aria-hidden="true"></span></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/comments" method="post">
+
+                        <input type="hidden" name="parent" value="">
+                        <input type="hidden" name="<%= section %>" value="<%= subject._id %>">
+
+                        <div class="form-group">
+                            <label for="message-text" class="control-label mb-2">متن پاسخ:</label>
+                            <textarea class="form-control mb-3" id="message-text" name="comment" required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <%- captcha %>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">ارسال</button>
+                            <button type="button" class="btn btn-default mr-2 ml-0" data-dismiss="modal">انصراف
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+
+<script>
+    /** set parent id in modal parent filed */
+    $(document).ready(function () {
+        $("#sendCommentModal").on("show.bs.modal", function (event) {
+            const button = $(event.relatedTarget);
+            const parentId = button.data("parent");
+            const modal = $(this);
+            modal.find("[name='parent']").val(parentId);
+        });
+    });
+</script>

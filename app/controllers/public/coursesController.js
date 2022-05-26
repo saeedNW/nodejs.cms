@@ -34,21 +34,56 @@ class CoursesController extends Controller {
         try {
             /**
              * get course info from database.
-             * use populate relation for user
-             * and episodes collections.
+             * use populate relations to get
+             * needed info.
              */
             const course = await courseModel.findOne({slug}).populate([
                 {
+                    /** use populate for user collection to get creator info */
                     path: "user"
                 },
                 {
+                    /** use populate for episodes collection to get episodes info */
                     path: "episodes",
                     options: {
+                        /** use sort option to sort episodes based on episode number */
                         sort: {episodeNumber: 1}
                     },
                     populate: {
+                        /** use populate for course collection inside the episodes */
                         path: "course"
                     }
+                },
+                {
+                    /** use populate for comments collection to get course comments info */
+                    path: "comments",
+                    /** use match option to select comments that are main comments and are approved by admin */
+                    match: {
+                        parent: null,
+                        approved: true
+                    },
+                    options: {
+                        /** use sort option to sort comments based on creation time */
+                        sort: {createdAt: 1}
+                    },
+                    populate: [
+                        {
+                            /** use populate for user collection to get comment author info */
+                            path: "user"
+                        },
+                        {
+                            /** use populate for comments collection to get answers for the main comment */
+                            path: "comments",
+                            /** use match option to select comments that are approved by admin */
+                            match: {
+                                approved: true
+                            },
+                            populate: {
+                                /** use populate for user collection to get answer comment author info */
+                                path: "user"
+                            }
+                        }
+                    ]
                 }
             ]);
 
@@ -58,7 +93,8 @@ class CoursesController extends Controller {
 
             /** transforming data to remove unneeded info */
             const transformedData = new CoursesTransform().withFullInfo()
-                .withEpisodeFullInfo().withUserInfo().transform(course);
+                .withEpisodeFullInfo().withUserInfo().withComments().transform(course);
+
 
             /**
              * check if user can access to the course episodes or not
@@ -68,6 +104,7 @@ class CoursesController extends Controller {
 
             res.render("public/courses/single", {
                 title: transformedData.title,
+                captcha: this.recaptcha.render(),
                 course: transformedData,
                 canUserUse
             });

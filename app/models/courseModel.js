@@ -86,5 +86,15 @@ courseSchema.virtual("episodes", {
     foreignField: "course",
 });
 
+/**
+ * create a virtual field to be used for
+ * course and comments collections relation
+ * through populate method.
+ */
+courseSchema.virtual("comments", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "course",
+});
 
 module.exports = mongoose.model("Course", courseSchema);

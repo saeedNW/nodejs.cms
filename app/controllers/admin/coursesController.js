@@ -1,6 +1,6 @@
 /** import escape and trim tool */
 const {escapeAndTrim} = require("../../utils/scapeAndTrim");
-/** import new course creation validator */
+/** import course validator */
 const {courseValidator} = require("./validator/courseValidator");
 /** import courses model */
 const {courseModel} = require("../../models").model;
@@ -157,7 +157,7 @@ class CoursesController extends Controller {
     }
 
     /**
-     * validate user inputs for new course creation
+     * validate user inputs for courses
      * @param req
      * @returns {Promise<boolean>}
      */
@@ -373,6 +373,9 @@ class CoursesController extends Controller {
 
             /**  delete course episodes */
             for (const episode of course.episodes) {
+
+                /** todo@ remove episodes video */
+
                 await episode.remove();
             }
 

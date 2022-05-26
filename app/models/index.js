@@ -8,11 +8,14 @@ const accountRecoveryModel = require("./accountRecoveryModel");
 const courseModel = require("./courseModel");
 /** import episodes model */
 const episodeModel = require("./episodeModel");
+/** import comments model */
+const commentModel = require("./commentModel");
 
 exports.model = {
     userModel,
     identifierModel,
     accountRecoveryModel,
     courseModel,
-    episodeModel
+    episodeModel,
+    commentModel
 }

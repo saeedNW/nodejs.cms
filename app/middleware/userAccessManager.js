@@ -15,9 +15,7 @@ class UserAccessManager extends Middleware {
             return next();
 
 
-        const error = new Error("شما مجاز به دسترسی به این آدرس نیستید");
-        error.status = 401;
-        next(error)
+        res.redirect("/auth/login");
     }
 }
 

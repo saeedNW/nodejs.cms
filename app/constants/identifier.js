@@ -17,6 +17,11 @@ module.exports = {
             modelName: 'episodes',
             deps: ['episodeModel'],
             isPartial: false
+        },
+        comments: {
+            modelName: 'comments',
+            deps: ['commentModel'],
+            isPartial: false
         }
     }
 }

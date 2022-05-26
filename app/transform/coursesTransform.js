@@ -2,6 +2,7 @@
 const Transform = require("./transform");
 /** import courses constants */
 const {coursesConstants} = require("../constants");
+const UserTransform = require("./userTransform");
 
 /**
  * courses data transformer
@@ -31,6 +32,12 @@ module.exports = class CoursesTransform extends Transform {
      * @type {boolean}
      */
     #userInfo = false;
+    /**
+     * this private variable will be used to determined
+     * which info of the comments is requested or not
+     * @type {boolean}
+     */
+    #commentsInfo = false;
 
     /**
      * transforming the course data
@@ -65,6 +72,7 @@ module.exports = class CoursesTransform extends Transform {
             ...this.showEpisodeBasicInfo(item),
             ...this.showEpisodeFullInfo(item),
             ...this.showUserInfo(item),
+            ...this.showComments(item)
         }
     }
 
@@ -178,6 +186,29 @@ module.exports = class CoursesTransform extends Transform {
 
         if (this.#userInfo) {
             return {user: new UserTransform().withHashedEmail().transform(item.user)}
+        }
+    }
+
+    /**
+     * this method will be called from outside the transform file to
+     * determined which comments info is requested or not
+     */
+    withComments() {
+        this.#commentsInfo = true;
+        return this;
+    }
+
+    /**
+     * return comments info if it was requested
+     * @param item
+     * @return {*}
+     */
+    showComments(item) {
+        /** import user transform */
+        const CommentsTransform = require("./commentsTransform");
+
+        if (this.#commentsInfo) {
+            return {comments: new CommentsTransform().withUserInfo().withAnswers().transformCollection(item.comments)}
         }
     }
 }
