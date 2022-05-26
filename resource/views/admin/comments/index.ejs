@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>کامنت های تایید شده</h2>
+    <div class="btn-group">
+        <a href="/admin/panel/comments/unapproved" class="btn btn-sm btn-primary me-1">کامنت های تایید نشده</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>شناسه کامنت</th>
+            <th>نویسنده</th>
+            <th>پست</th>
+            <th>متن کامنت</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if (comments.docs.length > 0){ %>
+            <% for (const comment of comments.docs) { %>
+                <tr>
+                    <th scope="row"><%= comments.pagingCounter %></th>
+                    <th><%= comment.hashId %></th>
+                    <th><%= comment.user.name %></th>
+                    <td>
+                        <a href="<%= comment.course ? comment.course.fullSlug : comment.episode.episodeLink %>">
+                            <%= comment.course ? comment.course.title : comment.episode.title %>
+                        </a>
+                    </td>
+                    <th><%= comment.comment.substr(0, 50) %></th>
+                    <td>
+                        <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE" method="post">
+                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            <%
+                +comments.pagingCounter++
+            }
+            %>
+        <% }else { %>
+            <tr>جلسه ای برای نمایش وجود ندارد</tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <%- include(viewDir("layouts/pagination"), {pagination:comments}) -%>
+
+</div>
+

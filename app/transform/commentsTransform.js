@@ -117,11 +117,12 @@ module.exports = class CommentsTransform extends Transform {
      * @return {{images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, commentCount: *, tags, createdAt: *, price: (number|*), _id: *, viewCount: *, time, user, slug: *, updatedAt: *}}
      */
     showCourseInfo(item) {
-        /** import courses transform */
-        const CoursesTransform = require("./coursesTransform");
+        if (item.course) {
+            /** import courses transform */
+            const CoursesTransform = require("./coursesTransform");
 
-        if (this.#courseInfo) {
-            return {course: new CoursesTransform().transform(item.course)}
+            if (this.#courseInfo)
+                return {course: new CoursesTransform().transform(item.course)}
         }
     }
 
@@ -140,11 +141,13 @@ module.exports = class CommentsTransform extends Transform {
      * @return {{episode: {images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, episodeNumber: ({type: (Number|NumberConstructor), required: boolean}|*), commentCount: *, tags, paymentType: (number|*), createdAt: *, episodeLink: string, price: (number|*), _id: *, time, viewCount: *, user, slug: *, downloadCount: ({default: number, type: (Number|NumberConstructor)}|*), updatedAt: *}}}
      */
     showEpisodeInfo(item) {
-        /** import episodes transform */
-        const EpisodesTransform = require("./episodesTransform");
+        if (item.episode) {
+            /** import episodes transform */
+            const EpisodesTransform = require("./episodesTransform");
 
-        if (this.#episodeInfo) {
-            return {episode: new EpisodesTransform().transform(item.episode)}
+            if (this.#episodeInfo) {
+                return {episode: new EpisodesTransform().transform(item.episode)}
+            }
         }
     }
 

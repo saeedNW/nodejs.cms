@@ -145,6 +145,6 @@ module.exports = class EpisodesTransform extends Transform {
      */
     episodeLink(item) {
         if (item.course.slug)
-            return {episodeLink: `/courses/${item.course.slug}/${item.episodeNumber}`}
+            return {episodeLink: `/courses/${item.course.slug}/episode/${item.episodeNumber}`}
     }
 }
