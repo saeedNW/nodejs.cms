@@ -10,7 +10,7 @@ const bcrypt = require("bcryptjs");
 /** import main controller file */
 const Controller = require("../controller");
 
-class CoursesController extends Controller {
+class EpisodesController extends Controller {
     /**
      * episode download process
      * @param req
@@ -117,4 +117,4 @@ class CoursesController extends Controller {
     }
 }
 
-module.exports = new CoursesController();
+module.exports = new EpisodesController();
