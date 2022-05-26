@@ -26,7 +26,10 @@ passport.use(new GoogleStrategy({
     },
     async (accessToken, refreshToken, profile, done) => {
         try {
-            const {email, name, sub} = profile._json
+            let {email, name, sub} = profile._json
+
+            /** set email to lower case */
+            email = email.toLowerCase();
 
             /** check user existence */
             const findUser = await userModel.findOne({email}, {passport: 0});

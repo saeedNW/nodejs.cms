@@ -4,7 +4,7 @@ const Middleware = require("./middleware");
 
 class AdminAccessManager extends Middleware {
     /**
-     * admin access manager handler method
+     * prevent non-admin user from accessing specified route
      * @param req
      * @param res
      * @param next

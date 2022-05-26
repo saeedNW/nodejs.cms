@@ -25,8 +25,13 @@ passport.use("local.register", new LocalStrategy({
     passReqToCallback: true
 }, async (req, email, password, done) => {
     try {
+        /** set email to lower case */
+        email = email.toLowerCase();
+
         /** check user existence */
         const findUser = await userModel.findOne({email});
+
+        /** send back error if user already exists */
         if (findUser)
             return done(null, false, req.flash("errors", "کاربری با این آدرس ایمیل از پیش در سامانه ثبت شده است"));
 
@@ -50,6 +55,9 @@ passport.use("local.login", new LocalStrategy({
     passReqToCallback: true
 }, async (req, email, password, done) => {
     try {
+        /** set email to lower case */
+        email = email.toLowerCase();
+
         /** check user existence */
         const findUser = await userModel.findOne({email});
 

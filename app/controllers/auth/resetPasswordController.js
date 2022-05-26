@@ -89,49 +89,47 @@ class ResetPasswordController extends Controller {
      * update user password
      * @param req
      * @param res
-     * @param next
      * @return {Promise<*>}
      */
-    async resetPassword(req, res, next) {
-        try {
-            /** extract data from request */
-            const {token, password} = req.body;
+    async resetPassword(req, res) {
+        /** extract data from request */
+        const {token, password} = req.body;
 
-            /** decoding token to extract email address */
-            const {email} = await accountRecoveryModel.decodeToken(token);
+        /** decoding token to extract email address */
+        let {email} = await accountRecoveryModel.decodeToken(token);
 
-            /** checking account recovery token existence in database */
-            const recoveryToken = await accountRecoveryModel.findOne({token, email});
+        /** set email to lower case */
+        email = email.toLowerCase();
 
-            /** return error if recovery token was not found or if the token already has been used */
-            if (!recoveryToken || recoveryToken.use) {
-                req.flash("errors", ["توکن فاقد اعتبار"]);
-                return this.redirectURL(req, res);
-            }
+        /** checking account recovery token existence in database */
+        const recoveryToken = await accountRecoveryModel.findOne({token, email});
 
-            /** find user in database */
-            const user = await userModel.findOne({email});
-
-            /** return error if user was not found */
-            if (!user) {
-                req.flash("errors", ["اطلاعات کاربر مورد نظر وجود ندارد"]);
-                return this.redirectURL(req, res);
-            }
-
-            /** update user password */
-            user.password = password
-            await user.save();
-
-            /** update account recovery token use status in database */
-            recoveryToken.use = true;
-            await recoveryToken.save();
-
-            /** send back success message */
-            req.flash("success", "بازیابی حساب کاربری با موفقیت به انجام رسید");
-            res.redirect("/auth/login");
-        } catch (err) {
-            next(err);
+        /** return error if recovery token was not found or if the token already has been used */
+        if (!recoveryToken || recoveryToken.use) {
+            req.flash("errors", ["توکن فاقد اعتبار"]);
+            return this.redirectURL(req, res);
         }
+
+        /** find user in database */
+        const user = await userModel.findOne({email});
+
+        /** return error if user was not found */
+        if (!user) {
+            req.flash("errors", ["اطلاعات کاربر مورد نظر وجود ندارد"]);
+            return this.redirectURL(req, res);
+        }
+
+        /** update user password */
+        user.password = password
+        await user.save();
+
+        /** update account recovery token use status in database */
+        recoveryToken.use = true;
+        await recoveryToken.save();
+
+        /** send back success message */
+        req.flash("success", "بازیابی حساب کاربری با موفقیت به انجام رسید");
+        res.redirect("/auth/login");
     }
 }
 

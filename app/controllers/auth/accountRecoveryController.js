@@ -83,7 +83,10 @@ class AccountRecoveryController extends Controller {
     async sendRecoveryLink(req, res, next) {
         try {
             /** extract user email from request body */
-            const {email} = req.body;
+            let {email} = req.body;
+
+            /** set email to lower case */
+            email = email.toLowerCase();
 
             /** check for user existence */
             const user = await userModel.findOne({email});
