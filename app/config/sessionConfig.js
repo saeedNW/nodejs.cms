@@ -4,7 +4,7 @@ const MongoStore = require("connect-mongo");
 let mongoUrl;
 if (process.env.NODE_ENV === 'test') {
     mongoUrl = process.env.MONGODB_TEST_URL;
-} else if (process.env.NODE_ENV === 'development') {
+} else if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'debugging') {
     mongoUrl = process.env.MONGODB_DEV_URL;
 } else {
     mongoUrl = process.env.MONGODB_PROD_URL;

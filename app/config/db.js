@@ -12,7 +12,7 @@ exports.DBConnection = async () => {
             ).catch((err) => {
                 reject(err);
             });
-        } else if (process.env.NODE_ENV === 'development') {
+        } else if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'debugging') {
             mongoose.connect(process.env.MONGODB_DEV_URL).then(
                 (conn) => {
                     resolve(conn);
