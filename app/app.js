@@ -18,21 +18,21 @@ const session = require("express-session");
 const passport = require("passport");
 
 /** import mongoose connection method */
-const {DBConnection} = require('./config/db');
+const {DBConnection} = require('./config/databaseConfig');
 /** import rest api router initializer */
 const {initializeApiRoutes} = require('./router/api');
 /** import web api router initializer */
 const {initializeWebRoutes} = require('./router/web');
 /** import view engine and ejs config initializer */
-const {initViewEngine} = require("./config/initViewEngine");
+const {initializer} = require("./config/viewEngineConfig");
 /** import unique identifier core */
 const {identifierInitializer} = require("./core/initIdentifierCollection");
 /** import session configs */
-const sessionConfigs = require("./config/sessionConfig");
+const {sessionConfig} = require("./config/sessionConfig");
 /** import login remember middleware */
 const {rememberLogin} = require("./middleware/rememberLogin");
 /** import vies global info configuration */
-const {viewsGlobalInfo} = require("./config/viewsGlobalInfo");
+const ViewsLocalsConfig = require("./config/viewsLocalsConfig");
 /** import error handler */
 const {errorHandler, notfound} = require("./middleware/errorHandler");
 
@@ -86,7 +86,7 @@ module.exports = class Application {
         require("./passport/passportGoogle");
 
         /** initialize view engine and ejs config */
-        initViewEngine(app, express);
+        initializer(app, express);
 
         /** initialize bodyparser module */
         app.use(bodyParser.urlencoded({extended: false}));
@@ -98,7 +98,7 @@ module.exports = class Application {
         app.use(methodOverride("_method"));
 
         /** initialize express session */
-        app.use(session({...sessionConfigs}));
+        app.use(session({...sessionConfig()}));
 
         /** initialize cookieParser module */
         app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
@@ -114,7 +114,10 @@ module.exports = class Application {
         app.use(rememberLogin);
 
         /** initialize global values for views */
-        viewsGlobalInfo(app);
+        app.use((req, res, next) => {
+            app.locals = new ViewsLocalsConfig(req, res).viewsLocals();
+            next();
+        })
     }
 
     /**

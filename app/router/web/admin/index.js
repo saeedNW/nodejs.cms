@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 /** import layout changer function */
-const {changeDefaultLayout} = require("../../../config/initViewEngine");
+const {changeDefaultLayout} = require("../../../config/viewEngineConfig");
 /** define new view layout for admin panel router */
 changeDefaultLayout(router, "./layouts/adminLayout");
 
