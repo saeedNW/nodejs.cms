@@ -45,7 +45,6 @@ commentSchema.index({hashId: 1});
 commentSchema.index({course: 1});
 commentSchema.index({episode: 1});
 
-
 /** initialize mongoose paginate plugin for courses schema */
 commentSchema.plugin(mongoosePaginate);
 
@@ -53,7 +52,7 @@ commentSchema.plugin(mongoosePaginate);
  * create a virtual field to be used for
  * collections relation through populate method.
  */
-commentSchema.virtual('comments', {
+commentSchema.virtual('answers', {
     ref: 'Comment',
     localField: '_id',
     foreignField: 'parent'

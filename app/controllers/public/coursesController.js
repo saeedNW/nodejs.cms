@@ -73,7 +73,7 @@ class CoursesController extends Controller {
                         },
                         {
                             /** use populate for comments collection to get answers for the main comment */
-                            path: "comments",
+                            path: "answers",
                             /** use match option to select comments that are approved by admin */
                             match: {
                                 approved: true

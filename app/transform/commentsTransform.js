@@ -138,7 +138,7 @@ module.exports = class CommentsTransform extends Transform {
     /**
      * return episode info if it was requested
      * @param item
-     * @return {{episode: {images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, episodeNumber: ({type: (Number|NumberConstructor), required: boolean}|*), commentCount: *, tags, paymentType: (number|*), createdAt: *, episodeLink: string, price: (number|*), _id: *, time, viewCount: *, user, slug: *, downloadCount: ({default: number, type: (Number|NumberConstructor)}|*), updatedAt: *}}}
+     * @return {{episode: {images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, episodeNumber: *, commentCount: *, tags, paymentType: (number|*), createdAt: (number|boolean|string|*), episodeLink: string, price: (number|*), episodeUrl: *, _id: *, time, viewCount: *, user, slug: *, updatedAt: (boolean|string|*)}}}
      */
     showEpisodeInfo(item) {
         if (item.episode) {
@@ -163,11 +163,11 @@ module.exports = class CommentsTransform extends Transform {
     /**
      * return answer comments info if it was requested
      * @param item
-     * @return {{comments: (?[]|{hasPrevPage: *, hasNextPage: *, pagingCounter: *, nextPage: *, limit: *, totalPages: *, prevPage: *, page: *, totalDocs: *})}}
+     * @return {{answers: (?[]|{hasPrevPage: *, hasNextPage: *, pagingCounter: *, nextPage: *, limit: *, totalPages: *, prevPage: *, page: *, totalDocs: *})}}
      */
     showAnswersInfo(item) {
         if (this.#answersInfo) {
-            return {comments: new CommentsTransform().withUserInfo().transformCollection(item.comments)}
+            return {answers: new CommentsTransform().withUserInfo().transformCollection(item.answers)}
         }
     }
 }
