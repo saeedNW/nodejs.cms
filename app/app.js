@@ -16,8 +16,6 @@ const app = express();
 const session = require("express-session");
 /** import passport module */
 const passport = require("passport");
-/** import path module */
-const path = require("path");
 
 /** import mongoose connection method */
 const {DBConnection} = require('./config/db');
