@@ -8,7 +8,7 @@
         <p class="text-muted small">
             <span> توسط <a href="#"><%= course.user.name %></a></span>
             -
-            <span>ارسال شده در 21 خرداد 1397</span>
+            <span>ارسال شده در <%= convertDate(course.createdAt).format('jDD jMMMM jYYYY') %> </span>
         </p>
 
         <hr>

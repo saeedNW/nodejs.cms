@@ -36,6 +36,8 @@
                     </button>
                 <% } %>
             </h5>
+            <span class="d-block mb-2 text-muted">ارسال شده در <%= convertDate(course.createdAt).fromNow() %> </span>
+
             <!-- comment text -->
             <%- comment.comment %>
 
@@ -47,6 +49,8 @@
                             <!-- answer author -->
                             <%= answer.user.name %>
                         </h5>
+                        <span class="d-block mb-2 text-muted">ارسال شده در <%= convertDate(answer.createdAt).fromNow() %> </span>
+
                         <!-- answer text -->
                         <%- answer.comment %>
                     </div>
