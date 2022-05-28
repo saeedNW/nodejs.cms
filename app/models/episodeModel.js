@@ -63,6 +63,17 @@ episodeSchema.index({episodeNumber: 1});
 episodeSchema.plugin(mongoosePaginate);
 
 /**
+ * increase counter fields
+ * @param field
+ * @param count
+ * @return {Promise<void>}
+ */
+episodeSchema.methods.increase = async function (field, count = 1) {
+    this[field] += count
+    await this.save();
+}
+
+/**
  * create episode secure download link
  * @param auth
  * @param canUserUse

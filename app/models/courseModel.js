@@ -76,6 +76,17 @@ courseSchema.index({commentCount: -1});
 courseSchema.plugin(mongoosePaginate);
 
 /**
+ * increase counter fields
+ * @param field
+ * @param count
+ * @return {Promise<void>}
+ */
+courseSchema.methods.increase = async function (field, count = 1) {
+    this[field] += count
+    await this.save();
+}
+
+/**
  * create a virtual field to be used for
  * course and episode collections relation
  * through populate method.

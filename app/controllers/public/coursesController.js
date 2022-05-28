@@ -37,7 +37,7 @@ class CoursesController extends Controller {
              * use populate relations to get
              * needed info.
              */
-            const course = await courseModel.findOne({slug}).populate([
+            const course = await courseModel.findOneAndUpdate({slug}, {$inc: {viewCount: 1}}).populate([
                 {
                     /** use populate for user collection to get creator info */
                     path: "user"
