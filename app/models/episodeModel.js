@@ -45,10 +45,6 @@ const episodeSchema = new Schema({
         type: String,
         default: "00:00:00"
     },
-    downloadCount: {
-        type: Number,
-        default: 0
-    },
     viewCount: {
         type: Number,
         default: 0

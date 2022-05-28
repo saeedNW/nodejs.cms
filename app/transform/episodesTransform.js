@@ -74,14 +74,13 @@ module.exports = class EpisodesTransform extends Transform {
     /**
      * return episode full info if it was requested
      * @param item
-     * @return {{createdAt: *, description, time, episodeNumber: ({type: Number | NumberConstructor, required: boolean}|*), downloadCount: ({default: number, type: Number | NumberConstructor}|*), updatedAt: *, paymentType: (number|*)}}
+     * @return {{createdAt: (number|boolean|string|*), episodeUrl: any, description, updatedAt: (boolean|string|*), paymentType: (number|*)}}
      */
     showFullInfo(item) {
         if (this.#fullInfoStatus) {
             return {
                 description: item.description,
                 episodeUrl: item.episodeUrl,
-                downloadCount: item.downloadCount,
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt,
                 paymentType: item.paymentType,
