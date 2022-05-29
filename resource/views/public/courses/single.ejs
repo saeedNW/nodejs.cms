@@ -127,12 +127,12 @@
         <div class="card my-4">
             <h5 class="card-header">جستجو</h5>
             <div class="card-body">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="دنبال چی میگردی ؟">
+                <form class="input-group" action="/courses" method="GET">
+                    <input type="text" class="form-control" name="search" placeholder="دنبال چی میگردی ؟">
                     <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">جستجو!</button>
-                </span>
-                </div>
+                        <button class="btn btn-secondary" type="submit">جستجو!</button>
+                    </span>
+                </form>
             </div>
         </div>
 

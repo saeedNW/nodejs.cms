@@ -1,9 +1,72 @@
 <!-- Jumbotron Header -->
 <header class="jumbotron">
     <h1>دوره ها</h1>
-    <p class="justify">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه
+    <p class="justify">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+        چاپگرها و متون بلکه
         روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف
         بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان
         را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان
         فارسی ایجاد کرد.</p>
 </header>
+
+<%
+const {search, paymentType, order} = query;
+%>
+
+<form action="/courses" method="GET">
+
+    <% if(search) { %>
+        <div class="form-group col-md-3 mb-3">
+            <input type="hidden" name="search" value="<%= search %>">
+            <span>عبارت جستجو شده : <%= search %>
+                <a href="/courses?<%= paymentType ? 'paymentType=' + paymentType : '' %><%= order ? '&order=1' : '' %>"
+                   class="btn btn-sm btn-dark">حذف</a>
+            </span>
+        </div>
+    <% } %>
+
+    <div class="form-group col-md-3 mb-3">
+        <label>
+            <select name="paymentType" class="form-control">
+                <option value="all" <%= paymentType === 'all' ? 'selected' : '' %> >همه دوره ها</option>
+                <option value="vip" <%= paymentType === 'vip' ? 'selected' : '' %> >اعضای ویژه</option>
+                <option value="cash" <%= paymentType === 'cash' ? 'selected' : '' %> >نقدی</option>
+                <option value="free" <%= paymentType === 'free' ? 'selected' : '' %> >رایگان</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="form-group col-md-3 mb-3">
+        <label class="checkbox-inline">
+            <input type="checkbox" name="order" value="1" class="ml-2" <%= order === '1' ? 'checked' : '' %>>
+            <span>از اول به آخر</span>
+        </label>
+    </div>
+
+    <div class="form-group col-md-3">
+        <button class="btn btn-danger" type="submit">فیلتر</button>
+    </div>
+</form>
+
+<hr>
+
+
+<div class="row">
+    <% for(const course of courses.docs){ %>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card">
+                <img class="card-img-top" src="<%= course.thumbnail %>" alt="<%= course.title %>">
+                <div class="card-body">
+                    <h3><a href="<%= course.fullSlug %>"><%= course.title %></a></h3>
+                    <p class="card-text justify"><%= course.description.substr(0, 100) %></p>
+                    <a href="<%= course.fullSlug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a>
+                </div>
+                <div class="card-footer text-muted">
+                    <%= course.viewCount %> بازدید
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<%- include(viewDir("layouts/pagination"), {pagination:courses}) -%>

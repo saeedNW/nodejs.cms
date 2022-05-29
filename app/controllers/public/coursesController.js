@@ -13,9 +13,76 @@ class CoursesController extends Controller {
      * @param res
      * @param next
      */
-    index(req, res, next) {
+    async index(req, res, next) {
+        /** extract page number from request query */
+        const page = +req.query.page || 1;
+        /** extract limit number from request query */
+        const limit = +req.query.limit || 10;
+        /** extract search query from request */
+        const {search, paymentType, order} = req.query;
+
         try {
-            res.render("public/courses/index", {title: "دوره ها"});
+            /**
+             * this variable will be used as search query
+             */
+            const query = {};
+
+            /**
+             * add a regex to query variable as title,
+             * if there was any search query in request
+             * the regex contains search query and "gi" flags
+             * "g" flag means global and "i" flag means case-insensitive
+             */
+            if (search)
+                query.title = new RegExp(search, 'gi');
+
+            /**
+             * add paymentType to query variable as paymentType,
+             * if it was in request query
+             */
+            if (paymentType && paymentType !== "all")
+                query.paymentType = paymentType
+
+            /**
+             * sorting variable
+             * @param order
+             * @return {{createdAt: number}}
+             */
+            const sort = (order) => {
+                if (order)
+                    return {createdAt: -1}
+
+                return {createdAt: 1}
+            }
+
+            /**
+                 * getting match courses from database with mongoose paginate plugin.
+                 * paginate plugin needs some options to initialize pagination based on them.
+                 */
+                const courses = await courseModel.paginate({...query}, {
+                    /**
+                     * page option:
+                     * this option define the requested page. and originally
+                     * receives from request query
+                     */
+                    page,
+                    /**
+                     * limit option:
+                     * this option define how many items should be in each page.
+                     * it originally receives from request query
+                     */
+                    limit,
+                    /**
+                     * sort option:
+                     * this options allows you to sort data before receiving them from database.
+                     */
+                    sort: sort(order)
+                });
+
+            /** transforming data to remove unneeded info */
+            const transformedData = new CoursesTransform().withPaginate().withFullInfo().transformCollection(courses);
+
+            res.render("public/courses/index", {title: "دوره ها", courses: transformedData});
         } catch (err) {
             next(err);
         }
