@@ -24,7 +24,7 @@ accountRecoverySchema.index({email: 1});
 accountRecoverySchema.index({use: 1});
 
 /** account recovery schema pre save method */
-accountRecoverySchema.pre("save", async function (next) {
+accountRecoverySchema.pre("validate", async function (next) {
     try {
         const accountRecovery = this;
 
@@ -32,7 +32,7 @@ accountRecoverySchema.pre("save", async function (next) {
          * continue save/update process if recovery token didn't change.
          * return next if recovery token  was not modified.
          */
-        if (!accountRecovery.isModified("token")) return next();
+        if (accountRecovery.token && !accountRecovery.isModified("token")) return next();
 
         /** create account recovery token */
         accountRecovery.token = await jwt.sign({email: this.email}, process.env.JWT_SECRET);

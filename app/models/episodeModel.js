@@ -9,7 +9,7 @@ const {episodesConstants} = require("../constants");
 /** import bcryptjs */
 const bcrypt = require("bcryptjs");
 
-/** define course collection schema */
+/** define episode collection schema */
 const episodeSchema = new Schema({
     hashId: {
         type: Number,

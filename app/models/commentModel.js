@@ -5,6 +5,7 @@ const {Schema} = mongoose;
 /** import mongoose paginate module */
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+/** define comment collection schema */
 const commentSchema = new Schema({
     hashId: {
         type: Number,
