@@ -51,7 +51,7 @@
     <div class="form-group row mb-3">
         <div class="col">
             <label for="description" class="control-label font-weight-bold mb-1">توضیحات</label>
-            <textarea rows="5" class="form-control" name="description" id="description"
+            <textarea rows="10" class="form-control" name="description" id="description"
                       placeholder="توضیحات دوره" required><%= oldData('description', course.description) %></textarea>
         </div>
     </div>
@@ -99,5 +99,11 @@
 <script>
     $('.form-control-chosen').chosen({
         // Chosen options here
+    });
+
+    // Replace the <textarea> with a CKEditor 4
+    // instance, using default configuration.
+    CKEDITOR.replace('description', {
+        filebrowserUploadUrl: '/admin/panel/ckEditor-uploader'
     });
 </script>

@@ -15,6 +15,14 @@ class HomeController extends Controller {
             next(err);
         }
     }
+
+    ckEditorUploader(req, res) {
+        res.json({
+            uploaded: 1,
+            fileName: req.file.originalname,
+            url: req.file.path.slice(6)
+        })
+    }
 }
 
 module.exports = new HomeController();

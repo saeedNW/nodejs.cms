@@ -41,4 +41,10 @@ $(document).ready(function () {
     $('.form-control-chosen').chosen({
         // Chosen options here
     });
+
+    // Replace the <textarea> with a CKEditor 4
+    // instance, using default configuration.
+    CKEDITOR.replace('description' , {
+        filebrowserUploadUrl : '/admin/panel/ckEditor-uploader'
+    });
 });

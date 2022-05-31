@@ -16,7 +16,7 @@ class ImageUploader extends Middleware {
         let month = new Date().getMonth() + 1;
         let day = new Date().getDate();
 
-        return `./public/uploads/images/courses/${year}/${month}/${day}`
+        return `./public/uploads/images/${year}/${month}/${day}`
     }
 
     /**
