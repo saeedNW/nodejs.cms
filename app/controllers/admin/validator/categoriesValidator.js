@@ -2,6 +2,8 @@
 const yup = require("yup");
 /** import models */
 const {categoryModel} = require("../../../models").model;
+/** import slug creator tool */
+const {createSlug} = require("../../../utils/createSlug");
 
 exports.categoryValidator = yup.object().shape({
     _method: yup.string()   // will be used for category update validation
@@ -14,8 +16,8 @@ exports.categoryValidator = yup.object().shape({
             "is-unique",
             "عنوان نمی تواند تکراری باشد",
             async function (name) {
-                /** check category name existence in database */
-                const existence = await categoryModel.findOne({name});
+                /** check category slug existence in database */
+                const existence = await categoryModel.findOne({slug: createSlug(name)});
 
                 /**
                  * process if request method wasn't put.

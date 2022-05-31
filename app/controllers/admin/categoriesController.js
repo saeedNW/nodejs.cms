@@ -8,6 +8,8 @@ const {identifierModels} = require("../../constants").identifierConstants;
 const {categoryModel} = require("../../models").model;
 /** import new episode creation validator */
 const {categoryValidator} = require("./validator/categoriesValidator");
+/** import slug creator tool */
+const {createSlug} = require("../../utils/createSlug");
 
 /** import main controller class */
 const Controller = require("../controller");
@@ -168,10 +170,13 @@ class CategoriesController extends Controller {
              * set category parent to null if it wasn't
              * chose as a child category by user
              */
-            req.body.parent = req.body.parent !== "none" ? req.body.parent : null
+            req.body.parent = req.body.parent !== "none" ? req.body.parent : null;
+
+            /** create category slug */
+            const slug = createSlug(req.body.name);
 
             /** save new course in database */
-            await categoryModel.create({...req.body, hashId});
+            await categoryModel.create({...req.body, hashId, slug});
 
             /** return user to the courses main page */
             res.redirect("/admin/panel/categories");
@@ -296,10 +301,13 @@ class CategoriesController extends Controller {
              * set category parent to null if it wasn't
              * chose as a child category by user
              */
-            req.body.parent = req.body.parent !== "none" ? req.body.parent : null
+            req.body.parent = req.body.parent !== "none" ? req.body.parent : null;
+
+            /** create category slug */
+            const slug = createSlug(req.body.name);
 
             /** update course in database */
-            await categoryModel.findByIdAndUpdate(_id, {...req.body});
+            await categoryModel.findByIdAndUpdate(_id, {...req.body, slug});
 
             /** return user to the courses main page */
             res.redirect("/admin/panel/categories");

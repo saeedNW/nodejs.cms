@@ -22,6 +22,11 @@ const categorySchema = new Schema({
         ref: 'Category',
         default: null
     },
+    slug: {
+        type: String,
+        required: true,
+        unique: true
+    },
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */

@@ -10,7 +10,7 @@
 </header>
 
 <%
-const {search, paymentType, order} = query;
+const {search, paymentType, order, category} = query;
 %>
 
 <form action="/courses" method="GET">
@@ -28,10 +28,19 @@ const {search, paymentType, order} = query;
     <div class="form-group col-md-3 mb-3">
         <label>
             <select name="paymentType" class="form-control">
-                <option value="all" <%= paymentType === 'all' ? 'selected' : '' %> >همه دوره ها</option>
+                <option value="all">همه دوره ها</option>
                 <option value="vip" <%= paymentType === 'vip' ? 'selected' : '' %> >اعضای ویژه</option>
                 <option value="cash" <%= paymentType === 'cash' ? 'selected' : '' %> >نقدی</option>
                 <option value="free" <%= paymentType === 'free' ? 'selected' : '' %> >رایگان</option>
+            </select>
+        </label>
+
+        <label>
+            <select name="category" class="form-control">
+                <option value="all">همه دسته ها</option>
+                <% for (const cate of categories){ %>
+                    <option value="<%= cate.slug %>" <%= cate.slug === category ? 'selected' : '' %> ><%= cate.name %></option>
+                <% } %>
             </select>
         </label>
     </div>
@@ -52,20 +61,24 @@ const {search, paymentType, order} = query;
 
 
 <div class="row">
-    <% for(const course of courses.docs){ %>
-        <div class="col-6 col-md-3 mb-3">
-            <div class="card">
-                <img class="card-img-top" src="<%= course.thumbnail %>" alt="<%= course.title %>">
-                <div class="card-body">
-                    <h3><a href="<%= course.fullSlug %>"><%= course.title %></a></h3>
-                    <p class="card-text justify"><%= course.description.substr(0, 100) %></p>
-                    <a href="<%= course.fullSlug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a>
-                </div>
-                <div class="card-footer text-muted">
-                    <%= course.viewCount %> بازدید
+    <% if (courses.docs.length){ %>
+        <% for(const course of courses.docs){ %>
+            <div class="col-6 col-md-3 mb-3">
+                <div class="card">
+                    <img class="card-img-top" src="<%= course.thumbnail %>" alt="<%= course.title %>">
+                    <div class="card-body">
+                        <h3><a href="<%= course.fullSlug %>"><%= course.title %></a></h3>
+                        <p class="card-text justify"><%= course.description.substr(0, 100) %></p>
+                        <a href="<%= course.fullSlug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <%= course.viewCount %> بازدید
+                    </div>
                 </div>
             </div>
-        </div>
+        <% } %>
+    <% } else { %>
+        <h4>دوره ای یافت نشد</h4>
     <% } %>
 </div>
 

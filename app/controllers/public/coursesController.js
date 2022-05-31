@@ -1,5 +1,5 @@
 /** import models */
-const {courseModel} = require("../../models").model;
+const {courseModel, categoryModel} = require("../../models").model;
 /** import courses transform */
 const CoursesTransform = require("../../transform/coursesTransform");
 
@@ -19,7 +19,7 @@ class CoursesController extends Controller {
         /** extract limit number from request query */
         const limit = +req.query.limit || 10;
         /** extract search query from request */
-        const {search, paymentType, order} = req.query;
+        const {search, paymentType, order, category} = req.query;
 
         try {
             /**
@@ -44,6 +44,17 @@ class CoursesController extends Controller {
                 query.paymentType = paymentType
 
             /**
+             * get category info from database and
+             * add its id to query variable as category
+             * if it was in request query
+             */
+            if (category && category !== "all") {
+                const cate = await categoryModel.findOne({slug: category});
+                if (cate)
+                    query.categories = {$in: [cate._id]};
+            }
+
+            /**
              * sorting variable
              * @param order
              * @return {{createdAt: number}}
@@ -56,33 +67,40 @@ class CoursesController extends Controller {
             }
 
             /**
-                 * getting match courses from database with mongoose paginate plugin.
-                 * paginate plugin needs some options to initialize pagination based on them.
+             * getting match courses from database with mongoose paginate plugin.
+             * paginate plugin needs some options to initialize pagination based on them.
+             */
+            const courses = await courseModel.paginate({...query}, {
+                /**
+                 * page option:
+                 * this option define the requested page. and originally
+                 * receives from request query
                  */
-                const courses = await courseModel.paginate({...query}, {
-                    /**
-                     * page option:
-                     * this option define the requested page. and originally
-                     * receives from request query
-                     */
-                    page,
-                    /**
-                     * limit option:
-                     * this option define how many items should be in each page.
-                     * it originally receives from request query
-                     */
-                    limit,
-                    /**
-                     * sort option:
-                     * this options allows you to sort data before receiving them from database.
-                     */
-                    sort: sort(order)
-                });
+                page,
+                /**
+                 * limit option:
+                 * this option define how many items should be in each page.
+                 * it originally receives from request query
+                 */
+                limit,
+                /**
+                 * sort option:
+                 * this options allows you to sort data before receiving them from database.
+                 */
+                sort: sort(order)
+            });
 
             /** transforming data to remove unneeded info */
             const transformedData = new CoursesTransform().withPaginate().withFullInfo().transformCollection(courses);
 
-            res.render("public/courses/index", {title: "دوره ها", courses: transformedData});
+            /** get categories from database */
+            const categories = await categoryModel.find({});
+
+            res.render("public/courses/index", {
+                title: "دوره ها",
+                courses: transformedData,
+                categories
+            });
         } catch (err) {
             next(err);
         }
@@ -162,6 +180,8 @@ class CoursesController extends Controller {
             const transformedData = new CoursesTransform().withFullInfo()
                 .withEpisodeFullInfo().withUserInfo().withComments().transform(course);
 
+            /** get categories from database */
+            const categories = await categoryModel.find({parent: null}).populate("childes");
 
             /**
              * check if user can access to the course episodes or not
@@ -173,7 +193,8 @@ class CoursesController extends Controller {
                 title: transformedData.title,
                 captcha: this.recaptcha.render(),
                 course: transformedData,
-                canUserUse
+                canUserUse,
+                categories
             });
         } catch (err) {
             next(err);
