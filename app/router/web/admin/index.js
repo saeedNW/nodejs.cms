@@ -16,6 +16,8 @@ const coursesRouter = require("./courses");
 const episodesRouter = require("./episodes");
 /** import comments manager router */
 const commentsRouter = require("./comments");
+/** import category manager router */
+const categoryRouter = require("./categories");
 
 /** initialize admin panel router */
 router.use(homeRouter);
@@ -25,5 +27,7 @@ router.use("/courses", coursesRouter);
 router.use("/episodes", episodesRouter);
 /** initialize comments manager router */
 router.use("/comments", commentsRouter);
+/** initialize category manager router */
+router.use("/categories", categoryRouter);
 
 module.exports = router;

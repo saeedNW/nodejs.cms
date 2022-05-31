@@ -1,0 +1,34 @@
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h2>ویرایش دسته بندی</h2>
+</div>
+<form class="form-horizontal" action="/admin/panel/categories/edit/<%= category._id %>?_method=put" method="post">
+
+    <%- include(viewDir("layouts/showMessage")) -%>
+
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="name" class="control-label font-weight-bold mb-1">عنوان دسته بندی</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="nodejs"
+                   value="<%= oldData('name', category.name) %>" required>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="parent" class="control-label font-weight-bold mb-1">دسته بندی والد</label>
+            <select name="parent" id="parent" class="form-control" required>
+                <option value="none">دسته اصلی</option>
+                <% for (const cate of categories) { %>
+                    <option value="<%= cate._id %>"
+                            <%= String(oldData('parent', cate._id)) === String(category.parent) ? 'selected' : '' %>>
+                        <%= cate.name %>
+                    </option>
+                <% } %>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col">
+            <button type="submit" class="btn btn-danger">ارسال</button>
+        </div>
+    </div>
+</form>

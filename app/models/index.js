@@ -10,6 +10,8 @@ const courseModel = require("./courseModel");
 const episodeModel = require("./episodeModel");
 /** import comments model */
 const commentModel = require("./commentModel");
+/** import category model */
+const categoryModel = require("./categoryModel");
 
 exports.model = {
     userModel,
@@ -17,5 +19,6 @@ exports.model = {
     accountRecoveryModel,
     courseModel,
     episodeModel,
-    commentModel
+    commentModel,
+    categoryModel
 }

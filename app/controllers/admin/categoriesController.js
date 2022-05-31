@@ -5,18 +5,16 @@ const {getHashId} = require("../../core/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants").identifierConstants;
 /** import models */
-const {courseModel, episodeModel} = require("../../models").model;
+const {categoryModel} = require("../../models").model;
 /** import new episode creation validator */
-const {episodeValidator} = require("./validator/episodeValidator");
-/** import transform */
-const EpisodeTransform = require("../../transform/episodesTransform");
+const {categoryValidator} = require("./validator/categoriesValidator");
 
 /** import main controller class */
 const Controller = require("../controller");
 
-class EpisodesController extends Controller {
+class CategoriesController extends Controller {
     /**
-     * rendering episodes index page
+     * rendering categories index page
      * @param req
      * @param res
      * @param next
@@ -29,10 +27,10 @@ class EpisodesController extends Controller {
 
         try {
             /**
-             * getting all courses from database with mongoose paginate plugin.
+             * getting all categories from database with mongoose paginate plugin.
              * paginate plugin needs some options to initialize pagination based on them.
              */
-            const episodes = await episodeModel.paginate({}, {
+            const categories = await categoryModel.paginate({}, {
                 /**
                  * page option:
                  * this option define the requested page. and originally
@@ -54,17 +52,18 @@ class EpisodesController extends Controller {
                  * populate option:
                  * Paths which should be populated with other documents
                  */
-                populate: "course"
+                populate: [
+                    {
+                        path: "parent"
+                    }
+                ]
             })
 
 
-            /** transforming data to remove unneeded info */
-            const transformedData = new EpisodeTransform().withPaginate().withCourseBasicInfo().transformCollection(episodes);
-
-            /** rendering courses page */
-            res.render("admin/episodes/index", {
-                title: "مدیریت ویدئو ها",
-                episodes: transformedData
+            /** rendering categories page */
+            res.render("admin/categories/index", {
+                title: "دسته بندی ها",
+                categories
             });
         } catch (err) {
             next(err)
@@ -72,33 +71,33 @@ class EpisodesController extends Controller {
     }
 
     /**
-     * rendering new episode creation page
+     * rendering new category creation page
      * @param req
      * @param res
      * @param next
      */
-    async newEpisodeForm(req, res, next) {
+    async newCategoryForm(req, res, next) {
         try {
-            /** get courses title */
-            const courses = await courseModel.find({}, {title: 1});
+            /** get main categories name */
+            const categories = await categoryModel.find({parent: null}, {name: 1});
 
-            res.render("admin/episodes/create", {title: "افزودن جلسه جدید", courses});
+            res.render("admin/categories/create", {title: "افزودن دسته بندی جدید", categories});
         } catch (err) {
             next(err)
         }
     }
 
     /**
-     * new episode process manager
+     * new category process manager
      * @param req
      * @param res
      * @param next
      * @returns {Promise<void>}
      */
-    async newEpisodeProcess(req, res, next) {
+    async newCategoryProcess(req, res, next) {
         try {
             /** user input validation */
-            const validationResult = await this.episodeValidation(req);
+            const validationResult = await this.categoryValidation(req);
 
             /**
              * redirect to previous page if there was any validation errors.
@@ -106,25 +105,36 @@ class EpisodesController extends Controller {
             if (!validationResult)
                 return this.redirectURL(req, res);
 
-            /** create new episode */
-            await this.createEpisode(req, res, next);
+            /** create new category */
+            await this.createCategory(req, res, next);
         } catch (err) {
             next(err);
         }
     }
 
     /**
-     * validate user inputs for new course creation
+     * validate user inputs for new category creation
      * @param req
      * @returns {Promise<boolean>}
      */
-    async episodeValidation(req) {
+    async categoryValidation(req) {
         try {
+            /**
+             * create custom feed for user inputs validation.
+             * this feed contains request body, method and query.
+             * @type {*&{_method: *, _id}}
+             */
+            const validationFields = {
+                ...req.body,
+                _method: req.query._method,
+                _id: req.params._id
+            }
+
             /** user input validation */
-            await episodeValidator.validate(req.body, {abortEarly: false});
+            await categoryValidator.validate(validationFields, {abortEarly: false});
 
             /** escape and trim user input */
-            escapeAndTrim(req, ["title", "course", "description", "paymentType", "episodeNumber"]);
+            escapeAndTrim(req);
 
             /** return true if there wasn't any validation errors */
             return true
@@ -143,41 +153,42 @@ class EpisodesController extends Controller {
     }
 
     /**
-     * create new episode
+     * create new category
      * @param req
      * @param res
      * @param next
      * @return {Promise<void>}
      */
-    async createEpisode(req, res, next) {
-        /** extract course id from request body */
-        const {course} = req.body;
-
+    async createCategory(req, res, next) {
         try {
             /** generate new course hash id */
-            const hashId = await getHashId(identifierModels.episodes.modelName);
+            const hashId = await getHashId(identifierModels.category.modelName);
+
+            /**
+             * set category parent to null if it wasn't
+             * chose as a child category by user
+             */
+            req.body.parent = req.body.parent !== "none" ? req.body.parent : null
 
             /** save new course in database */
-            await episodeModel.create({...req.body, hashId});
+            await categoryModel.create({...req.body, hashId});
 
-            /** update course time */
-            await this.updateCourseTime(course)
             /** return user to the courses main page */
-            res.redirect("/admin/panel/episodes");
+            res.redirect("/admin/panel/categories");
         } catch (err) {
             next(err);
         }
     }
 
     /**
-     * episode removal process manager
+     * category removal process manager
      * @param req
      * @param res
      * @param next
      * @return {Promise<void>}
      */
-    async deleteEpisodeProcess(req, res, next) {
-        /** extract episode id from request params */
+    async deleteCategoryProcess(req, res, next) {
+        /** extract category id from request params */
         const {_id} = req.params
 
         try {
@@ -185,64 +196,65 @@ class EpisodesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read episode data from database based on _id */
-            const episode = await episodeModel.findById(_id);
+            const category = await categoryModel.findById(_id).populate("childes");
 
             /** return error if episode was not found */
-            if (!episode)
-                this.sendError("چنین جلسه ای ای وجود ندارد", 404);
+            if (!category)
+                this.sendError("چنین دسته ای ای وجود ندارد", 404);
 
-            /** todo@ remove episode video */
+
+            /** process if there were any childes for chosen category */
+            if (category.childes.length > 0) {
+                /** loop over comment answers */
+                for (const child of category.childes) {
+                    /** removing the child */
+                    await categoryModel.findByIdAndDelete(child._id);
+                }
+            }
 
             /**
              * deleting episode from database
              */
-            await episode.remove();
-
-            /** update course time */
-            await this.updateCourseTime(episode.course);
+            await category.remove();
 
             /** redirect to episodes index page */
-            res.redirect("/admin/panel/episodes");
+            res.redirect("/admin/panel/categories");
         } catch (err) {
             next(err);
         }
     }
 
     /**
-     * rendering edit episode page
+     * rendering edit category page
      * @param req
      * @param res
      * @param next
      * @return {Promise<*>}
      */
-    async editEpisodeForm(req, res, next) {
-        /** extract episode id from request params */
+    async editCategoryForm(req, res, next) {
+        /** extract category id from request params */
         const {_id} = req.params
 
         try {
             /** return error if given id is not a valid id */
             this.mongoObjectIdValidation(_id);
 
-            /** read course data from database based on _id */
-            const episode = await episodeModel.findById(_id).populate("course");
+            /** read category data from database based on _id */
+            const category = await categoryModel.findById(_id);
 
 
             /** return error if course was not found */
-            if (!episode)
+            if (!category)
                 this.sendError("چنین جلسه ای وجود ندارد", 404);
 
-            /** get courses title */
-            const courses = await courseModel.find({}, {title: 1});
-
-            /** transforming data to remove unneeded info */
-            const transformedData = new EpisodeTransform().withFullInfo().withCourseBasicInfo().transform(episode)
-
+            /** get main categories name */
+            const categories = await categoryModel.find({parent: null}, {name: 1});
 
             /** rendering courses page */
-            res.render("admin/episodes/edit", {
-                title: "ویرایش جلسه",
-                episode: transformedData,
-                courses
+            res.render("admin/categories/edit", {
+                title: "ویرایش دسته بندی",
+                category,
+                categories
             });
         } catch (err) {
             next(err);
@@ -250,29 +262,29 @@ class EpisodesController extends Controller {
     }
 
     /**
-     * edit course process
+     * edit category process
      * @param req
      * @param res
      * @param next
      * @return {Promise<*>}
      */
-    async editEpisodeProcess(req, res, next) {
-        /** extract course id from request params */
+    async editCategoryProcess(req, res, next) {
+        /** extract category id from request params */
         const {_id} = req.params
 
         try {
             /** return error if given id is not a valid id */
             this.mongoObjectIdValidation(_id);
 
-            /** read course data from database based on _id */
-            const episode = await episodeModel.findById(_id);
+            /** read category data from database based on _id */
+            const category = await categoryModel.findById(_id);
 
-            /** return error if course was not found */
-            if (!episode)
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+            /** return error if category was not found */
+            if (!category)
+                this.sendError("چنین دسته ای وجود ندارد", 404);
 
             /** user input validation */
-            const validationResult = await this.episodeValidation(req);
+            const validationResult = await this.categoryValidation(req);
 
             /**
              * redirect to previous page if there was any validation errors.
@@ -280,32 +292,21 @@ class EpisodesController extends Controller {
             if (!validationResult)
                 return this.redirectURL(req, res);
 
-            /** update course in database */
-            await episodeModel.findByIdAndUpdate(_id, {...req.body});
+            /**
+             * set category parent to null if it wasn't
+             * chose as a child category by user
+             */
+            req.body.parent = req.body.parent !== "none" ? req.body.parent : null
 
-            /** update previous course time */
-            await this.updateCourseTime(episode.course);
-            /** update new course time */
-            await this.updateCourseTime(req.body.course);
+            /** update course in database */
+            await categoryModel.findByIdAndUpdate(_id, {...req.body});
 
             /** return user to the courses main page */
-            res.redirect("/admin/panel/episodes");
+            res.redirect("/admin/panel/categories");
         } catch (err) {
             next(err);
         }
     }
-
-    /**
-     * update course time
-     * @param courseId
-     * @return {Promise<void>}
-     */
-    async updateCourseTime(courseId) {
-        const course = await courseModel.findById(courseId).populate("episodes");
-
-        course.time = this.getTime(course.episodes);
-        await course.save();
-    }
 }
 
-module.exports = new EpisodesController();
+module.exports = new CategoriesController();

@@ -44,7 +44,7 @@ exports.courseValidator = yup.object().shape({
                  * return true if course was not found
                  */
                 if (!findCourse)
-                    return true
+                    return true;
 
                 /**
                  * process if request method was put.

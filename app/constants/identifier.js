@@ -22,6 +22,11 @@ module.exports = {
             modelName: 'comments',
             deps: ['commentModel'],
             isPartial: false
+        },
+        category: {
+            modelName: 'category',
+            deps: ['categoryModel'],
+            isPartial: false
         }
     }
 }
