@@ -17,6 +17,11 @@ const courseSchema = new Schema({
         required: true,
         ref: "User"
     },
+    categories: [{
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "Category"
+    }],
     title: {
         type: String,
         required: true

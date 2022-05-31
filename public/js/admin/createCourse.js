@@ -37,4 +37,8 @@ $(document).ready(function () {
             },
         });
     }
+
+    $('.form-control-chosen').chosen({
+        // Chosen options here
+    });
 });

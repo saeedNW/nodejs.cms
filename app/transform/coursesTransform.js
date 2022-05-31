@@ -101,6 +101,7 @@ module.exports = class CoursesTransform extends Transform {
                 price: item.price,
                 tags: item.tags,
                 time: item.time,
+                categories: item.categories,
                 createdAt: item.createdAt,
                 updatedAt: item.updatedAt
             }

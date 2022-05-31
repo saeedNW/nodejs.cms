@@ -21,6 +21,15 @@ exports.courseValidator = yup.object().shape({
         .min(20, "توضیحات نمیتواند کمتر از 20 کاراکتر باشد"),
     price: yup.string()
         .required("فیلد قیمت نمیتواند خالی باشد"),
+    categories: yup.lazy(
+        val => (
+            Array.isArray(val) ? yup.array().of(
+                yup.string()
+                    .required("فیلد دسته بندی نمیتواند خالی باشد"),
+            ) : yup.string()
+                .required("فیلد دسته بندی نمیتواند خالی باشد")
+        )
+    ),
     tags: yup.string()
         .required("فیلد تگ ها نمیتواند خالی باشد"),
     slug: yup.string()

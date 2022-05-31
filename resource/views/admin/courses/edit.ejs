@@ -2,7 +2,7 @@
     <h2>ویرایش دوره</h2>
 </div>
 <form class="form-horizontal" action="/admin/panel/courses/edit/<%= course._id %>?_method=put" method="post"
-      enctype="multipart/form-data">
+      enctype="multipart/form-data" novalidate>
 
     <%- include(viewDir("layouts/showMessage")) -%>
 
@@ -12,8 +12,6 @@
             <input type="text" class="form-control" name="title" id="title" placeholder="دوره پروژه محور node js"
                    value="<%= oldData('title', course.title) %>" required>
         </div>
-    </div>
-    <div class="form-group row mb-3">
         <div class="col">
             <label for="slug" class="control-label font-weight-bold mb-1">نامک دوره</label>
             <input type="text" class="form-control" name="slug" id="slug"
@@ -34,6 +32,19 @@
                 <option value="free" <%= oldData('paymentType', course.paymentType) === 'free' ? 'selected' : '' %>>
                     رایگان
                 </option>
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="categories" class="control-label font-weight-bold mb-1">دسته بندی ها</label>
+            <select name="categories" id="categories" class="form-control form-control-chosen"
+                    data-placeholder="انتخاب دسته بندی" required multiple>
+                <% for (const category of categories){ %>
+                    <option value="<%= category._id %>"
+                            <%= course.categories.indexOf(category._id) !== -1 ? 'selected' : '' %> >
+                        <%= category.name %>
+                    </option>
+                <% } %>
             </select>
         </div>
     </div>
@@ -82,4 +93,11 @@
 </form>
 
 
+<link rel="stylesheet" href="/css/admin/component-chosen.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.6/chosen.jquery.min.js"></script>
 <script src="/js/admin/createCourse.js"></script>
+<script>
+    $('.form-control-chosen').chosen({
+        // Chosen options here
+    });
+</script>

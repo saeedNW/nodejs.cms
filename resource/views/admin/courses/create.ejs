@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
     <h2>ایجاد دوره</h2>
 </div>
-<form class="form-horizontal" action="/admin/panel/courses/create" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="/admin/panel/courses/create" method="post" enctype="multipart/form-data" novalidate>
 
     <%- include(viewDir("layouts/showMessage")) -%>
 
@@ -11,8 +11,6 @@
             <input type="text" class="form-control" name="title" id="title" placeholder="دوره پروژه محور node js"
                    value="<%= oldData('title') %>" required>
         </div>
-    </div>
-    <div class="form-group row mb-3">
         <div class="col">
             <label for="slug" class="control-label font-weight-bold mb-1">نامک دوره</label>
             <input type="text" class="form-control" name="slug" id="slug"
@@ -27,6 +25,15 @@
                 <option value="vip" <%= oldData('paymentType') === 'vip' ? 'selected' : '' %>>اعضای ویژه</option>
                 <option value="cash" <%= oldData('paymentType') === 'cash' ? 'selected' : '' %>>نقدی</option>
                 <option value="free" <%= oldData('paymentType') === 'free' ? 'selected' : '' %>>رایگان</option>
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="categories" class="control-label font-weight-bold mb-1">دسته بندی ها</label>
+            <select name="categories" id="categories" class="form-control form-control-chosen" data-placeholder="انتخاب دسته بندی" required multiple>
+                <% for (const category of categories){ %>
+                    <option value="<%= category._id %>"><%= category.name %></option>
+                <% } %>
             </select>
         </div>
     </div>
@@ -63,4 +70,6 @@
 </form>
 
 
+<link rel="stylesheet" href="/css/admin/component-chosen.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.6/chosen.jquery.min.js"></script>
 <script src="/js/admin/createCourse.js"></script>

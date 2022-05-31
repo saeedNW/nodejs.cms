@@ -3,7 +3,7 @@ const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import course validator */
 const {courseValidator} = require("./validator/courseValidator");
 /** import courses model */
-const {courseModel} = require("../../models").model;
+const {courseModel, categoryModel} = require("../../models").model;
 /** import general hashId generator method */
 const {getHashId} = require("../../core/getHashId");
 /** import identifier constants */
@@ -76,9 +76,17 @@ class CoursesController extends Controller {
      * rendering new course creation page
      * @param req
      * @param res
+     * @param next
      */
-    newCourseForm(req, res) {
-        res.render("admin/courses/create", {title: "ایجاد دوره جدید"});
+    async newCourseForm(req, res, next) {
+        try {
+            /** get categories from database */
+            const categories = await categoryModel.find({}, {name: 1});
+
+            res.render("admin/courses/create", {title: "ایجاد دوره جدید", categories});
+        } catch (err) {
+            next(err)
+        }
     }
 
     /**
@@ -104,12 +112,16 @@ class CoursesController extends Controller {
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /** transforming data to remove unneeded info */
-            const transformedData = new CoursesTransform().withFullInfo().transform(course)
+            const transformedData = new CoursesTransform().withFullInfo().transform(course);
+
+            /** get categories from database */
+            const categories = await categoryModel.find({}, {name: 1});
 
             /** rendering courses page */
             res.render("admin/courses/edit", {
                 title: "ویرایش دوره",
-                course: transformedData
+                course: transformedData,
+                categories
             });
         } catch (err) {
             next(err);
@@ -188,7 +200,7 @@ class CoursesController extends Controller {
             await courseValidator.validate(validationFields, {abortEarly: false});
 
             /** escape and trim user input */
-            escapeAndTrim(req);
+            escapeAndTrim(req, ['title','slug','paymentType','price','tags']);
 
             /** return true if there wasn't any validation errors */
             return true
