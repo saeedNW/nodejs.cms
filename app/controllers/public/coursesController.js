@@ -324,7 +324,6 @@ class CoursesController extends Controller {
         try {
             /** return error if payment was not successful */
             if (Status && Status !== "OK") {
-                console.log(100)
                 this.sweetalertGenerator(req, {
                     title: "خطا",
                     text: "پرداخت شما با موفقیت انجام نشد",
@@ -333,7 +332,6 @@ class CoursesController extends Controller {
                 return this.redirectURL(req, res);
             }
 
-            console.log(200)
             /** get payment info from database */
             const payment = await paymentModel.findOne({resNumber: Authority}).populate("course");
 
