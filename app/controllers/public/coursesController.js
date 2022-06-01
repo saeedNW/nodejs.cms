@@ -206,25 +206,38 @@ class CoursesController extends Controller {
             /** return error if given id is not a valid id */
             this.mongoObjectIdValidation(_id);
 
+
             /** read course data from database based on _id */
             const course = await courseModel.findById(_id);
 
-            /** todo@ return error if course was not found */
+            /** return error if course was not found */
             if (!course) {
-                console.log("not found");
-                return false
+                this.sweetalertGenerator(req, {
+                    title: "یافت نشد",
+                    message: "دوره مورد نظر شما یافت نشد!!",
+                    type: "error",
+                })
+                return this.redirectURL(req, res);
             }
 
-            /** todo@ return error if user already have bought the chosen course */
+            /** return error if user already have bought the chosen course */
             if (user && await user.haveBought(course._id)) {
-                console.log("already have bought");
-                return false
+                this.sweetalertGenerator(req, {
+                    title: "خرید مجدد",
+                    message: "شما قبلا این دوره را خریداری کرده اید",
+                    type: "error",
+                })
+                return this.redirectURL(req, res);
             }
 
-            /** todo@ return error if the chosen course is vip ar free */
+            /** return error if the chosen course is vip ar free */
             if (course.price === 0 && (course.paymentType === PaymentType.vip || course.paymentType === PaymentType.free)) {
-                console.log("you can't buy this course");
-                return false;
+                this.sweetalertGenerator(req, {
+                    title: "عدم امکان خرید",
+                    message: "این دوره قابل خرید نمی باشد",
+                    type: "error",
+                })
+                return this.redirectURL(req, res);
             }
 
             /** buy process */

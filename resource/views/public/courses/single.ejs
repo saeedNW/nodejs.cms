@@ -117,8 +117,8 @@
                                 <div class="card-body">
                                     <p>برای استفاده از این دوره نیاز است این دوره را با
                                         مبلغ <%= numberWithCommas(course.price) %>تومان خریداری کنید</p>
-                                    <form action="/courses/payment" method="post">
-                                        <input type="hidden" name="course" value="<% course._id %>">
+                                    <form action="/courses/payment" method="POST">
+                                        <input type="hidden" name="course" value="<%= course._id %>">
                                         <button type="submit" class="btn btn-success">خرید دوره</button>
                                     </form>
                                 </div>

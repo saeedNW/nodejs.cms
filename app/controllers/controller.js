@@ -128,4 +128,25 @@ module.exports = class Controller {
 
         return sprintf("%02d:%02d:%02d", hours, minutes, seconds);
     }
+
+    /**
+     * sweetalert generator method
+     * @param req
+     * @param {{title:string||undefined, message:string||undefined, type:string||undefined, buttons:*, timer:number||undefined}} data
+     */
+    sweetalertGenerator(req, data) {
+        const buttons = {
+            showConfirmButton: true,
+            confirmButtonText: 'خیلی خوب',
+        }
+        const alertOptions = {
+            title: data.title || "",
+            message: data.message || "",
+            type: data.type || "info",
+            ...data.buttons === null ? null : data.buttons || buttons,
+            timer: data.buttons !== null ? "null" : data.timer || 2000
+        }
+
+        req.flash("sweetalert", alertOptions);
+    }
 }

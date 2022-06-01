@@ -33,13 +33,24 @@ module.exports = class ViewsLocalsConfig extends Config {
         return {
             auth: this.userData(),
             viewDir: this.viewPath,
-            errors: this.req.flash("errors"),
-            success: this.req.flash("success"),
             oldData: this.oldInfo,
             convertDate: this.convertDate,
             query: this.req.query,
             numberWithCommas: this.numberWithCommas,
-            canUserUse: this.canUserUse
+            canUserUse: this.canUserUse,
+            ...this.flashMessages()
+        }
+    }
+
+    /**
+     * send flash messages
+     * @return {{success: (Array|Object|Number|*), sweetalert: (Array|Object|Number|*), errors: (Array|Object|Number|*)}}
+     */
+    flashMessages() {
+        return {
+            errors: this.req.flash("errors"),
+            success: this.req.flash("success"),
+            sweetalert: this.req.flash("sweetalert")[0]
         }
     }
 
