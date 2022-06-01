@@ -35,7 +35,8 @@ module.exports = class ViewsLocalsConfig extends Config {
             success: this.req.flash("success"),
             oldData: this.oldInfo,
             convertDate: this.convertDate,
-            query: this.req.query
+            query: this.req.query,
+            numberWithCommas: this.numberWithCommas
         }
     }
 
@@ -77,5 +78,17 @@ module.exports = class ViewsLocalsConfig extends Config {
      */
     convertDate(time) {
         return moment(time)
+    }
+
+    /**
+     * This module is used to separate numbers with ','
+     * @param num
+     * @return {string}
+     */
+    numberWithCommas(num) {
+        let regEx = /\B(?=(\d{3})+(?!\d))/g
+        let parts = num.toString().split(".");
+        parts[0] = parts[0].replace(regEx, ",");
+        return parts.join(".");
     }
 }
