@@ -4,6 +4,8 @@ const Config = require("./config");
 const path = require("path");
 /** import moment-jalaali module */
 const moment = require("moment-jalaali");
+/** import course constants */
+const {coursesConstants} = require("../constants");
 /** activate persian language for moment */
 moment.loadPersian({usePersianDigits: true})
 
@@ -36,7 +38,8 @@ module.exports = class ViewsLocalsConfig extends Config {
             oldData: this.oldInfo,
             convertDate: this.convertDate,
             query: this.req.query,
-            numberWithCommas: this.numberWithCommas
+            numberWithCommas: this.numberWithCommas,
+            canUserUse: this.canUserUse
         }
     }
 
@@ -90,5 +93,41 @@ module.exports = class ViewsLocalsConfig extends Config {
         let parts = num.toString().split(".");
         parts[0] = parts[0].replace(regEx, ",");
         return parts.join(".");
+    }
+
+    /**
+     * check if user can access to the course episodes or not
+     * @param course
+     * @return {boolean}
+     */
+    canUserUse(course) {
+        let canUse = false;
+
+        /**
+         * check if user logged in.
+         * check if user has access to
+         * course episodes or not
+         */
+        if (this.req.isAuthenticated()) {
+            switch (course.paymentType) {
+                case coursesConstants.PaymentType.vip:
+                    canUse = this.req.user.isVip();
+                    break;
+                case coursesConstants.PaymentType.cash:
+                    canUse = this.req.user.haveBought(course._id);
+                    break;
+                default:
+                    canUse = true;
+            }
+        }
+
+        /**
+         * set user access status
+         * to true if user is an admin
+         */
+        if (this.req.isAuthenticated() && this.req.user.admin)
+            canUse = true;
+
+        return canUse;
     }
 }

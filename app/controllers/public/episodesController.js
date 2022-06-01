@@ -33,17 +33,8 @@ class EpisodesController extends Controller {
             if (!episode)
                 this.sendError("چنین جلسه ای وجو ندارد", 404);
 
-            /**
-             * auth variable will be used to create secure download link
-             * @type {{loginCheck: *, user}}
-             */
-            const auth = {
-                user: req.user,
-                loginCheck: req.isAuthenticated()
-            }
-
             /** creating secure link */
-            const secureDownloadLink = episode.episodeDownload(auth, await this.userCanUse(req, episode.course))
+            const secureDownloadLink = episode.episodeDownload(req);
 
             /** check if download link is accessible for user or not */
             if (secureDownloadLink === "#")

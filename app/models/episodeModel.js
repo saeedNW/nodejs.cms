@@ -75,25 +75,26 @@ episodeSchema.methods.increase = async function (field, count = 1) {
 
 /**
  * create episode secure download link
- * @param auth
- * @param canUserUse
+ * @param req
  * @return {string|string}
  */
-episodeSchema.methods.episodeDownload = function (auth, canUserUse) {
-    if (!auth.loginCheck) return "#"
+episodeSchema.methods.episodeDownload = function (req) {
+    if (!req.isAuthenticated()) return "#"
 
     let status = false;
 
     if (this.paymentType === episodesConstants.PaymentType.free)
         status = true;
-    else if (this.paymentType === episodesConstants.PaymentType.vip || this.paymentType === episodesConstants.PaymentType.cash)
-        status = canUserUse;
+    else if (this.paymentType === episodesConstants.PaymentType.vip)
+        status = req.user.isVip();
+    else if (this.paymentType === episodesConstants.PaymentType.cash)
+        status = req.user.haveBought(this.course);
 
     if (!status) return "#"
 
     const timestamp = new Date().getTime() + 12 * 3600 * 1000;
 
-    let secretMac = `${process.env.EPISODE_SECRET_MAC}${this._id}${timestamp}${auth.user._id}`;
+    let secretMac = `${process.env.EPISODE_SECRET_MAC}${this._id}${timestamp}${req.user._id}`;
 
     secretMac = bcrypt.hashSync(secretMac, 15);
 

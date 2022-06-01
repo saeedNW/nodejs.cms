@@ -21,13 +21,13 @@
         <!-- check payment status for course -->
         <% if(auth.loginCheck) { %>
             <% if(course.paymentType == 'vip') { %>
-                <% if (!canUserUse){ %>
+                <% if (!canUserUse(course)){ %>
                     <div class="alert alert-danger">برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید</div>
                 <% } else { %>
                     <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
                 <% } %>
             <% } else if (course.paymentType == 'cash'){ %>
-                <% if (!canUserUse){ %>
+                <% if (!canUserUse(course)){ %>
                     <div class="alert alert-danger">برای مشاهده این دوره نیاز است به صورت نقدی دوره راه تهیه کنید</div>
                 <% } else{ %>
                     <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
@@ -58,7 +58,7 @@
                     <td><%= episode.time %></td>
                     <% if(auth.loginCheck) { %>
                         <% if(episode.paymentType == 'vip') { %>
-                            <% if (!canUserUse){ %>
+                            <% if (!canUserUse(course)){ %>
                                 <td><span data-feather="lock"></span></td>
                                 <td><a href="#">دانلود</a></td>
                             <% } else { %>
@@ -66,7 +66,7 @@
                                 <td><a href="/episodes/download?e=<%= episode._id %>">دانلود</a></td>
                             <% } %>
                         <% } else if (episode.paymentType == 'cash'){ %>
-                            <% if (!canUserUse){ %>
+                            <% if (!canUserUse(course)){ %>
                                 <td><span data-feather="lock"></span></td>
                                 <td><a href="#">دانلود</a></td>
                             <% } else{ %>
@@ -98,7 +98,7 @@
             <div class="card-body">
                 <% if(auth.loginCheck) { %>
                     <% if(course.paymentType == 'vip') { %>
-                        <% if (!canUserUse){ %>
+                        <% if (!canUserUse(course)){ %>
                             <div class="card my-4">
                                 <div class="card-body">
                                     <p>برای مشاهده این دوره نیاز است <a href="#">عضویت ویژه</a> را تهیه کنید</p>
@@ -112,12 +112,12 @@
                             </div>
                         <% } %>
                     <% } else if (course.paymentType == 'cash'){ %>
-                        <% if (!canUserUse){ %>
+                        <% if (!canUserUse(course)){ %>
                             <div class="card my-4">
                                 <div class="card-body">
                                     <p>برای استفاده از این دوره نیاز است این دوره را با
                                         مبلغ <%= numberWithCommas(course.price) %>تومان خریداری کنید</p>
-                                    <form action="/course/payment" method="post">
+                                    <form action="/courses/payment" method="post">
                                         <input type="hidden" name="course" value="<% course._id %>">
                                         <button type="submit" class="btn btn-success">خرید دوره</button>
                                     </form>

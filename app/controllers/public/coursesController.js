@@ -183,17 +183,10 @@ class CoursesController extends Controller {
             /** get categories from database */
             const categories = await categoryModel.find({parent: null}).populate("childes");
 
-            /**
-             * check if user can access to the course episodes or not
-             * @type {boolean}
-             */
-            const canUserUse = await this.userCanUse(req, course);
-
             res.render("public/courses/single", {
                 title: transformedData.title,
                 captcha: this.recaptcha.render(),
                 course: transformedData,
-                canUserUse,
                 categories
             });
         } catch (err) {

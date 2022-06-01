@@ -1,5 +1,7 @@
 /** import mongoose */
 const mongoose = require("mongoose");
+/** extract schema method from mongoose module */
+const {Schema} = mongoose
 /** import bcryptjs */
 const bcrypt = require("bcryptjs");
 /** import unique string module */
@@ -7,7 +9,7 @@ const uniqueString = require("unique-string");
 
 
 /** define user collection schema */
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     hashId: {
         type: Number,
         required: true,
@@ -112,14 +114,25 @@ userSchema.virtual("courses", {
 
 /**
  * check if user is a vip user or not
- * @return {Promise<boolean>}
+ * @return {boolean}
  */
-userSchema.methods.isVip = async function () {
+userSchema.methods.isVip = function () {
+    if (this.admin)
+        return true;
+
     return false;
 }
 
-userSchema.methods.haveBought = async function (course) {
-    return false;
+/**
+ * check if user already bought the chosen course or not
+ * @param courseId
+ * @return {boolean}
+ */
+userSchema.methods.haveBought = function (courseId) {
+    if (this.admin)
+        return true;
+
+    return this.purchases.indexOf(courseId) !== -1;
 }
 
 module.exports = mongoose.model("User", userSchema);

@@ -8,8 +8,6 @@ const mongoose = require("mongoose");
 const {sendError: error} = require("../utils/sendError");
 /** import sprintf module */
 const {sprintf} = require("sprintf-js");
-/** import courses constants */
-const {coursesConstants} = require("../constants");
 
 module.exports = class Controller {
     constructor() {
@@ -129,42 +127,5 @@ module.exports = class Controller {
         seconds = Math.floor(((seconds / 60) % 1) * 60);
 
         return sprintf("%02d:%02d:%02d", hours, minutes, seconds);
-    }
-
-    /**
-     * check if user can access to the course episodes or not
-     * @param req
-     * @param course
-     * @return {Promise<boolean>}
-     */
-    async userCanUse(req, course) {
-        let canUse = false;
-
-        /**
-         * check if user logged in.
-         * check if user has access to
-         * course episodes or not
-         */
-        if (req.isAuthenticated()) {
-            switch (course.paymentType) {
-                case coursesConstants.PaymentType.vip:
-                    canUse = await req.user.isVip();
-                    break;
-                case coursesConstants.PaymentType.cash:
-                    canUse = await req.user.haveBought(course);
-                    break;
-                default:
-                    canUse = true;
-            }
-        }
-
-        /**
-         * set user access  status
-         * to true if user is an admin
-         */
-        if (req.isAuthenticated() && req.user.admin)
-            canUse = true;
-
-        return canUse;
     }
 }
