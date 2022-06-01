@@ -99,25 +99,50 @@
                 <% if(auth.loginCheck) { %>
                     <% if(course.paymentType == 'vip') { %>
                         <% if (!canUserUse){ %>
-                            <p>برای مشاهده این دوره نیاز است عضویت ویژه را تهیه کنید</p>
-                            <a class="btn btn-success btn-sm" href="#">شارژ اکانت</a>
+                            <div class="card my-4">
+                                <div class="card-body">
+                                    <p>برای مشاهده این دوره نیاز است <a href="#">عضویت ویژه</a> را تهیه کنید</p>
+                                </div>
+                            </div>
                         <% } else { %>
-                            <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
+                            <div class="card my-4">
+                                <div class="card-body">
+                                    <p>شما به محتوای این دوره دسترسی دارید</p>
+                                </div>
+                            </div>
                         <% } %>
                     <% } else if (course.paymentType == 'cash'){ %>
                         <% if (!canUserUse){ %>
-                            <p>برای استفاده از این دوره نیاز است این دوره را با مبلغ 60000 تومان خریداری کنید</p>
-                            <form action="/course/payment" method="post">
-                                <input type="hidden" name="course_id" value="5b1e4a0ac4cf2d675052a78a">
-                                <button type="submit" class="btn btn-success">خرید دوره</button>
-                            </form>
+                            <div class="card my-4">
+                                <div class="card-body">
+                                    <p>برای استفاده از این دوره نیاز است این دوره را با
+                                        مبلغ <%= numberWithCommas(course.price) %>تومان خریداری کنید</p>
+                                    <form action="/course/payment" method="post">
+                                        <input type="hidden" name="course" value="<% course._id %>">
+                                        <button type="submit" class="btn btn-success">خرید دوره</button>
+                                    </form>
+                                </div>
+                            </div>
                         <% } else{ %>
-                            <div class="alert alert-success">شما به محتوای این دوره دسترسی دارید</div>
+                            <div class="card my-4">
+                                <div class="card-body">
+                                    <p>شما در این دوره ثبت نام کرده اید</p>
+                                </div>
+                            </div>
                         <% } %>
+                    <% } else { %>
+                        <div class="card my-4">
+                            <div class="card-body">
+                                <p>این دوره به صورت رایگان در دسترس می باشد</p>
+                            </div>
+                        </div>
                     <% } %>
                 <% } else { %>
-                    <p>برای تهیه این دوره نیاز است ابتدا وارد سایت شوید</p>
-                    <a class="btn btn-success btn-sm" href="/auth/login">ورود</a>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <p>برای تهیه این دوره نیاز است ابتدا <a href="/auth/login">وارد سایت شوید</a></p>
+                        </div>
+                    </div>
                 <% } %>
             </div>
         </div>
