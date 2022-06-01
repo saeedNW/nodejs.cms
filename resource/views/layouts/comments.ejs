@@ -110,9 +110,13 @@
 
     // Replace the <textarea> with a CKEditor 4
     // instance, using default configuration.
-    CKEDITOR.replace( 'form-control' );
+    CKEDITOR.replace('form-control', {
+        contentsLangDirection: "rtl"
+    });
 
     // Replace the <textarea> with a CKEditor 4
     // instance, using default configuration.
-    CKEDITOR.replace( 'message-text' );
+    CKEDITOR.replace('message-text', {
+        contentsLangDirection: "rtl"
+    });
 </script>

@@ -51,7 +51,7 @@
     <div class="form-group row mb-3">
         <div class="col">
             <label for="description" class="control-label font-weight-bold mb-1">توضیحات</label>
-            <textarea rows="10" class="form-control" name="description" id="description"
+            <textarea rows="10" class="form-control cke_rtl" name="description" id="description"
                       placeholder="توضیحات دوره" required><%= oldData('description', course.description) %></textarea>
         </div>
     </div>
@@ -104,6 +104,7 @@
     // Replace the <textarea> with a CKEditor 4
     // instance, using default configuration.
     CKEDITOR.replace('description', {
-        filebrowserUploadUrl: '/admin/panel/ckEditor-uploader'
+        filebrowserUploadUrl: '/admin/panel/ckEditor-uploader',
+        contentsLangDirection:"rtl"
     });
 </script>

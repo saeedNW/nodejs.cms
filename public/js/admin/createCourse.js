@@ -45,6 +45,7 @@ $(document).ready(function () {
     // Replace the <textarea> with a CKEditor 4
     // instance, using default configuration.
     CKEDITOR.replace('description' , {
-        filebrowserUploadUrl : '/admin/panel/ckEditor-uploader'
+        filebrowserUploadUrl : '/admin/panel/ckEditor-uploader',
+        contentsLangDirection:"rtl"
     });
 });

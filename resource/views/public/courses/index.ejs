@@ -68,8 +68,8 @@ const {search, paymentType, order, category} = query;
                     <img class="card-img-top" src="<%= course.thumbnail %>" alt="<%= course.title %>">
                     <div class="card-body">
                         <h3><a href="<%= course.fullSlug %>"><%= course.title %></a></h3>
-                        <p class="card-text justify"><%= course.description.substr(0, 100) %></p>
-                        <a href="<%= course.fullSlug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a>
+                        <%- course.description.substr(0, 150) + '...' %>
+                        <p><a href="<%= course.fullSlug %>" class="btn btn-primary btn-sm">اطلاعات بیشتر</a></p>
                     </div>
                     <div class="card-footer text-muted">
                         <%= course.viewCount %> بازدید
