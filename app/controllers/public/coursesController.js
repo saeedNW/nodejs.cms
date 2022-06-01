@@ -2,6 +2,8 @@
 const {courseModel, categoryModel} = require("../../models").model;
 /** import courses transform */
 const CoursesTransform = require("../../transform/coursesTransform");
+/** import course constants */
+const {PaymentType} = require("../../constants").coursesConstants
 
 /** import main controller file */
 const Controller = require("../controller");
@@ -189,6 +191,44 @@ class CoursesController extends Controller {
                 course: transformedData,
                 categories
             });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async paymentProcess(req, res, next) {
+        /** get course id from request body */
+        const {course: _id} = req.body;
+        /** get user data from request */
+        const {user} = req;
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /** read course data from database based on _id */
+            const course = await courseModel.findById(_id);
+
+            /** todo@ return error if course was not found */
+            if (!course) {
+                console.log("not found");
+                return false
+            }
+
+            /** todo@ return error if user already have bought the chosen course */
+            if (user && await user.haveBought(course._id)) {
+                console.log("already have bought");
+                return false
+            }
+
+            /** todo@ return error if the chosen course is vip ar free */
+            if (course.price === 0 && (course.paymentType === PaymentType.vip || course.paymentType === PaymentType.free)) {
+                console.log("you can't buy this course");
+                return false;
+            }
+
+            /** buy process */
+
         } catch (err) {
             next(err);
         }

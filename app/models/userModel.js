@@ -35,7 +35,12 @@ const userSchema = new Schema({
     rememberToken: {
         type: String,
         default: null
-    }
+    },
+    purchases: [{
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "Course"
+    }],
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
