@@ -59,7 +59,7 @@ const episodeSchema = new Schema({
 episodeSchema.index({hashId: 1});
 episodeSchema.index({episodeNumber: 1});
 
-/** initialize mongoose paginate plugin for courses schema */
+/** initialize mongoose paginate plugin for episodes schema */
 episodeSchema.plugin(mongoosePaginate);
 
 /**

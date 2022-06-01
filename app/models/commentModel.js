@@ -46,7 +46,7 @@ commentSchema.index({hashId: 1});
 commentSchema.index({course: 1});
 commentSchema.index({episode: 1});
 
-/** initialize mongoose paginate plugin for courses schema */
+/** initialize mongoose paginate plugin for comments schema */
 commentSchema.plugin(mongoosePaginate);
 
 /**

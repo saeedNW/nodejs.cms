@@ -43,7 +43,7 @@ categorySchema.virtual("childes", {
     foreignField: "parent",
 });
 
-/** initialize mongoose paginate plugin for courses schema */
+/** initialize mongoose paginate plugin for category schema */
 categorySchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Category', categorySchema);

@@ -163,7 +163,7 @@ class CategoriesController extends Controller {
      */
     async createCategory(req, res, next) {
         try {
-            /** generate new course hash id */
+            /** generate new category hash id */
             const hashId = await getHashId(identifierModels.category.modelName);
 
             /**

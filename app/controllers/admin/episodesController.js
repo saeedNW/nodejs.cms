@@ -154,7 +154,7 @@ class EpisodesController extends Controller {
         const {course} = req.body;
 
         try {
-            /** generate new course hash id */
+            /** generate new episode hash id */
             const hashId = await getHashId(identifierModels.episodes.modelName);
 
             /** save new course in database */

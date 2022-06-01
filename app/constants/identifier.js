@@ -27,6 +27,11 @@ module.exports = {
             modelName: 'category',
             deps: ['categoryModel'],
             isPartial: false
+        },
+        payment: {
+            modelName: 'payment',
+            deps: ['paymentModel'],
+            isPartial: false
         }
     }
 }

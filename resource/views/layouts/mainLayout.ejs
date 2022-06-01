@@ -78,7 +78,8 @@
 
 <% if (sweetalert){ %>
     <script>
-        Swal.fire(sweetalert)
+        const sweetalertData = '<%- JSON.stringify(sweetalert) %>';
+        Swal.fire(JSON.parse(sweetalertData));
     </script>
 <% } %>
 

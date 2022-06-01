@@ -13,7 +13,9 @@ const coursesController = require("../../../controllers/public/coursesController
 router.get('/', coursesController.index);
 
 /** course payment route */
-router.post("/payment", UAM, coursesController.paymentProcess)
+router.post("/payment", UAM, coursesController.paymentProcess);
+/** course payment callback route */
+router.get("/payment/checker", UAM, coursesController.paymentChecker);
 
 /** single course page route */
 router.get('/:slug', coursesController.singleCourse);

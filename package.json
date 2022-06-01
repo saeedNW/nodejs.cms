@@ -36,6 +36,7 @@
     "passport": "^0.5.2",
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
+    "request-promise": "^4.2.6",
     "sharp": "^0.30.4",
     "sprintf-js": "^1.1.2",
     "unique-string": "^2.0.0",
