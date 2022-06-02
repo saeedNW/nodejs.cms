@@ -53,7 +53,7 @@ const episodeSchema = new Schema({
         type: Number,
         default: 0
     },
-}, {timestamps: true});
+}, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
 episodeSchema.index({hashId: 1});
@@ -100,5 +100,16 @@ episodeSchema.methods.episodeDownload = function (req) {
 
     return `/episodes/download/${this._id}?mac=${secretMac}&t=${timestamp}`;
 }
+
+/**
+ * create a virtual field to be used for
+ * course and comments collections relation
+ * through populate method.
+ */
+episodeSchema.virtual("comments", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "episode",
+});
 
 module.exports = mongoose.model("Episode", episodeSchema);

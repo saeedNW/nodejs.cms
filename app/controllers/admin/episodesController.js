@@ -185,13 +185,22 @@ class EpisodesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read episode data from database based on _id */
-            const episode = await episodeModel.findById(_id);
+            const episode = await episodeModel.findById(_id).populate({
+                path: "comments",
+                populate: {
+                    path: "answers"
+                }
+            });
 
             /** return error if episode was not found */
             if (!episode)
                 this.sendError("چنین جلسه ای ای وجود ندارد", 404);
 
             /** todo@ remove episode video */
+
+            /** remove episode comments */
+            if (episode.comments.length > 0)
+                await this.episodeCommentRemoval(episode.comments);
 
             /**
              * deleting episode from database
@@ -205,6 +214,27 @@ class EpisodesController extends Controller {
             res.redirect("/admin/panel/episodes");
         } catch (err) {
             next(err);
+        }
+    }
+
+    /**
+     * remove episode comments
+     * @param comments
+     * @return {Promise<void>}
+     */
+    async episodeCommentRemoval(comments) {
+        /** loop over comments */
+        for (const comment of comments) {
+            /** loop over answers */
+            for (const answer of comment.answers) {
+                /** removing the answer */
+                await answer.remove();
+            }
+
+            /**
+             * deleting comment from database
+             */
+            await comment.remove();
         }
     }
 
