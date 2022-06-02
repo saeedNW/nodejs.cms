@@ -21,7 +21,10 @@ class PaymentsController extends Controller {
         const {user} = req;
 
         try {
-            /** grt user payments from database */
+            /**
+             * getting all user payments from database with mongoose paginate plugin.
+             * paginate plugin needs some options to initialize pagination based on them.
+             */
             const payments = await paymentModel.paginate({user: user._id}, {
                 /**
                  * page option:
@@ -47,6 +50,7 @@ class PaymentsController extends Controller {
                 populate: {path: "course"}
             });
 
+            /** transforming data to remove unneeded info */
             const transformedData = new PaymentsTransform().withCourseInfo().withPaginate().transformCollection(payments);
 
             res.render("user/paymentsHistory", {title: "پرداختی ها", payments: transformedData});

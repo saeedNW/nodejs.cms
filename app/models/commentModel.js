@@ -14,11 +14,11 @@ const commentSchema = new Schema({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: "User"
     },
     parent: {
         type: Schema.Types.ObjectId,
-        ref: 'Comment',
+        ref: "Comment",
         default: null
     },
     approved: {
@@ -27,12 +27,12 @@ const commentSchema = new Schema({
     },
     course: {
         type: Schema.Types.ObjectId,
-        ref: 'Course',
+        ref: "Course",
         default: undefined
     },
     episode: {
         type: Schema.Types.ObjectId,
-        ref: 'Episode',
+        ref: "Episode",
         default: undefined
     },
     comment: {

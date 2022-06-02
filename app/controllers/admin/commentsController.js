@@ -232,7 +232,7 @@ class CommentsController extends Controller {
                         ++totalDecreaseCount;
 
                     /** removing the answer */
-                    await commentModel.findByIdAndDelete(answer._id);
+                    await answer.remove();
                 }
             }
 
@@ -242,7 +242,6 @@ class CommentsController extends Controller {
              */
             if (comment.approved)
                 ++totalDecreaseCount;
-
 
             /**
              * decreasing course/episode comments count

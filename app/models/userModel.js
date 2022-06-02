@@ -60,13 +60,13 @@ userSchema.pre("save", function (next) {
         if (!user.isModified("password")) return next();
 
         /**
-         * continue save/update process if user password has benn changed.
+         * continue save/update process if user password has been changed.
          * change user password to new hashed value if password was modified.
          */
         user.password = bcrypt.hashSync(this.password, 15);
         next()
     } catch (err) {
-        console.log(err)
+        next(err)
     }
 });
 
@@ -102,7 +102,7 @@ userSchema.methods.setRememberToken = async function (res) {
         /** update user rememberToken in database */
         await this.updateOne({rememberToken: token});
     } catch (err) {
-        console.log(err)
+        next(err)
     }
 }
 

@@ -14,11 +14,11 @@ const paymentSchema = new Schema({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
     },
     course: {
         type: Schema.Types.ObjectId,
-        ref: 'Course',
+        ref: "Course",
         default: null
     },
     vip: {
