@@ -67,6 +67,6 @@ passport.use("local.login", new LocalStrategy({
 
         done(null, findUser);
     } catch (err) {
-        done(err, false, req.flash("errors", "ثبت نام با موفقیت انجام نشد، لطفا مجددا تلاش نمایید."));
+        done(err, false, req.flash("errors", "ورود با موفقیت انجام نشد، لطفا مجددا تلاش نمایید."));
     }
 }));
