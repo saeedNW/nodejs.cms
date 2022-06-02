@@ -200,7 +200,7 @@ class CoursesController extends Controller {
             await courseValidator.validate(validationFields, {abortEarly: false});
 
             /** escape and trim user input */
-            escapeAndTrim(req, ['title','slug','paymentType','price','tags']);
+            escapeAndTrim(req, ['title', 'slug', 'paymentType', 'price', 'tags']);
 
             /** return true if there wasn't any validation errors */
             return true
@@ -377,19 +377,35 @@ class CoursesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read course data from database based on _id */
-            const course = await courseModel.findById(_id).populate("episodes");
+            const course = await courseModel.findById(_id).populate([
+                {
+                    path: "episodes",
+                    populate: {
+                        path: "comments",
+                        populate: {
+                            path: "answers"
+                        }
+                    }
+                },
+                {
+                    path: "comments",
+                    populate: {
+                        path: "answers"
+                    }
+                }
+            ]);
 
             /** return error if course was not found */
             if (!course)
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
             /**  delete course episodes */
-            for (const episode of course.episodes) {
+            if (course.episodes.length > 0)
+                await this.courseEpisodeRemoval(course.episodes);
 
-                /** todo@ remove episodes video */
-
-                await episode.remove();
-            }
+            /** delete course comments */
+            if (course.comments.length > 0)
+                await this.courseCommentRemoval(course.comments);
 
             /** get course image addresses as na array */
             const images = Object.values(course.images);
@@ -411,6 +427,60 @@ class CoursesController extends Controller {
             res.redirect("/admin/panel/courses");
         } catch (err) {
             next(err);
+        }
+    }
+
+    /**
+     * remove course episodes
+     * @param episodes
+     * @return {Promise<void>}
+     */
+    async courseEpisodeRemoval(episodes) {
+        /** loop over episodes */
+        for (const episode of episodes) {
+
+            /** todo@ remove episodes video */
+
+            /** remove episode comments */
+            if (episode.comments.length > 0) {
+                /** loop over comments */
+                for (const comment of episode.comments) {
+                    /** loop over answers */
+                    for (const answer of comment.answers) {
+                        /** removing the answer */
+                        await answer.remove();
+                    }
+
+                    /**
+                     * deleting comment from database
+                     */
+                    await comment.remove();
+                }
+            }
+
+            /** remove episode from database */
+            await episode.remove();
+        }
+    }
+
+    /**
+     * remove course comments
+     * @param comments
+     * @return {Promise<void>}
+     */
+    async courseCommentRemoval(comments) {
+        /** loop over comments */
+        for (const comment of comments) {
+            /** loop over answers */
+            for (const answer of comment.answers) {
+                /** removing the answer */
+                await answer.remove();
+            }
+
+            /**
+             * deleting comment from database
+             */
+            await comment.remove();
         }
     }
 
