@@ -12,7 +12,7 @@ router.get('/', commentsController.index);
 /** unapproved comments page route */
 router.get("/unapproved", commentsController.unapproved);
 /** unapproved comments approval process route */
-router.put("/unapproved/:_id", commentsController.approvalProcess);
+router.patch("/unapproved/:_id", commentsController.approvalProcess);
 
 /** episode removal process route */
 router.delete("/delete/:_id", commentsController.deleteCommentProcess);

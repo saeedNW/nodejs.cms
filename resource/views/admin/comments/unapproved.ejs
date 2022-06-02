@@ -31,7 +31,7 @@
                     <th title="<%= comment.comment %>"><%= comment.comment.substr(0, 50) %></th>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <form action="/admin/panel/comments/unapproved/<%= comment._id %>?_method=PUT" method="post">
+                            <form action="/admin/panel/comments/unapproved/<%= comment._id %>?_method=PATCH" method="post">
                                 <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
                                 <button type="submit" class="btn btn-primary me-1">تایید</button>
                             </form>
