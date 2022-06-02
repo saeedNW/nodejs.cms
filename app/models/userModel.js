@@ -6,7 +6,8 @@ const {Schema} = mongoose
 const bcrypt = require("bcryptjs");
 /** import unique string module */
 const uniqueString = require("unique-string");
-
+/** import mongoose paginate module */
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 /** define user collection schema */
 const userSchema = new Schema({
@@ -47,6 +48,9 @@ const userSchema = new Schema({
 userSchema.index({hashId: 1});
 userSchema.index({email: 1});
 userSchema.index({admin: 1});
+
+/** initialize mongoose paginate plugin for user schema */
+userSchema.plugin(mongoosePaginate);
 
 /** user schema pre save method */
 userSchema.pre("save", function (next) {
