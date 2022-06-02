@@ -122,6 +122,28 @@ userSchema.virtual("courses", {
 });
 
 /**
+ * create a virtual field to be used for
+ * user and payments collections relation
+ * through populate method.
+ */
+userSchema.virtual("payments", {
+    ref: "Payment",
+    localField: "_id",
+    foreignField: "user",
+});
+
+/**
+ * create a virtual field to be used for
+ * user and comments collections relation
+ * through populate method.
+ */
+userSchema.virtual("comments", {
+    ref: "Comment",
+    localField: "_id",
+    foreignField: "user",
+});
+
+/**
  * check if user is a vip user or not
  * @return {boolean}
  */
