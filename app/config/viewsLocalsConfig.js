@@ -36,6 +36,7 @@ module.exports = class ViewsLocalsConfig extends Config {
             oldData: this.oldInfo,
             convertDate: this.convertDate,
             query: this.req.query,
+            requestURL: this.req.url,
             numberWithCommas: this.numberWithCommas,
             canUserUse: this.canUserUse,
             ...this.flashMessages()

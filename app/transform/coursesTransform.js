@@ -2,7 +2,6 @@
 const Transform = require("./transform");
 /** import courses constants */
 const {coursesConstants} = require("../constants");
-const UserTransform = require("./userTransform");
 
 /**
  * courses data transformer
@@ -40,7 +39,7 @@ module.exports = class CoursesTransform extends Transform {
     #commentsInfo = false;
 
     /**
-     * transforming the course data
+     * transforming course data
      * @param item
      */
     transform(item) {

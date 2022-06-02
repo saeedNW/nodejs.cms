@@ -3,10 +3,14 @@ const express = require('express');
 /** create express Router instance */
 const router = express.Router();
 
-/** import comments router */
-const commentsRouter = require('./comments');
+/** import home router */
+const homeRouter = require('./home');
+/** import payments router */
+const paymentsRouter = require('./payments');
 
-/** initialize comments router */
-router.use("/comments", commentsRouter);
+/** initialize home router */
+router.use(homeRouter);
+/** initialize payments router */
+router.use('/payments', paymentsRouter);
 
 module.exports = router;

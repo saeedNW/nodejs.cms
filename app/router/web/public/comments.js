@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 /** import controllers */
-const commentsController = require("../../../controllers/user/commentsController");
+const commentsController = require("../../../controllers/public/commentsController");
 
 /** new comment process route */
 router.post('/', commentsController.newCommentProcess);

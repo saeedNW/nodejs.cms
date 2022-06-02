@@ -1,8 +1,5 @@
 /** import main transform file */
 const Transform = require("./transform");
-const UserTransform = require("./userTransform");
-const CoursesTransform = require("./coursesTransform");
-const EpisodesTransform = require("./episodesTransform");
 
 /**
  * episodes data transformer
@@ -40,7 +37,7 @@ module.exports = class CommentsTransform extends Transform {
     #answersInfo = false;
 
     /**
-     * transforming the user data
+     * transforming comment data
      * @param item
      */
     transform(item) {

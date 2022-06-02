@@ -5,7 +5,7 @@
         <h5 class="card-header">ثبت نظر :</h5>
         <div class="card-body">
             <%- include(viewDir("layouts/showMessage")) -%>
-            <form role="form" action="/user/panel/comments" method="post">
+            <form role="form" action="/comments" method="post">
                 <input type="hidden" name="<%= section %>" value="<%= subject._id %>">
                 <div class="form-group mb-3">
                     <label for="form-control" class="mb-2">متن نظر</label>
@@ -72,7 +72,7 @@
                             aria-label="Close"><span aria-hidden="true"></span></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/user/panel/comments" method="post">
+                    <form action="/comments" method="post">
 
                         <input type="hidden" name="parent" value="">
                         <input type="hidden" name="<%= section %>" value="<%= subject._id %>">

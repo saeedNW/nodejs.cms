@@ -1,0 +1,30 @@
+<%- include(viewDir("user/navbar")) -%>
+
+
+<div style="margin: 20px;">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>شناسه</th>
+            <th>مقدار پرداخت</th>
+            <th>بابت</th>
+            <th>وضعیت پرداخت</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <% for (const payment of payments.docs){ %>
+            <tr>
+                <td><%= payment.hashId %></td>
+                <td><%= payment.price %> تومان</td>
+                <td><%= payment.vip ? ' خریداری عضویت ویژه' : `خرید دوره ${payment.course.title}` %></td>
+                <td><%= payment.payment ? 'موفق' : 'ناموفق' %></td>
+            </tr>
+        <% } %>
+
+        </tbody>
+    </table>
+
+    <%- include(viewDir("layouts/pagination"), {pagination:payments}) -%>
+
+</div>

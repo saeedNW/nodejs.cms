@@ -27,7 +27,7 @@ module.exports = class EpisodesTransform extends Transform {
     #courseFullInfo = false
 
     /**
-     * transforming the course data
+     * transforming episode data
      * @param item
      */
     transform(item) {
