@@ -182,7 +182,7 @@ module.exports = class CoursesTransform extends Transform {
      */
     showUserInfo(item) {
         /** import user transform */
-        const UserTransform = require("./userTransform");
+        const UserTransform = require("./usersTransform");
 
         if (this.#userInfo) {
             return {user: new UserTransform().withHashedEmail().transform(item.user)}

@@ -22,7 +22,19 @@ module.exports = class UserTransform extends Transform {
      * which full info of the course is requested or not
      * @type {boolean}
      */
-    #courseFullInfo = false
+    #courseFullInfo = false;
+    /**
+     * this private variable will be used to determined
+     * which user payments are requested or not
+     * @type {boolean}
+     */
+    #paymentsInfo = false;
+    /**
+     * this private variable will be used to determined
+     * which user comments are requested or not
+     * @type {boolean}
+     */
+    #commentsInfo = false;
 
     /**
      * transforming the user data
@@ -40,6 +52,8 @@ module.exports = class UserTransform extends Transform {
             ...this.showHashedEmail(item),
             ...this.showCourseBasicInfo(item),
             ...this.showCourseFullInfo(item),
+            ...this.showPaymentsInfo(item),
+            ...this.showCommentsInfo(item),
         }
     }
 
@@ -117,6 +131,54 @@ module.exports = class UserTransform extends Transform {
 
         if (this.#courseFullInfo) {
             return {courses: new CoursesTransform().withFullInfo().transformCollection(item.courses)}
+        }
+    }
+
+    /**
+     * this method will be called from outside the transform file to
+     * determined which user payments are requested or not
+     */
+    withPaymentsInfo() {
+        this.#paymentsInfo = true;
+        return this;
+    }
+
+    /**
+     * return user payments info if it was requested
+     * @param item
+     * @return {{payments: (?[]|{hasPrevPage: *, hasNextPage: *, pagingCounter: *, nextPage: *, limit: *, totalPages: *, prevPage: *, page: *, totalDocs: *})}}
+     */
+    showPaymentsInfo(item) {
+        /** import courses transform */
+        const PaymentsTransform = require("./paymentsTransform");
+
+        if (this.#courseFullInfo) {
+            return {payments: new PaymentsTransform().transformCollection(item.payments)}
+        }
+    }
+
+    /**
+     * this method will be called from outside the transform file to
+     * determined which user comments are requested or not
+     */
+    withCommentsInfo() {
+        this.#commentsInfo = true;
+        return this;
+    }
+
+    /**
+     * return user comments info if it was requested
+     * @param item
+     * @return {{comments: (?[]|{hasPrevPage: *, hasNextPage: *, pagingCounter: *, nextPage: *, limit: *, totalPages: *, prevPage: *, page: *, totalDocs: *})}}
+     */
+    showCommentsInfo(item) {
+        /** import courses transform */
+        const CommentsTransform = require("./commentsTransform");
+
+        if (this.#courseFullInfo) {
+            return {
+                comments: new CommentsTransform().withEpisodeInfo().withCourseInfo().transformCollection(item.comments)
+            }
         }
     }
 }
