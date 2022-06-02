@@ -18,6 +18,8 @@ const episodesRouter = require("./episodes");
 const commentsRouter = require("./comments");
 /** import categories manager router */
 const categoriesRouter = require("./categories");
+/** import users manager router */
+const usersRouter = require("./users");
 
 /** initialize admin panel router */
 router.use(homeRouter);
@@ -29,5 +31,7 @@ router.use("/episodes", episodesRouter);
 router.use("/comments", commentsRouter);
 /** initialize categories manager router */
 router.use("/categories", categoriesRouter);
+/** initialize users manager router */
+router.use("/users", usersRouter);
 
 module.exports = router;

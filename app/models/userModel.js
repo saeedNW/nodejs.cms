@@ -74,6 +74,30 @@ userSchema.pre("save", function (next) {
     }
 });
 
+/** user schema pre update method */
+userSchema.pre("findOneAndUpdate", function (next) {
+    try {
+        /**
+         * continue update process if user password didn't change.
+         * return next if password was not modified.
+         */
+        const modifiedPassword = this.getUpdate().$set.password;
+        if (modifiedPassword.length === 0) {
+            delete this.getUpdate().$set.password
+            return next();
+        }
+
+        /**
+         * continue update process if user password has been changed.
+         * change user password to new hashed value if password was modified.
+         */
+        this.getUpdate().$set.password = bcrypt.hashSync(this.getUpdate().$set.password, 15);
+        next();
+    } catch (err) {
+        next(err)
+    }
+})
+
 /**
  * user schema password comparer method
  * @param password
