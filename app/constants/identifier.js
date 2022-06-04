@@ -23,12 +23,12 @@ module.exports = {
             deps: ['commentModel'],
             isPartial: false
         },
-        category: {
+        categories: {
             modelName: 'category',
             deps: ['categoryModel'],
             isPartial: false
         },
-        payment: {
+        payments: {
             modelName: 'payment',
             deps: ['paymentModel'],
             isPartial: false

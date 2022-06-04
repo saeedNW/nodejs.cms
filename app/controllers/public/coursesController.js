@@ -8,7 +8,7 @@ const {PaymentType} = require("../../constants").coursesConstants;
 const request = require("request-promise");
 /** import general hashId generator method */
 const {getHashId} = require("../../core/getHashId");
-/** import identifierModels from identifier constant */
+/** import identifier constants */
 const {identifierModels} = require("../../constants/identifier");
 
 /** import main controller file */
@@ -288,7 +288,7 @@ class CoursesController extends Controller {
             this.sendError("پرداخت شما با موفقیت انجام نشد", 400);
 
         /** generate new payment hash id */
-        const hashId = await getHashId(identifierModels.payment.modelName);
+        const hashId = await getHashId(identifierModels.payments.modelName);
 
         /**
          * save new payment in database

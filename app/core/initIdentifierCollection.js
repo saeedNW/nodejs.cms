@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 /** import identifierModel from models */
 const {identifierModel} = require("../models").model;
-/** import identifierModels from identifier constant */
+/** import identifier constants */
 const {identifierModels} = require("../constants").identifierConstants;
 
 /**

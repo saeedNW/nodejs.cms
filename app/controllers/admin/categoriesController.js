@@ -164,7 +164,7 @@ class CategoriesController extends Controller {
     async createCategory(req, res, next) {
         try {
             /** generate new category hash id */
-            const hashId = await getHashId(identifierModels.category.modelName);
+            const hashId = await getHashId(identifierModels.categories.modelName);
 
             /**
              * set category parent to null if it wasn't

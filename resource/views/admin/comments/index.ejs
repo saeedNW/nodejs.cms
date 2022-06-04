@@ -28,7 +28,7 @@
                             <%= comment.course ? comment.course.title : comment.episode.title %>
                         </a>
                     </td>
-                    <th><%= comment.comment.substr(0, 50) %></th>
+                    <th title="<%= comment.comment %>"><%= comment.comment.substr(0, 50) %></th>
                     <td>
                         <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE" method="post">
                             <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
