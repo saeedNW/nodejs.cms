@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>سطوح دسترسی</h2>
+    <div class="btn-group">
+        <a href="/admin/panel/permissions/create" class="btn btn-sm btn-primary me-1">افزودن دسترسی جدید</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>کد شناسایی</th>
+            <th>عنوان</th>
+            <th>برچسب</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if (permissions.docs.length > 0){ %>
+            <% for (const permission of permissions.docs) { %>
+                <tr>
+                    <th scope="row"><%= permissions.pagingCounter %></th>
+                    <th><%= permission.hashId %></th>
+                    <th><%= permission.name %></th>
+                    <th><%= permission.label %></th>
+                    <td>
+                        <form action="/admin/panel/permissinos/delete/<%= permission._id %>?_method=DELETE"
+                              method="post">
+                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin/panel/permissinos/edit/<%= permission._id %>"
+                                   class="btn btn-primary me-1">ویرایش</a>
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            <%
+                +permissions.pagingCounter++
+            }
+            %>
+        <% }else { %>
+            <tr>سطح دسترسی برای نمایش وجود ندارد</tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <%- include(viewDir("layouts/pagination"), {pagination:permissions}) -%>
+
+</div>
+

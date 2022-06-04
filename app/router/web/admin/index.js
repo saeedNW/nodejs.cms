@@ -20,6 +20,8 @@ const commentsRouter = require("./comments");
 const categoriesRouter = require("./categories");
 /** import users manager router */
 const usersRouter = require("./users");
+/** import permissions manager router */
+const permissionsRouter = require("./permissions");
 
 /** initialize admin panel router */
 router.use(homeRouter);
@@ -33,5 +35,7 @@ router.use("/comments", commentsRouter);
 router.use("/categories", categoriesRouter);
 /** initialize users manager router */
 router.use("/users", usersRouter);
+/** initialize permissions manager router */
+router.use("/permissions", permissionsRouter);
 
 module.exports = router;

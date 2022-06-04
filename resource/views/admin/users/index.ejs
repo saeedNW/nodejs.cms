@@ -2,7 +2,8 @@
     <h2>کاربران</h2>
     <div class="btn-group">
         <a href="/admin/panel/users/create" class="btn btn-sm btn-primary me-1">افزودن کاربر</a>
-        <a href="/admin/panel/users/roles" class="btn btn-sm btn-success">مدیریت سطوح دسترسی</a>
+        <a href="/admin/panel/permissions" class="btn btn-sm btn-secondary me-1">مدیریت سطوح دسترسی</a>
+        <a href="/admin/panel/users/roles" class="btn btn-sm btn-success">مدیریت دسترسی کاربران</a>
     </div>
 </div>
 <div class="table-responsive">
@@ -38,8 +39,8 @@
                             </form>
 
                             <% if(user.admin) { %>
-                                <a href="/admin/panel/users/edit-roles/<%= user._id %>"
-                                   class="btn btn-success me-1">ویرایش سطح دسترسی</a>
+                                <a href="/admin/panel/users/roles/edit/<%= user._id %>"
+                                   class="btn btn-success me-1">ویرایش دسترسی های کاربر</a>
                             <% } %>
 
                             <form action="/admin/panel/users/delete/<%= user._id %>?_method=DELETE" method="post">

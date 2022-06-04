@@ -32,6 +32,11 @@ module.exports = {
             modelName: 'payment',
             deps: ['paymentModel'],
             isPartial: false
+        },
+        permissions: {
+            modelName: 'permission',
+            deps: ["permissionModel"],
+            isPartial: false
         }
     }
 }
