@@ -43,6 +43,16 @@ categorySchema.virtual("childes", {
     foreignField: "parent",
 });
 
+/**
+ * create a virtual field to be used for
+ * collections relation through populate method.
+ */
+categorySchema.virtual("courses", {
+    ref: "Course",
+    localField: "_id",
+    foreignField: "categories",
+});
+
 /** initialize mongoose paginate plugin for category schema */
 categorySchema.plugin(mongoosePaginate);
 
