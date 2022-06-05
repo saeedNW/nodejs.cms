@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
-    <h2>سطوح دسترسی</h2>
+    <h2>اجازه های دسترسی</h2>
     <div class="btn-group">
         <a href="/admin/panel/permissions/create" class="btn btn-sm btn-primary me-1">افزودن دسترسی جدید</a>
     </div>
@@ -24,11 +24,11 @@
                     <th><%= permission.name %></th>
                     <th><%= permission.label %></th>
                     <td>
-                        <form action="/admin/panel/permissinos/delete/<%= permission._id %>?_method=DELETE"
+                        <form action="/admin/panel/permissions/delete/<%= permission._id %>?_method=DELETE"
                               method="post">
                             <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
                             <div class="btn-group btn-group-sm">
-                                <a href="/admin/panel/permissinos/edit/<%= permission._id %>"
+                                <a href="/admin/panel/permissions/edit/<%= permission._id %>"
                                    class="btn btn-primary me-1">ویرایش</a>
                                 <button type="submit" class="btn btn-danger">حذف</button>
                             </div>
@@ -40,7 +40,7 @@
             }
             %>
         <% }else { %>
-            <tr>سطح دسترسی برای نمایش وجود ندارد</tr>
+            <tr>اجازه دسترسی برای نمایش وجود ندارد</tr>
         <% } %>
         </tbody>
     </table>

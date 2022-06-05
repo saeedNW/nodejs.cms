@@ -20,6 +20,6 @@ router.delete("/delete/:_id", permissionsController.deletePermissionProcess);
 /** edit episode form route */
 router.get("/edit/:_id", permissionsController.editPermissionForm);
 /** edit episode process route */
-router.put("/edit/:_id", permissionsController.editEpisodeProcess);
+router.put("/edit/:_id", permissionsController.editPermissionProcess);
 
 module.exports = router;

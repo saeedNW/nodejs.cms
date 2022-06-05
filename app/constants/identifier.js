@@ -24,18 +24,23 @@ module.exports = {
             isPartial: false
         },
         categories: {
-            modelName: 'category',
+            modelName: 'categories',
             deps: ['categoryModel'],
             isPartial: false
         },
         payments: {
-            modelName: 'payment',
+            modelName: 'payments',
             deps: ['paymentModel'],
             isPartial: false
         },
         permissions: {
-            modelName: 'permission',
+            modelName: 'permissions',
             deps: ["permissionModel"],
+            isPartial: false
+        },
+        roles: {
+            modelName: 'roles',
+            deps: ["roleModel"],
             isPartial: false
         }
     }

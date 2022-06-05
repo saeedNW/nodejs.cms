@@ -5,16 +5,16 @@ const {getHashId} = require("../../core/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants").identifierConstants;
 /** import models */
-const {permissionModel} = require("../../models").model;
+const {roleModel, permissionModel} = require("../../models").model;
 /** import permission validator */
-const {permissionsValidator} = require("./validator/permissionsValidator");
+const {rolesValidator} = require("./validator/rolesValidator");
 
 /** import main controller class */
 const Controller = require("../controller");
 
-class permissionsController extends Controller {
+class rolesController extends Controller {
     /**
-     * rendering permissions index page
+     * rendering roles index page
      * @param req
      * @param res
      * @param next
@@ -27,10 +27,10 @@ class permissionsController extends Controller {
 
         try {
             /**
-             * getting all permissions from database with mongoose paginate plugin.
+             * getting all roles from database with mongoose paginate plugin.
              * paginate plugin needs some options to initialize pagination based on them.
              */
-            const permissions = await permissionModel.paginate({}, {
+            const roles = await roleModel.paginate({}, {
                 /**
                  * page option:
                  * this option define the requested page. and originally
@@ -47,13 +47,22 @@ class permissionsController extends Controller {
                  * sort option:
                  * this options allows you to sort data before receiving them from database.
                  */
-                sort: {createdAt: 1}
-            })
+                sort: {createdAt: 1},
+                /**
+                 * populate option:
+                 * Paths which should be populated with other documents
+                 */
+                populate: [
+                    {
+                        path: "permissions"
+                    }
+                ]
+            });
 
             /** rendering permissions index page */
-            res.render("admin/permissions/index", {
-                title: "مدیریت اجازه های دسترسی",
-                permissions
+            res.render("admin/roles/index", {
+                title: "مدیریت سطوح دسترسی ها",
+                roles
             });
         } catch (err) {
             next(err)
@@ -61,30 +70,33 @@ class permissionsController extends Controller {
     }
 
     /**
-     * rendering new permission creation page
+     * rendering new role creation page
      * @param req
      * @param res
      * @param next
      */
-    async newPermissionForm(req, res, next) {
+    async newRoleForm(req, res, next) {
         try {
-            res.render("admin/permissions/create", {title: "افزودن اجازه دسترسی جدید"});
+            /** get permissions info from database */
+            const permissions = await permissionModel.find({});
+
+            res.render("admin/roles/create", {title: "افزودن سطح دسترسی جدید", permissions});
         } catch (err) {
             next(err)
         }
     }
 
     /**
-     * new permission process manager
+     * new role process manager
      * @param req
      * @param res
      * @param next
      * @returns {Promise<void>}
      */
-    async newPermissionProcess(req, res, next) {
+    async newRoleProcess(req, res, next) {
         try {
             /** user input validation */
-            const validationResult = await this.permissionValidation(req);
+            const validationResult = await this.RoleValidation(req);
 
             /**
              * redirect to previous page if there was any validation errors.
@@ -93,18 +105,18 @@ class permissionsController extends Controller {
                 return this.redirectURL(req, res);
 
             /** create new permission */
-            await this.createPermission(req, res, next);
+            await this.createRole(req, res, next);
         } catch (err) {
             next(err);
         }
     }
 
     /**
-     * validate user inputs for new permission creation
+     * validate user inputs for new role creation
      * @param req
      * @returns {Promise<boolean>}
      */
-    async permissionValidation(req) {
+    async RoleValidation(req) {
         try {
             /**
              * create custom feed for user inputs validation.
@@ -117,10 +129,10 @@ class permissionsController extends Controller {
             }
 
             /** user input validation */
-            await permissionsValidator.validate(validationFields, {abortEarly: false});
+            await rolesValidator.validate(validationFields, {abortEarly: false});
 
             /** escape and trim user input */
-            escapeAndTrim(req);
+            escapeAndTrim(req, ["name", "label"]);
 
             /** return true if there wasn't any validation errors */
             return true
@@ -139,35 +151,35 @@ class permissionsController extends Controller {
     }
 
     /**
-     * create new permission
+     * create new role
      * @param req
      * @param res
      * @param next
      * @return {Promise<void>}
      */
-    async createPermission(req, res, next) {
+    async createRole(req, res, next) {
         try {
-            /** generate new permissions' hash id */
-            const hashId = await getHashId(identifierModels.permissions.modelName);
+            /** generate new roles' hash id */
+            const hashId = await getHashId(identifierModels.roles.modelName);
 
-            /** save new permission in database */
-            await permissionModel.create({...req.body, hashId});
+            /** save new roles in database */
+            await roleModel.create({...req.body, hashId});
 
-            /** return user to the permissions main page */
-            res.redirect("/admin/panel/permissions");
+            /** return user to the role's main page */
+            res.redirect("/admin/panel/roles");
         } catch (err) {
             next(err);
         }
     }
 
     /**
-     * permission removal process manager
+     * role removal process manager
      * @param req
      * @param res
      * @param next
      * @return {Promise<void>}
      */
-    async deletePermissionProcess(req, res, next) {
+    async deleteRoleProcess(req, res, next) {
         /** extract permission id from request params */
         const {_id} = req.params
 
@@ -175,32 +187,19 @@ class permissionsController extends Controller {
             /** return error if given id is not a valid id */
             this.mongoObjectIdValidation(_id);
 
-            /** read permission data from database based on _id */
-            const permission = await permissionModel.findById(_id).populate("roles");
+            /** read role data from database based on _id */
+            const role = await roleModel.findById(_id)
 
-            /** return error if permission was not found */
-            if (!permission)
-                this.sendError("چنین اجازه دسترسی وجود ندارد", 404);
-
-            /**
-             * removing permission from roles
-             * before deleting it from database
-             */
-            for (const role of permission.roles) {
-                /** find permission id index in the role permissions list */
-                const index = role.permissions.indexOf(permission._id);
-                /** removing permission from roles' permissions */
-                role.permissions.splice(index, 1);
-                /** save role */
-                await role.save();
-            }
+            /** return error if role was not found */
+            if (!role)
+                this.sendError("چنین دسترسی وجود ندارد", 404);
 
             /**
-             * deleting permission from database
+             * deleting role from database
              */
-            await permission.remove();
+            await role.remove();
 
-            /** redirect to permission index page */
+            /** redirect to roles index page */
             this.redirectURL(req, res);
         } catch (err) {
             next(err);
@@ -208,32 +207,36 @@ class permissionsController extends Controller {
     }
 
     /**
-     * rendering edit permission page
+     * rendering edit role page
      * @param req
      * @param res
      * @param next
      * @return {Promise<*>}
      */
-    async editPermissionForm(req, res, next) {
-        /** extract permission id from request params */
+    async editRoleForm(req, res, next) {
+        /** extract role id from request params */
         const {_id} = req.params
 
         try {
             /** return error if given id is not a valid id */
             this.mongoObjectIdValidation(_id);
 
-            /** read permission data from database based on _id */
-            const permission = await permissionModel.findById(_id);
+            /** read role data from database based on _id */
+            const role = await roleModel.findById(_id);
 
 
-            /** return error if permission was not found */
-            if (!permission)
-                this.sendError("چنین اجازه دسترسی وجود ندارد", 404);
+            /** return error if role was not found */
+            if (!role)
+                this.sendError("چنین دسترسی وجود ندارد", 404);
 
-            /** rendering permissions page */
-            res.render("admin/permissions/edit", {
-                title: "ویرایش اجازه دسترسی",
-                permission
+            /** get permissions info from database */
+            const permissions = await permissionModel.find({});
+
+            /** rendering roles page */
+            res.render("admin/roles/edit", {
+                title: "ویرایش دسترسی",
+                role,
+                permissions
             });
         } catch (err) {
             next(err);
@@ -241,26 +244,26 @@ class permissionsController extends Controller {
     }
 
     /**
-     * edit permission process
+     * edit role process
      * @param req
      * @param res
      * @param next
      * @return {Promise<*>}
      */
-    async editPermissionProcess(req, res, next) {
-        /** extract permission id from request params */
+    async editRoleProcess(req, res, next) {
+        /** extract role id from request params */
         const {_id} = req.params
 
         try {
             /** return error if given id is not a valid id */
             this.mongoObjectIdValidation(_id);
 
-            /** read permission data from database based on _id */
-            const permission = await permissionModel.findById(_id);
+            /** read role data from database based on _id */
+            const role = await roleModel.findById(_id);
 
-            /** return error if course was not found */
-            if (!permission)
-                this.sendError("چنین اجازه دسترسی وجود ندارد", 404);
+            /** return error if role was not found */
+            if (!role)
+                this.sendError("چنین دسترسی وجود ندارد", 404);
 
             /** user input validation */
             const validationResult = await this.permissionValidation(req);
@@ -272,14 +275,14 @@ class permissionsController extends Controller {
                 return this.redirectURL(req, res);
 
             /** update permission in database */
-            await permissionModel.findByIdAndUpdate(_id, {...req.body});
+            await roleModel.findByIdAndUpdate(_id, {...req.body});
 
             /** return user to the courses main page */
-            res.redirect("/admin/panel/permissions");
+            res.redirect("/admin/panel/roles");
         } catch (err) {
             next(err);
         }
     }
 }
 
-module.exports = new permissionsController();
+module.exports = new rolesController();

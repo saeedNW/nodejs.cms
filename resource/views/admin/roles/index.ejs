@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2>سطوح دسترسی</h2>
+    <div class="btn-group">
+        <a href="/admin/panel/roles/create" class="btn btn-sm btn-primary me-1">افزودن سطح دسترسی جدید</a>
+        <a href="/admin/panel/permissions" class="btn btn-sm btn-danger me-1">مدیریت اجازه های دسترسی</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>کد شناسایی</th>
+            <th>عنوان</th>
+            <th>برچسب</th>
+            <th>اجازه های دسترسی</th>
+            <th>تنظیمات</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if (roles.docs.length > 0){ %>
+            <% for (const role of roles.docs) { %>
+                <tr>
+                    <th scope="row"><%= roles.pagingCounter %></th>
+                    <th><%= role.hashId %></th>
+                    <th><%= role.name %></th>
+                    <th><%= role.label %></th>
+                    <th>
+                        <a href="#" title="<% for (const permission of role.permissions) { %>
+                            <%= permission.label %>
+                        <% } %>">
+                            دسترسی ها
+                        </a>
+                    </th>
+                    <td>
+                        <form action="/admin/panel/roles/delete/<%= role._id %>?_method=DELETE"
+                              method="post">
+                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                            <div class="btn-group btn-group-sm">
+                                <a href="/admin/panel/roles/edit/<%= role._id %>"
+                                   class="btn btn-primary me-1">ویرایش</a>
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            <%
+                +roles.pagingCounter++
+            }
+            %>
+        <% }else { %>
+            <tr>سطح دسترسی برای نمایش وجود ندارد</tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <%- include(viewDir("layouts/pagination"), {pagination:roles}) -%>
+
+</div>
+

@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+    <h2>ویرایش سطح دسترسی</h2>
+</div>
+<form class="form-horizontal" action="/admin/panel/roles/edit/<%= role._id %>?_method=put" method="post">
+
+    <%- include(viewDir("layouts/showMessage")) -%>
+
+
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="name" class="control-label font-weight-bold mb-1">عنوان دسترسی</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="teacher"
+                   value="<%= oldData('name', role.name) %>" required>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <div class="col">
+            <label for="label" class="control-label font-weight-bold mb-1">برچسب دسترسی</label>
+            <input type="text" class="form-control" name="label" id="label"
+                   value="<%= oldData('label', role.label) %>" placeholder="مدرس" required>
+        </div>
+    </div>
+
+    <div class="form-group row mb-3">
+        <label for="permissions" class="control-label font-weight-bold mb-1">اجازه دسترسی ها</label>
+        <select name="permissions" id="permissions" class="form-control form-control-chosen"
+                data-placeholder="انتخاب اجازه دسترسی ها" required multiple>
+            <% for (const permission of permissions){ %>
+                <option value="<%= permission._id %>"
+                        <%= oldData("permissions", role.permissions).indexOf(permission._id) !== -1 ? 'selected' : '' %> >
+                    <%= permission.name %>
+                </option>
+            <% } %>
+        </select>
+    </div>
+
+    <div class="form-group row">
+        <div class="col">
+            <button type="submit" class="btn btn-danger">ارسال</button>
+        </div>
+    </div>
+</form>
+
+<link rel="stylesheet" href="/css/admin/component-chosen.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.6/chosen.jquery.min.js"></script>
+<script>
+    $('.form-control-chosen').chosen({
+        // Chosen options here
+    });
+</script>

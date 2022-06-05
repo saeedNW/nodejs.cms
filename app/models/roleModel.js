@@ -6,7 +6,7 @@ const {Schema} = mongoose;
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 /** define category collection schema */
-const permissionSchema = new Schema({
+const roleSchema = new Schema({
     hashId: {
         type: Number,
         required: true,
@@ -22,26 +22,19 @@ const permissionSchema = new Schema({
         required: true,
         unique: true
     },
-}, {timestamps: true, toJSON: {virtuals: true}});
+    permissions: [{
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Permission'
+    }]
+}, {timestamps: true});
 
 /** define collection indexes */
-permissionSchema.index({hashId: 1});
-permissionSchema.index({name: 1});
-permissionSchema.index({label: 1});
+roleSchema.index({hashId: 1});
+roleSchema.index({name: 1});
+roleSchema.index({label: 1});
 
 /** initialize mongoose paginate plugin for category schema */
-permissionSchema.plugin(mongoosePaginate);
+roleSchema.plugin(mongoosePaginate);
 
-/**
- * create a virtual field to be used for
- * permissions and roles collections relation
- * through populate method.
- */
-permissionSchema.virtual("roles", {
-    ref: "Role",
-    localField: "_id",
-    foreignField: "permissions",
-});
-
-
-module.exports = mongoose.model('Permission', permissionSchema);
+module.exports = mongoose.model('Role', roleSchema);

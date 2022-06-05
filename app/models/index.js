@@ -16,6 +16,8 @@ const categoryModel = require("./categoryModel");
 const paymentModel = require("./paymentModel");
 /** import permission model */
 const permissionModel = require("./permissionModel");
+/** import role model */
+const roleModel = require("./roleModel");
 
 exports.model = {
     userModel,
@@ -26,5 +28,6 @@ exports.model = {
     commentModel,
     categoryModel,
     paymentModel,
-    permissionModel
+    permissionModel,
+    roleModel
 }
