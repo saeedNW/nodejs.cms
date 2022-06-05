@@ -5,14 +5,14 @@
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link <%= requestURL === '/user/panel' ? 'active' : '' %>" href="/user/panel">اطلاعات کاربری</a>
+        <a class="nav-link <%= isActive("/user/panel", true) %>" href="/user/panel">اطلاعات کاربری</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link <%= requestURL.includes('/user/panel/payments') ? 'active' : '' %>"
+        <a class="nav-link <%= isActive("/user/panel/payments") %>"
            href="/user/panel/payments">پرداخت های انجام شده</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link <%= requestURL === '/user/panel/vip' ? 'active' : '' %>" href="/user/panel/vip">شارژ
+        <a class="nav-link <%= isActive("/user/panel/vip", true) %>" href="/user/panel/vip">شارژ
             vip</a>
     </li>
 </ul>

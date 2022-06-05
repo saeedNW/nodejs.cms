@@ -11,9 +11,10 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>کد شناسایی کاربر</th>
+            <th>کد شناسایی</th>
             <th>نام کاربر</th>
             <th>ایمیل</th>
+            <th>دسترسی ها</th>
             <th>تاریخ عضویت</th>
             <th>تنظیمات</th>
         </tr>
@@ -26,6 +27,18 @@
                     <th><%= user.hashId %></th>
                     <td><%= user.name %></td>
                     <td><%= user.email %></td>
+                    <th>
+                        <a href="#" title="
+                        <% if (user.roles.length) { %>
+                            <% for (const role of user.roles) { %>
+                                <%= role.label %>
+                            <% } %>
+                        <% } else { %>
+                            <%= "کاربر فاقد دسترسی می باشد" %>
+                        <% } %>">
+                            دسترسی ها
+                        </a>
+                    </th>
                     <td><%= convertDate(user.createdAt).format('jDD - jMMMM - jYYYY') %></td>
                     <td>
                         <div class="btn-group btn-group-sm">
@@ -34,13 +47,13 @@
                             <form action="/admin/panel/users/toggle-admin/<%= user._id %>?_method=PATCH" method="post">
                                 <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
                                 <button type="submit" class="btn btn-secondary me-1">
-                                    <%= user.admin ? "حذف دسترسی ادمین" : "افزودن دسترسی ادمین" %>
+                                    <%= user.admin ? "لغو ادمین" : "دسترسی ادمین" %>
                                 </button>
                             </form>
 
                             <% if(user.admin) { %>
-                                <a href="/admin/panel/users/roles/edit/<%= user._id %>"
-                                   class="btn btn-success me-1">ویرایش دسترسی های کاربر</a>
+                                <a href="/admin/panel/users/roles/<%= user._id %>"
+                                   class="btn btn-success me-1">ویرایش دسترسی ها</a>
                             <% } %>
 
                             <form action="/admin/panel/users/delete/<%= user._id %>?_method=DELETE" method="post">

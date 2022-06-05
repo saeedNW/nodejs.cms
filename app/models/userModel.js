@@ -39,8 +39,11 @@ const userSchema = new Schema({
     },
     purchases: [{
         type: Schema.Types.ObjectId,
-        required: true,
         ref: "Course"
+    }],
+    roles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Role'
     }],
 }, {timestamps: true, toJSON: {virtuals: true}});
 

@@ -3,9 +3,11 @@ const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import user hash id generator */
 const {nextUserHashId} = require("../../core/nextUserHashId");
 /** import models */
-const {userModel} = require("../../models").model;
+const {userModel, roleModel} = require("../../models").model;
 /** import user validator */
 const {userValidator} = require("./validator/userValidator");
+/** import users' roles validator */
+const {userRolesValidator} = require("./validator/userRolesValidator");
 /** import user transform */
 const UsersTransform = require("../../transform/usersTransform");
 /** import file system module */
@@ -49,7 +51,16 @@ class UsersController extends Controller {
                  * sort option:
                  * this options allows you to sort data before receiving them from database.
                  */
-                sort: {createdAt: 1}
+                sort: {createdAt: 1},
+                /**
+                 * populate option:
+                 * Paths which should be populated with other documents
+                 */
+                populate: [
+                    {
+                        path: "roles"
+                    }
+                ]
             });
 
             /** transforming data to remove unneeded info */
@@ -486,6 +497,119 @@ class UsersController extends Controller {
             this.redirectURL(req, res);
         } catch (err) {
             next(err);
+        }
+    }
+
+    /**
+     * rendering users' roles manager page
+     * @param req
+     * @param res
+     * @param next
+     */
+    async manageRolesForm(req, res, next) {
+        /** extract user id from request params */
+        const {userId: _id} = req.params;
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /**
+             * get users info from database.
+             * Note: user should be an admin user.
+             */
+            const user = await userModel.findOne({_id, admin: true});
+
+            /** return error if user was not found */
+            if (!user)
+                this.sendError("چنین کاربری وجود ندارد", 404);
+
+            /** transforming data to remove unneeded info */
+            const transformedData = new UsersTransform().transform(user);
+
+            /** get roles from database */
+            const roles = await roleModel.find({});
+
+            res.render("admin/users/manageRoles", {
+                title: "مدیریت دسترسی های کاربر",
+                user: transformedData,
+                roles
+            });
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    /**
+     * users' roles manager process
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
+    async manageRolesProcess(req, res, next) {
+        /** extract user id from request params */
+        const {userId: _id} = req.params;
+        /** extract user new set of roles from request body */
+        const {roles} = req.body;
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /**
+             * get users info from database.
+             * Note: user should be an admin user.
+             */
+            const user = await userModel.findOne({_id, admin: true});
+
+            /** return error if user was not found */
+            if (!user)
+                this.sendError("چنین کاربری وجود ندارد", 404);
+
+            /** user input validation */
+            const validationResult = await this.userRolesValidation(req);
+
+            /**
+             * redirect to previous page if there was any validation errors.
+             */
+            if (!validationResult)
+                return this.redirectURL(req, res);
+
+            /** set user new roles */
+            user.roles = roles;
+            /** update user info in database */
+            await user.save();
+
+            /** return to users list page */
+            res.redirect("/admin/panel/users");
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /**
+     * validate user inputs for users' roles manager process
+     * @param req
+     * @returns {Promise<boolean>}
+     */
+    async userRolesValidation(req) {
+        try {
+            /** user input validation */
+            await userRolesValidator.validate(req.body, {abortEarly: false});
+
+            /** return true if there wasn't any validation errors */
+            return true
+        } catch (err) {
+            console.log(err)
+            /** get validation errors */
+            const errors = err.errors;
+
+            /** set errors in a flash message */
+            req.flash("errors", errors);
+
+            /** return false if there was any validation error */
+            return false
         }
     }
 }

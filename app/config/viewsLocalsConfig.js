@@ -39,6 +39,7 @@ module.exports = class ViewsLocalsConfig extends Config {
             requestURL: this.req.url,
             numberWithCommas: this.numberWithCommas,
             canUserUse: this.canUserUse,
+            isActive: this.isActive,
             ...this.flashMessages()
         }
     }
@@ -141,5 +142,25 @@ module.exports = class ViewsLocalsConfig extends Config {
             canUse = true;
 
         return canUse;
+    }
+
+    /**
+     * add bootstrap active class to navbar
+     * if the request url is match to navbar url.
+     * @param url
+     * @param exactMath
+     * @return {string}
+     */
+    isActive(url, exactMath = false) {
+        /** check if url needs to be exact match */
+        if (exactMath)
+            if (this.req.url === url)
+                return "active";
+
+        /** check if url has needed match */
+        if (this.req.url.includes(url))
+            return "active";
+
+        return ""
     }
 }

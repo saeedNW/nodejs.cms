@@ -25,4 +25,9 @@ router.put("/edit/:_id", usersController.editUserProcess);
 /** toggle user admin access process route */
 router.patch("/toggle-admin/:_id", usersController.toggleAdminAccess);
 
+/** user roles manager form route */
+router.get("/roles/:userId", usersController.manageRolesForm);
+/** user roles manager process route */
+router.patch("/roles/:userId", usersController.manageRolesProcess);
+
 module.exports = router;

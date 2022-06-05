@@ -5,7 +5,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.rtl.min.css" integrity="sha384-dc2NSrAXbAkjrdm9IYrX10fQq9SDG6Vjz7nQVKdKcJl3pC+k37e7qJR5MVSCS+wR" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.rtl.min.css"
+          integrity="sha384-dc2NSrAXbAkjrdm9IYrX10fQq9SDG6Vjz7nQVKdKcJl3pC+k37e7qJR5MVSCS+wR" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/admin/panel.css">
     <%- style %>
@@ -36,43 +37,44 @@
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/admin/panel/">
+                        <a class="nav-link <%= isActive("/admin/panel", true) %>" href="/admin/panel/">
                             <span data-feather="home"></span>
                             داشبورد
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/panel/courses">
+                        <a class="nav-link <%= isActive("/admin/panel/courses") %>"
+                           href="/admin/panel/courses">
                             <span data-feather="shopping-cart"></span>
                             دورها
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/panel/comments">
+                        <a class="nav-link <%= isActive("/admin/panel/comments") %>" href="/admin/panel/comments">
                             <span data-feather="layers"></span>
                             نظرات
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/panel/categories">
+                        <a class="nav-link <%= isActive("/admin/panel/categories") %>" href="/admin/panel/categories">
                             <span data-feather="grid"></span>
                             دسته بندی ها
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/panel/users">
+                        <a class="nav-link <%= isActive("/admin/panel/users") %>" href="/admin/panel/users">
                             <span data-feather="users"></span>
                             کاربران
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/panel/permissions">
+                        <a class="nav-link <%= isActive("/admin/panel/permissions") %>" href="/admin/panel/permissions">
                             <span data-feather="alert-octagon"></span>
                             اجازه دسترسی
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/admin/panel/roles">
+                        <a class="nav-link <%= isActive("/admin/panel/roles") %>" href="/admin/panel/roles">
                             <span data-feather="alert-octagon"></span>
                             سطوح دسترسی
                         </a>
@@ -132,9 +134,15 @@
 <%- include(viewDir("layouts/copyRight")) -%>
 <!-- Copyright Footer-->
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 <script src="/js/admin/holder.min.js"></script>
 <script src="/js/feather.min.js"></script>
 <script src="/ckEditor/full/ckeditor.js"></script>

@@ -27,7 +27,7 @@ const roleSchema = new Schema({
         required: true,
         ref: 'Permission'
     }]
-}, {timestamps: true});
+}, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
 roleSchema.index({hashId: 1});
@@ -36,5 +36,16 @@ roleSchema.index({label: 1});
 
 /** initialize mongoose paginate plugin for category schema */
 roleSchema.plugin(mongoosePaginate);
+
+/**
+ * create a virtual field to be used for
+ * roles and users collections relation
+ * through populate method.
+ */
+roleSchema.virtual("users", {
+    ref: "User",
+    localField: "_id",
+    foreignField: "roles",
+});
 
 module.exports = mongoose.model('Role', roleSchema);

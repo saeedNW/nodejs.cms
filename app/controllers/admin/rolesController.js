@@ -96,7 +96,7 @@ class rolesController extends Controller {
     async newRoleProcess(req, res, next) {
         try {
             /** user input validation */
-            const validationResult = await this.RoleValidation(req);
+            const validationResult = await this.roleValidation(req);
 
             /**
              * redirect to previous page if there was any validation errors.
@@ -116,7 +116,7 @@ class rolesController extends Controller {
      * @param req
      * @returns {Promise<boolean>}
      */
-    async RoleValidation(req) {
+    async roleValidation(req) {
         try {
             /**
              * create custom feed for user inputs validation.
@@ -266,7 +266,7 @@ class rolesController extends Controller {
                 this.sendError("چنین دسترسی وجود ندارد", 404);
 
             /** user input validation */
-            const validationResult = await this.permissionValidation(req);
+            const validationResult = await this.roleValidation(req);
 
             /**
              * redirect to previous page if there was any validation errors.
