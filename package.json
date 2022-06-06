@@ -10,7 +10,6 @@
   "author": "Saeed Noroozi",
   "license": "ISC",
   "dependencies": {
-    "app-module-path": "^2.2.0",
     "auto-bind": "^4.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
