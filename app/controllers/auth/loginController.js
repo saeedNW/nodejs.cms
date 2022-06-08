@@ -91,7 +91,7 @@ class LoginController extends Controller {
             /** use passport login method for user login process */
             req.logIn(user, err => {
                 /** set remember me token if remember option was checked */
-                if (remember) user.setRememberToken(res);
+                if (remember) user.setRememberToken(res, next);
 
                 /** redirect user to home page after completing login process */
                 res.redirect("/");

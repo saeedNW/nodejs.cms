@@ -12,6 +12,6 @@ const homeController = require("../../../controllers/admin/homeController");
 router.get('/', homeController.index);
 
 /** image uploader route */
-router.post("/ckEditor-uploader", imageUploader.single("upload"), homeController.ckEditorUploader)
+router.post("/ckEditor-uploader", imageUploader.single("upload"), homeController.ckEditorUploader);
 
 module.exports = router;

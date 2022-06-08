@@ -153,13 +153,15 @@ module.exports = class ViewsLocalsConfig extends Config {
      */
     isActive(url, exactMath = false) {
         /** check if url needs to be exact match */
-        if (exactMath)
+        if (exactMath) {
             if (this.req.url === url)
                 return "active";
+        }
 
         /** check if url has needed match */
-        if (this.req.url.includes(url))
+        else if (this.req.url.includes(url)) {
             return "active";
+        }
 
         return ""
     }

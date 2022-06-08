@@ -4,7 +4,7 @@ const {courseModel, categoryModel, paymentModel} = require("../../models").model
 const CoursesTransform = require("../../transform/coursesTransform");
 /** import course constants */
 const {PaymentType} = require("../../constants").coursesConstants;
-/** import axios module */
+/** import request-promise module */
 const request = require("request-promise");
 /** import general hashId generator method */
 const {getHashId} = require("../../core/getHashId");
@@ -115,7 +115,7 @@ class CoursesController extends Controller {
     }
 
     /**
-     *
+     * rendering single course page
      * @param req
      * @param res
      * @param next
@@ -202,6 +202,13 @@ class CoursesController extends Controller {
         }
     }
 
+    /**
+     * payment process
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
     async paymentProcess(req, res, next) {
         /** get course id from request body */
         const {course: _id} = req.body;
@@ -391,7 +398,13 @@ class CoursesController extends Controller {
         }
     }
 
-
+    /**
+     * create payment request options
+     * @param url
+     * @param params
+     * @param method
+     * @return {{headers: {"content-type": string, "cache-control": string}, method: string, json: boolean, body, url}}
+     */
     getPaymentRequestOptions(url, params, method = "POST") {
         return {
             method,

@@ -6,7 +6,7 @@ const Config = require("./config");
 /**
  * database configs
  */
-class DatabaseConfig extends Config {7
+class DatabaseConfig extends Config {
     /**
      * specify mongodb connection url
      * based on nodes' running environment

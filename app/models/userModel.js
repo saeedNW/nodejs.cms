@@ -113,8 +113,9 @@ userSchema.methods.comparePassword = function (password) {
 /**
  * user schema set remember me token method
  * @param res
+ * @param next
  */
-userSchema.methods.setRememberToken = async function (res) {
+userSchema.methods.setRememberToken = async function (res, next) {
     try {
         /** create remember me token */
         const token = uniqueString();

@@ -72,7 +72,7 @@ module.exports = class Controller {
 
         /** return error if given id is not a valid id */
         if (!validate)
-            this.sendError("چنین دوره ای وجود ندارد", 404);
+            this.sendError("آی دی وارد شده وجود ندارد", 404);
     }
 
     /**
