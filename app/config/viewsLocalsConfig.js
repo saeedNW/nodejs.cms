@@ -36,7 +36,7 @@ module.exports = class ViewsLocalsConfig extends Config {
             oldData: this.oldInfo,
             convertDate: this.convertDate,
             query: this.req.query,
-            requestURL: this.req.url,
+            requestURL: this.req.originalUrl,
             numberWithCommas: this.numberWithCommas,
             canUserUse: this.canUserUse,
             isActive: this.isActive,
@@ -154,12 +154,12 @@ module.exports = class ViewsLocalsConfig extends Config {
     isActive(url, exactMath = false) {
         /** check if url needs to be exact match */
         if (exactMath) {
-            if (this.req.url === url)
+            if (this.req.originalUrl === url)
                 return "active";
         }
 
         /** check if url has needed match */
-        else if (this.req.url.includes(url)) {
+        else if (this.req.originalUrl.includes(url)) {
             return "active";
         }
 
