@@ -1,7 +1,7 @@
 /** import escape and trim tool */
 const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import user hash id generator */
-const {nextUserHashId} = require("../../core/nextUserHashId");
+const {nextUserHashId} = require("../../utils/nextUserHashId");
 /** import models */
 const {userModel, roleModel} = require("../../models").model;
 /** import user validator */
@@ -540,7 +540,7 @@ class UsersController extends Controller {
             const roles = await roleModel.find({});
 
             res.render("admin/users/manageRoles", {
-                title: "مدیریت دسترسی های کاربر",
+                title: "مدیریت نقش های کاربر",
                 user: transformedData,
                 roles
             });

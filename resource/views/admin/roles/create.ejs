@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
-    <h2>افزودن سطح دسترسی</h2>
+    <h2>افزودن نقش جدید</h2>
 </div>
 <form class="form-horizontal" action="/admin/panel/roles/create" method="post">
 
@@ -20,9 +20,9 @@
         </div>
     </div>
     <div class="form-group row mb-3">
-        <label for="permissions" class="control-label font-weight-bold mb-1">اجازه دسترسی ها</label>
+        <label for="permissions" class="control-label font-weight-bold mb-1">دسترسی ها</label>
         <select name="permissions" id="permissions" class="form-control form-control-chosen"
-                data-placeholder="انتخاب اجازه های دسترسی" required multiple>
+                data-placeholder="انتخاب دسترسی" required multiple>
             <% for (const permission of permissions){ %>
                 <option value="<%= permission._id %>"
                         <%= oldData("permissions").indexOf(permission._id) !== -1 ? 'selected' : '' %> >

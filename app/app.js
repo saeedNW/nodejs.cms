@@ -26,7 +26,7 @@ const {initializeWebRoutes} = require('./router/web');
 /** import view engine and ejs config initializer */
 const {initializer} = require("./config/viewEngineConfig");
 /** import unique identifier core */
-const {identifierInitializer} = require("./core/initIdentifierCollection");
+const {identifierInitializer} = require("./initializer/initIdentifierCollection");
 /** import session configs */
 const {sessionConfig} = require("./config/sessionConfig");
 /** import login remember middleware */

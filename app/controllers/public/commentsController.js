@@ -5,7 +5,7 @@ const {commentsValidator} = require("./validator/commentsValidator");
 /** import escape and trim tool */
 const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import general hashId generator method */
-const {getHashId} = require("../../core/getHashId");
+const {getHashId} = require("../../utils/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants").identifierConstants;
 /** import models */

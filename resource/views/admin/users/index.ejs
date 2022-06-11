@@ -14,7 +14,7 @@
             <th>کد شناسایی</th>
             <th>نام کاربر</th>
             <th>ایمیل</th>
-            <th>دسترسی ها</th>
+            <th>نقش</th>
             <th>تاریخ عضویت</th>
             <th>تنظیمات</th>
         </tr>
@@ -30,7 +30,7 @@
                     <th>
                         <a href="#" data-toggle="modal" data-target="#rolesModal"
                            data-roles="<%= JSON.stringify(user.roles) %>">
-                            دسترسی ها
+                            نقش ها کاربر
                         </a>
                     </th>
                     <td><%= convertDate(user.createdAt).format('jDD - jMMMM - jYYYY') %></td>
@@ -47,7 +47,7 @@
 
                             <% if(user.admin) { %>
                                 <a href="/admin/panel/users/roles/<%= user._id %>"
-                                   class="btn btn-success me-1">ویرایش دسترسی ها</a>
+                                   class="btn btn-success me-1">ویرایش نقش ها</a>
                             <% } %>
 
                             <form action="/admin/panel/users/delete/<%= user._id %>?_method=DELETE" method="post">

@@ -5,7 +5,7 @@ const LocalStrategy = require("passport-local").Strategy;
 /** import user model */
 const {userModel} = require("../models").model
 /** import user hash id generator */
-const {nextUserHashId} = require("../core/nextUserHashId");
+const {nextUserHashId} = require("../utils/nextUserHashId");
 
 
 passport.serializeUser(function (user, done) {

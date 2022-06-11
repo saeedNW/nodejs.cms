@@ -7,7 +7,7 @@ const {PaymentType} = require("../../constants").coursesConstants;
 /** import request-promise module */
 const request = require("request-promise");
 /** import general hashId generator method */
-const {getHashId} = require("../../core/getHashId");
+const {getHashId} = require("../../utils/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants/identifier");
 

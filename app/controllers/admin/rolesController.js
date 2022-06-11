@@ -1,7 +1,7 @@
 /** import escape and trim tool */
 const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import general hashId generator method */
-const {getHashId} = require("../../core/getHashId");
+const {getHashId} = require("../../utils/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants").identifierConstants;
 /** import models */
@@ -61,7 +61,7 @@ class rolesController extends Controller {
 
             /** rendering permissions index page */
             res.render("admin/roles/index", {
-                title: "مدیریت سطوح دسترسی ها",
+                title: "مدیریت نقش ها",
                 roles
             });
         } catch (err) {
@@ -80,7 +80,7 @@ class rolesController extends Controller {
             /** get permissions info from database */
             const permissions = await permissionModel.find({});
 
-            res.render("admin/roles/create", {title: "افزودن سطح دسترسی جدید", permissions});
+            res.render("admin/roles/create", {title: "افزودن نقش جدید", permissions});
         } catch (err) {
             next(err)
         }
@@ -247,7 +247,7 @@ class rolesController extends Controller {
 
             /** rendering roles page */
             res.render("admin/roles/edit", {
-                title: "ویرایش دسترسی",
+                title: "ویرایش نقش",
                 role,
                 permissions
             });

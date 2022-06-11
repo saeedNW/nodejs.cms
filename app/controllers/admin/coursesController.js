@@ -5,7 +5,7 @@ const {courseValidator} = require("./validator/courseValidator");
 /** import courses model */
 const {courseModel, categoryModel} = require("../../models").model;
 /** import general hashId generator method */
-const {getHashId} = require("../../core/getHashId");
+const {getHashId} = require("../../utils/getHashId");
 /** import identifier constants */
 const {identifierModels} = require("../../constants").identifierConstants;
 /** import file system module */

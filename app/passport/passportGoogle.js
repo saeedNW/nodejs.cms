@@ -3,7 +3,7 @@ const passport = require("passport");
 /** import passport-local */
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 /** import user hash id generator */
-const {nextUserHashId} = require("../core/nextUserHashId");
+const {nextUserHashId} = require("../utils/nextUserHashId");
 /** import user model */
 const {userModel} = require("../models").model
 

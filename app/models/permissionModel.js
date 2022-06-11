@@ -27,7 +27,6 @@ const permissionSchema = new Schema({
 /** define collection indexes */
 permissionSchema.index({hashId: 1});
 permissionSchema.index({name: 1});
-permissionSchema.index({label: 1});
 
 /** initialize mongoose paginate plugin for category schema */
 permissionSchema.plugin(mongoosePaginate);
