@@ -36,8 +36,8 @@ class CoursesController extends Controller {
             const query = {};
 
             /**
-             * add a regex to query variable as title,
-             * if there was any search query in request
+             * add a regex to query variable as title
+             * if there was any search query in request.
              * the regex contains search query and "gi" flags
              * "g" flag means global and "i" flag means case-insensitive
              */
