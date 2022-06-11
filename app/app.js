@@ -68,6 +68,8 @@ module.exports = class Application {
                 /** initialize routers */
                 this.setRouters();
 
+                /** todo@ create an admin user */
+
                 /** Initialize identifier collection */
                 return identifierInitializer();
             })

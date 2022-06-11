@@ -28,14 +28,8 @@
                     <td><%= user.name %></td>
                     <td><%= user.email %></td>
                     <th>
-                        <a href="#" title="
-                        <% if (user.roles.length) { %>
-                            <% for (const role of user.roles) { %>
-                                <%= role.label %>
-                            <% } %>
-                        <% } else { %>
-                            <%= "کاربر فاقد دسترسی می باشد" %>
-                        <% } %>">
+                        <a href="#" data-toggle="modal" data-target="#rolesModal"
+                           data-roles="<%= JSON.stringify(user.roles) %>">
                             دسترسی ها
                         </a>
                     </th>
@@ -77,3 +71,36 @@
 
 </div>
 
+<div class="modal fade" id="rolesModal" tabindex="-1" role="dialog"
+     aria-labelledby="rolesModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">نقش های کاربر</h4>
+                <button type="button" class="close btn-close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"></span></button>
+            </div>
+            <div class="modal-body">
+                <ul id="userRolesList" class="list-group dir-ltr text-end p-0">
+                    <!-- user roles list -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /** set parent id in modal parent filed */
+    $(document).ready(function () {
+        $("#rolesModal").on("show.bs.modal", function (event) {
+            const button = $(event.relatedTarget);
+            const roles = button.data("roles");
+            const modal = $(this);
+            const userRolesList = modal.find("#userRolesList");
+            userRolesList.html("");
+            for (const role of roles) {
+                userRolesList.append(`<li class="list-group-item">${role.name} : ${role.label}</li>`)
+            }
+        });
+    });
+</script>

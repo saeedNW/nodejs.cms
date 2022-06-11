@@ -80,8 +80,6 @@ class UsersController extends Controller {
      */
     async newUserForm(req, res, next) {
         try {
-            /** todo@ user role manager */
-
             res.render("admin/users/create", {title: "افزودن کاربر"});
         } catch (err) {
             next(err)
@@ -482,6 +480,8 @@ class UsersController extends Controller {
             if (!user)
                 this.sendError("چنین کاربری وجود ندارد", 404);
 
+            console.log(1, user.admin)
+
             /**
              * toggle user admin access status.
              * if it's true change it to false
@@ -489,6 +489,15 @@ class UsersController extends Controller {
              * @type {boolean}
              */
             user.admin = !user.admin;
+
+            console.log(2, user.admin)
+
+            /**
+             * remove user roles and permissions if
+             * user admin access was taken
+             */
+            if (!user.admin)
+                user.roles = [];
 
             /** update user info in database */
             await user.save();

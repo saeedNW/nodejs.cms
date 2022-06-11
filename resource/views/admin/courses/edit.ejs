@@ -42,7 +42,7 @@
                 <% for (const category of categories){ %>
                     <option value="<%= category._id %>"
                             <%= course.categories.indexOf(category._id) !== -1 ? 'selected' : '' %> >
-                        <%= category.name %>
+                        <%= category.label %>
                     </option>
                 <% } %>
             </select>

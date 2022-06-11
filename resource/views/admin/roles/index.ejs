@@ -26,9 +26,8 @@
                     <th><%= role.name %></th>
                     <th><%= role.label %></th>
                     <th>
-                        <a href="#" title="<% for (const permission of role.permissions) { %>
-                            <%= permission.label %>
-                        <% } %>">
+                        <a href="#" data-toggle="modal" data-target="#permissionsModal"
+                           data-permissions="<%= JSON.stringify(role.permissions) %>">
                             دسترسی ها
                         </a>
                     </th>
@@ -58,3 +57,36 @@
 
 </div>
 
+<div class="modal fade" id="permissionsModal" tabindex="-1" role="dialog"
+     aria-labelledby="permissionsModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">اجازه های دسترسی</h4>
+                <button type="button" class="close btn-close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true"></span></button>
+            </div>
+            <div class="modal-body">
+                <ul id="rolePermissionsList" class="list-group dir-ltr text-end p-0">
+                    <!-- user roles list -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /** set parent id in modal parent filed */
+    $(document).ready(function () {
+        $("#permissionsModal").on("show.bs.modal", function (event) {
+            const button = $(event.relatedTarget);
+            const permissions = button.data("permissions");
+            const modal = $(this);
+            const rolePermissionsList = modal.find("#rolePermissionsList");
+            rolePermissionsList.html("");
+            for (const permission of permissions) {
+                rolePermissionsList.append(`<li class="list-group-item">${permission.name} : ${permission.label}</li>`);
+            }
+        });
+    });
+</script>

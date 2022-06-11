@@ -8,7 +8,7 @@
     <div class="form-group row mb-3">
         <div class="col">
             <label for="name" class="control-label font-weight-bold mb-1">عنوان دسترسی</label>
-            <input type="text" class="form-control" name="name" id="name" placeholder="teacher"
+            <input type="text" class="form-control dir-ltr" name="name" id="name" placeholder="teacher"
                    value="<%= oldData('name') %>" required>
         </div>
     </div>
@@ -26,7 +26,7 @@
             <% for (const permission of permissions){ %>
                 <option value="<%= permission._id %>"
                         <%= oldData("permissions").indexOf(permission._id) !== -1 ? 'selected' : '' %> >
-                    <%= permission.name %>
+                    <%= permission.label %>
                 </option>
             <% } %>
         </select>

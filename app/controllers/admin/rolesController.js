@@ -188,11 +188,24 @@ class rolesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read role data from database based on _id */
-            const role = await roleModel.findById(_id)
+            const role = await roleModel.findById(_id).populate("users");
 
             /** return error if role was not found */
             if (!role)
                 this.sendError("چنین دسترسی وجود ندارد", 404);
+
+            /**
+             * removing role from user roles
+             * before deleting it from database
+             */
+            for (const user of role.users) {
+                /** find role id index in the user roles list */
+                const index = user.roles.indexOf(role._id);
+                /** removing role from user roles */
+                user.roles.splice(index, 1);
+                /** save user */
+                await user.save();
+            }
 
             /**
              * deleting role from database
