@@ -2,8 +2,6 @@
     <h2>کاربران</h2>
     <div class="btn-group">
         <a href="/admin/panel/users/create" class="btn btn-sm btn-primary me-1">افزودن کاربر</a>
-        <a href="/admin/panel/permissions" class="btn btn-sm btn-secondary me-1">مدیریت اجازه های دسترسی</a>
-        <a href="/admin/panel/roles" class="btn btn-sm btn-success">مدیریت سطوح دسترسی</a>
     </div>
 </div>
 <div class="table-responsive">
@@ -29,7 +27,7 @@
                     <td><%= user.email %></td>
                     <th>
                         <a href="#" data-toggle="modal" data-target="#rolesModal"
-                           data-roles="<%= JSON.stringify(user.roles) %>">
+                           data-roles="#">
                             نقش ها کاربر
                         </a>
                     </th>
@@ -46,7 +44,7 @@
                             </form>
 
                             <% if(user.admin) { %>
-                                <a href="/admin/panel/users/roles/<%= user._id %>"
+                                <a href="#"
                                    class="btn btn-success me-1">ویرایش نقش ها</a>
                             <% } %>
 
@@ -98,9 +96,9 @@
             const modal = $(this);
             const userRolesList = modal.find("#userRolesList");
             userRolesList.html("");
-            for (const role of roles) {
-                userRolesList.append(`<li class="list-group-item">${role.name} : ${role.label}</li>`)
-            }
+            // for (const role of roles) {
+            //     userRolesList.append(`<li class="list-group-item">${role.name} : ${role.label}</li>`)
+            // }
         });
     });
 </script>

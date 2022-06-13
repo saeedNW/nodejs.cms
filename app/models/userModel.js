@@ -41,10 +41,6 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Course"
     }],
-    roles: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Role'
-    }],
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
