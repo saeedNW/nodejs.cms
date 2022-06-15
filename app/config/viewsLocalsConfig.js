@@ -134,13 +134,6 @@ module.exports = class ViewsLocalsConfig extends Config {
             }
         }
 
-        /**
-         * set user access status
-         * to true if user is an admin
-         */
-        if (this.req.isAuthenticated() && this.req.user.admin)
-            canUse = true;
-
         return canUse;
     }
 

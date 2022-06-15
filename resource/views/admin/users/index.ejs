@@ -2,6 +2,7 @@
     <h2>کاربران</h2>
     <div class="btn-group">
         <a href="/admin/panel/users/create" class="btn btn-sm btn-primary me-1">افزودن کاربر</a>
+        <a href="/admin/panel/roles" class="btn btn-sm btn-success">مدیریت نقش ها</a>
     </div>
 </div>
 <div class="table-responsive">
@@ -25,33 +26,36 @@
                     <th><%= user.hashId %></th>
                     <td><%= user.name %></td>
                     <td><%= user.email %></td>
-                    <th>
-                        <a href="#" data-toggle="modal" data-target="#rolesModal"
-                           data-roles="#">
-                            نقش ها کاربر
-                        </a>
-                    </th>
+                    <td><%= user.role ? user.role.label : user.admin ? "ادمین فاقد دسترسی" : "کاربر" %></td>
                     <td><%= convertDate(user.createdAt).format('jDD - jMMMM - jYYYY') %></td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <a href="/admin/panel/users/edit/<%= user._id %>" class="btn btn-primary me-1">ویرایش</a>
-
-                            <form action="/admin/panel/users/toggle-admin/<%= user._id %>?_method=PATCH" method="post">
-                                <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                <button type="submit" class="btn btn-secondary me-1">
-                                    <%= user.admin ? "لغو ادمین" : "دسترسی ادمین" %>
-                                </button>
-                            </form>
-
-                            <% if(user.admin) { %>
-                                <a href="#"
-                                   class="btn btn-success me-1">ویرایش نقش ها</a>
+                            <% if(canEditUser) { %>
+                                <a href="/admin/panel/users/edit/<%= user._id %>"
+                                   class="btn btn-primary me-1">ویرایش</a>
                             <% } %>
 
-                            <form action="/admin/panel/users/delete/<%= user._id %>?_method=DELETE" method="post">
-                                <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                <button type="submit" class="btn btn-danger">حذف</button>
-                            </form>
+                            <% if(canChangeAdminAccess) { %>
+                                <form action="/admin/panel/users/toggle-admin/<%= user._id %>?_method=PATCH"
+                                      method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit" class="btn btn-secondary me-1">
+                                        <%= user.admin ? "لغو ادمین" : "دسترسی ادمین" %>
+                                    </button>
+                                </form>
+                            <% } %>
+
+                            <% if(canChangeRoles && user.admin) { %>
+                                <a href="/admin/panel/users/roles/<%= user._id %>"
+                                   class="btn btn-success me-1">ویرایش نقش کاربر</a>
+                            <% } %>
+
+                            <% if(canDeleteUser) { %>
+                                <form action="/admin/panel/users/delete/<%= user._id %>?_method=DELETE" method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit" class="btn btn-danger">حذف</button>
+                                </form>
+                            <% } %>
                         </div>
                     </td>
                 </tr>
@@ -68,37 +72,3 @@
     <%- include(viewDir("layouts/pagination"), {pagination:users}) -%>
 
 </div>
-
-<div class="modal fade" id="rolesModal" tabindex="-1" role="dialog"
-     aria-labelledby="rolesModalLabel" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalLabel">نقش های کاربر</h4>
-                <button type="button" class="close btn-close" data-dismiss="modal"
-                        aria-label="Close"><span aria-hidden="true"></span></button>
-            </div>
-            <div class="modal-body">
-                <ul id="userRolesList" class="list-group dir-ltr text-end p-0">
-                    <!-- user roles list -->
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    /** set parent id in modal parent filed */
-    $(document).ready(function () {
-        $("#rolesModal").on("show.bs.modal", function (event) {
-            const button = $(event.relatedTarget);
-            const roles = button.data("roles");
-            const modal = $(this);
-            const userRolesList = modal.find("#userRolesList");
-            userRolesList.html("");
-            // for (const role of roles) {
-            //     userRolesList.append(`<li class="list-group-item">${role.name} : ${role.label}</li>`)
-            // }
-        });
-    });
-</script>

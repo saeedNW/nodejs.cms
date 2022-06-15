@@ -3,13 +3,17 @@ const {escapeAndTrim} = require("../../utils/scapeAndTrim");
 /** import user hash id generator */
 const {nextUserHashId} = require("../../utils/nextUserHashId");
 /** import models */
-const {userModel} = require("../../models").model;
+const {userModel, roleModel} = require("../../models").model;
 /** import user validator */
 const {userValidator} = require("./validator/userValidator");
 /** import user transform */
 const UsersTransform = require("../../transform/usersTransform");
 /** import file system module */
 const fs = require("fs");
+/** import permission constants */
+const {permissionsConstants} = require("../../constants");
+/** import user role validator */
+const {userRolesValidator} = require("./validator/userRolesValidator");
 
 /** import main controller file */
 const Controller = require("../controller");
@@ -49,13 +53,66 @@ class UsersController extends Controller {
                  * sort option:
                  * this options allows you to sort data before receiving them from database.
                  */
-                sort: {createdAt: 1}
+                sort: {createdAt: 1},
+                /**
+                 * populate option:
+                 * Paths which should be populated with other documents
+                 */
+                populate: [
+                    {
+                        path: "role"
+                    }
+                ]
             });
 
             /** transforming data to remove unneeded info */
             const transformedData = new UsersTransform().withPaginate().transformCollection(users);
 
-            res.render("admin/users/index", {title: "مدیریت کاربران", users: transformedData});
+            /**
+             * check if admin has access to creating user
+             * @type {boolean}
+             */
+            const canAddUser = await this.hasPermission(req, [
+                permissionsConstants.AccessPermissions.addUsers
+            ]);
+            /**
+             * check if admin has access to edit user
+             * @type {boolean}
+             */
+            const canEditUser = await this.hasPermission(req, [
+                permissionsConstants.AccessPermissions.editUsers
+            ]);
+            /**
+             * check if admin has access to change users admin access
+             * @type {boolean}
+             */
+            const canChangeAdminAccess = await this.hasPermission(req, [
+                permissionsConstants.AccessPermissions.editUsersAdminStatus
+            ]);
+            /**
+             * check if admin has access to change users roles
+             * @type {boolean}
+             */
+            const canChangeRoles = await this.hasPermission(req, [
+                permissionsConstants.AccessPermissions.editUsersRoles
+            ]);
+            /**
+             * check if admin has access to delete users
+             * @type {boolean}
+             */
+            const canDeleteUser = await this.hasPermission(req, [
+                permissionsConstants.AccessPermissions.deleteUsers
+            ]);
+
+            res.render("admin/users/index", {
+                title: "مدیریت کاربران",
+                users: transformedData,
+                canAddUser,
+                canEditUser,
+                canChangeAdminAccess,
+                canChangeRoles,
+                canDeleteUser
+            });
         } catch (err) {
             next(err);
         }
@@ -222,8 +279,15 @@ class UsersController extends Controller {
                 await this.userPaymentRemoval(user.payments);
 
             /** remove user comments */
-            if (user.comments.length > 0)
-                await this.userCommentsRemoval(user.comments);
+            if (user.comments.length > 0) {
+                /** loop over comments */
+                for (const comment of user.comments) {
+                    /**
+                     * remove comment and its answers
+                     */
+                    await this.removeComment(comment);
+                }
+            }
 
             /**
              * deleting user from database
@@ -315,56 +379,6 @@ class UsersController extends Controller {
         for (const payment of payments) {
             /** remove payment from database */
             await payment.remove()
-        }
-    }
-
-    /**
-     * remove user comments
-     * @param comments
-     * @return {Promise<void>}
-     */
-    async userCommentsRemoval(comments) {
-        /** loop over comments */
-        for (const comment of comments) {
-            /**
-             * calculating the count of decreased comments.
-             * @type {number}
-             */
-            let totalDecreaseCount = 0;
-
-            /** process if there were any answers for chosen comment */
-            if (comment.answers.length > 0) {
-                /** loop over comment answers */
-                for (const answer of comment.answers) {
-                    /**
-                     * add a unit to the number of decreased
-                     * comments if answer was approved
-                     */
-                    if (answer.approved)
-                        ++totalDecreaseCount;
-
-                    /** removing the answer */
-                    await answer.remove();
-                }
-            }
-
-            /**
-             * add a unit to the number of decreased comments
-             * if the main comment was approved
-             */
-            if (comment.approved)
-                ++totalDecreaseCount;
-
-            /**
-             * decreasing course/episode comments count
-             * based on comments' belongTo field.
-             */
-            await comment.belongTo.increase('commentCount', -totalDecreaseCount);
-
-            /**
-             * deleting comment from database
-             */
-            await comment.remove();
         }
     }
 
@@ -469,8 +483,6 @@ class UsersController extends Controller {
             if (!user)
                 this.sendError("چنین کاربری وجود ندارد", 404);
 
-            console.log(1, user.admin)
-
             /**
              * toggle user admin access status.
              * if it's true change it to false
@@ -479,14 +491,12 @@ class UsersController extends Controller {
              */
             user.admin = !user.admin;
 
-            console.log(2, user.admin)
-
             /**
              * remove user roles and permissions if
              * user admin access was taken
              */
             if (!user.admin)
-                user.roles = [];
+                user.role = null;
 
             /** update user info in database */
             await user.save();
@@ -497,6 +507,120 @@ class UsersController extends Controller {
             next(err);
         }
     }
+
+    /**
+     * rendering users' roles manager page
+     * @param req
+     * @param res
+     * @param next
+     */
+    async manageRolesForm(req, res, next) {
+        /** extract user id from request params */
+        const {userId: _id} = req.params;
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /**
+             * get users info from database.
+             * Note: user should be an admin user.
+             */
+            const user = await userModel.findOne({_id, admin: true});
+
+            /** return error if user was not found */
+            if (!user)
+                this.sendError("چنین کاربری وجود ندارد", 404);
+
+            /** transforming data to remove unneeded info */
+            const transformedData = new UsersTransform().transform(user);
+
+            /** get roles from database */
+            const roles = await roleModel.find({});
+
+            res.render("admin/users/manageRoles", {
+                title: "مدیریت نقش های کاربر",
+                user: transformedData,
+                roles
+            });
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    /**
+     * users' roles manager process
+     * @param req
+     * @param res
+     * @param next
+     * @return {Promise<*>}
+     */
+    async manageRolesProcess(req, res, next) {
+        /** extract user id from request params */
+        const {userId: _id} = req.params;
+        /** extract user new set of roles from request body */
+        const {role} = req.body;
+
+        try {
+            /** return error if given id is not a valid id */
+            this.mongoObjectIdValidation(_id);
+
+            /**
+             * get users info from database.
+             * Note: user should be an admin user.
+             */
+            const user = await userModel.findOne({_id, admin: true});
+
+            /** return error if user was not found */
+            if (!user)
+                this.sendError("چنین کاربری وجود ندارد", 404);
+
+            /** user input validation */
+            const validationResult = await this.userRolesValidation(req);
+
+            /**
+             * redirect to previous page if there was any validation errors.
+             */
+            if (!validationResult)
+                return this.redirectURL(req, res);
+
+            /** set user new roles */
+            user.role = role;
+            /** update user info in database */
+            await user.save();
+
+            /** return to users list page */
+            res.redirect("/admin/panel/users");
+        } catch (err) {
+            next(err);
+        }
+    }
+
+        /**
+         * validate user inputs for users' roles manager process
+         * @param req
+         * @returns {Promise<boolean>}
+         */
+        async userRolesValidation(req) {
+            try {
+                /** user input validation */
+                await userRolesValidator.validate(req.body, {abortEarly: false});
+
+                /** return true if there wasn't any validation errors */
+                return true
+            } catch (err) {
+                console.log(err)
+                /** get validation errors */
+                const errors = err.errors;
+
+                /** set errors in a flash message */
+                req.flash("errors", errors);
+
+                /** return false if there was any validation error */
+                return false
+            }
+        }
+
 }
 
 module.exports = new UsersController();

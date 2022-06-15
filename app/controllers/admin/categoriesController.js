@@ -205,7 +205,7 @@ class CategoriesController extends Controller {
 
             /** return error if episode was not found */
             if (!category)
-                this.sendError("چنین دسته ای ای وجود ندارد", 404);
+                this.sendError("چنین دسته بندی وجود ندارد", 404);
 
 
             /** process if there were any childes for chosen category */
@@ -250,7 +250,7 @@ class CategoriesController extends Controller {
 
             /** return error if course was not found */
             if (!category)
-                this.sendError("چنین جلسه ای وجود ندارد", 404);
+                this.sendError("چنین دسته بندی وجود ندارد", 404);
 
             /** get main categories name */
             const categories = await categoryModel.find({parent: null}, {name: 1});
@@ -286,7 +286,7 @@ class CategoriesController extends Controller {
 
             /** return error if category was not found */
             if (!category)
-                this.sendError("چنین دسته ای وجود ندارد", 404);
+                this.sendError("چنین دسته بندی وجود ندارد", 404);
 
             /** user input validation */
             const validationResult = await this.categoryValidation(req);

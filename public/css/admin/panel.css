@@ -91,3 +91,7 @@ body {
 .border-bottom {
     border-bottom: 1px solid #e5e5e5;
 }
+
+.chosen-container .chosen-results li.result-selected:before {
+    margin-left: unset !important;
+}

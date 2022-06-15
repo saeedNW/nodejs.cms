@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const {sendError: error} = require("../utils/sendError");
 /** import sprintf module */
 const {sprintf} = require("sprintf-js");
+/** import permission constants */
+const {permissionsConstants} = require("../constants");
 
 module.exports = class Controller {
     constructor() {
@@ -72,7 +74,7 @@ module.exports = class Controller {
 
         /** return error if given id is not a valid id */
         if (!validate)
-            this.sendError("آی دی وارد شده وجود ندارد", 404);
+            this.sendError("آی دی وارد شده صحیح نمی باشد", 404);
     }
 
     /**
@@ -153,5 +155,100 @@ module.exports = class Controller {
         }
 
         req.flash("sweetalert", alertOptions);
+    }
+
+    /**
+     * remove comment and its answers
+     * @param comment
+     * @return {Promise<void>}
+     */
+    async removeComment(comment){
+        /**
+         * calculating the count of decreased comments.
+         * @type {number}
+         */
+        let totalDecreaseCount = 0;
+
+        /** process if there were any answers for chosen comment */
+        if (comment.answers.length > 0) {
+            /** loop over comment answers */
+            for (const answer of comment.answers) {
+                /**
+                 * add a unit to the number of decreased
+                 * comments if answer was approved
+                 */
+                if (answer.approved)
+                    ++totalDecreaseCount;
+
+                /** removing the answer */
+                await answer.remove();
+            }
+        }
+
+        /**
+         * add a unit to the number of decreased comments
+         * if the main comment was approved
+         */
+        if (comment.approved)
+            ++totalDecreaseCount;
+
+        /**
+         * decreasing course/episode comments count
+         * based on comments' belongTo field.
+         */
+        await comment.belongTo.increase('commentCount', -totalDecreaseCount);
+
+        /**
+         * deleting comment from database
+         */
+        await comment.remove();
+    }
+
+    /**
+     * check if user has permission to processed or not
+     * @param req
+     * @param requiredPermissions
+     * @return {Promise<boolean>}
+     */
+    async hasPermission(req, requiredPermissions = []) {
+        /**
+         * get user info from request.
+         * populate with user roles
+         */
+        const user = await req.user.populate({
+            path: "role",
+            /**
+             * populate roles with role permissions
+             */
+            populate: {
+                path: "permissions"
+            }
+        });
+
+        /**
+         * return false if user has no roles
+         */
+        if (!user.role)
+            return false
+
+        /**
+         * get user access permissions title as an array
+         * @type {*[]}
+         */
+        const userPermissions = user.role.permissions.map(permission => permission.title);
+
+        /**
+         * check if user has the required permission
+         * @type {boolean[]}
+         */
+        const hasPermission = requiredPermissions.map(permission => {
+            return userPermissions.includes(permission);
+        })
+
+        /** set permission to true if user has full access */
+        if (userPermissions.includes(permissionsConstants.AccessPermissions.fullAccess))
+            return true;
+
+        return hasPermission.includes(true);
     }
 }

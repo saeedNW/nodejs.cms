@@ -25,7 +25,7 @@ const {initializeApiRoutes} = require('./router/api');
 const {initializeWebRoutes} = require('./router/web');
 /** import view engine and ejs config initializer */
 const {initializer} = require("./config/viewEngineConfig");
-/** import unique identifier core */
+/** import unique identifier collection initializer */
 const {identifierInitializer} = require("./initializer/initIdentifierCollection");
 /** import session configs */
 const {sessionConfig} = require("./config/sessionConfig");
@@ -35,6 +35,10 @@ const {rememberLogin} = require("./middleware/rememberLogin");
 const ViewsLocalsConfig = require("./config/viewsLocalsConfig");
 /** import error handler */
 const {errorHandler, notfound} = require("./middleware/errorHandler");
+/** import permission collection initializer */
+const {permissionsInitializer} = require("./initializer/initPermissionCollecion");
+/** import super admin account initializer */
+const {adminAccountInitializer} = require("./initializer/initAdminUser");
 
 /**
  * define server port
@@ -59,19 +63,23 @@ module.exports = class Application {
          * initialize database connection
          */
         DBConnection()
-            .then(conn => {
+            .then(async conn => {
                 console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+                /** Initialize identifier collection */
+                await identifierInitializer();
+
+                /** initialize permissions collection */
+                await permissionsInitializer();
+
+                /** initialize admin account */
+                await adminAccountInitializer();
 
                 /** starting application */
                 this.startApplication();
 
                 /** initialize routers */
                 this.setRouters();
-
-                /** todo@ create an admin user */
-
-                /** Initialize identifier collection */
-                return identifierInitializer();
             })
             .catch(err => {
                 console.log(err);

@@ -171,7 +171,7 @@ class CommentsController extends Controller {
 
             /** return error if comments was not found */
             if (!comment)
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+                this.sendError("چنین نظری وجود ندارد", 404);
 
             /**
              * increase course/episode comment count
@@ -215,44 +215,9 @@ class CommentsController extends Controller {
                 this.sendError("چنین نظری وجود ندارد", 404);
 
             /**
-             * calculating the count of decreased comments.
-             * @type {number}
+             * remove comment and its answers
              */
-            let totalDecreaseCount = 0;
-
-            /** process if there were any answers for chosen comment */
-            if (comment.answers.length > 0) {
-                /** loop over comment answers */
-                for (const answer of comment.answers) {
-                    /**
-                     * add a unit to the number of decreased
-                     * comments if answer was approved
-                     */
-                    if (answer.approved)
-                        ++totalDecreaseCount;
-
-                    /** removing the answer */
-                    await answer.remove();
-                }
-            }
-
-            /**
-             * add a unit to the number of decreased comments
-             * if the main comment was approved
-             */
-            if (comment.approved)
-                ++totalDecreaseCount;
-
-            /**
-             * decreasing course/episode comments count
-             * based on comments' belongTo field.
-             */
-            await comment.belongTo.increase('commentCount', -totalDecreaseCount);
-
-            /**
-             * deleting comment from database
-             */
-            await comment.remove();
+            await this.removeComment(comment);
 
             /** redirect to previous page */
             this.redirectURL(req, res);

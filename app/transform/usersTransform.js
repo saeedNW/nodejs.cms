@@ -47,7 +47,7 @@ module.exports = class UserTransform extends Transform {
             name: item.name,
             admin: item.admin,
             email: item.email,
-            roles: item.roles,
+            role: item.role,
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
             ...this.showHashedEmail(item),

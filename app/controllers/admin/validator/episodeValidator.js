@@ -9,15 +9,7 @@ exports.episodeValidator = yup.object().shape({
     course: yup.string()
         .required("فیلد دوره نمیتواند خالی باشد"),
     time: yup.string()
-        .required("فیلد دوره نمیتواند خالی باشد")
-    /*.test(
-        "is-time",
-        "نوع زمان وارد شده صحیح نمی باشد",
-        function (time) {
-            const regex = new RegExp("^(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$");
-            return regex.test(time);
-        }
-    )*/,
+        .required("فیلد دوره نمیتواند خالی باشد"),
     episodeUrl: yup.string()
         .required("لینک دانلود نمیتواند خالی باشد"),
     description: yup.string()

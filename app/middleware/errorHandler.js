@@ -24,15 +24,10 @@ class ErrorHandler extends Middleware {
         const message = error.message || "فرایند با مشکل مواجه شد";
         const stack = error.stack || "";
 
-        if (status === 404)
-            return next();
-
-
         if (req.url.includes('/api')) {
             console.log(error)
             return res.status(status).json({message, status});
         }
-
 
         /**
          * error page rendering for developers

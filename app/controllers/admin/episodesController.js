@@ -194,7 +194,7 @@ class EpisodesController extends Controller {
 
             /** return error if episode was not found */
             if (!episode)
-                this.sendError("چنین جلسه ای ای وجود ندارد", 404);
+                this.sendError("چنین جلسه ای وجود ندارد", 404);
 
             /** todo@ remove episode video */
 
@@ -299,7 +299,7 @@ class EpisodesController extends Controller {
 
             /** return error if course was not found */
             if (!episode)
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+                this.sendError("چنین جلسه ای وجود ندارد", 404);
 
             /** user input validation */
             const validationResult = await this.episodeValidation(req);

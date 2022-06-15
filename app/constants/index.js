@@ -6,10 +6,13 @@ const identifierConstants = require("./identifier");
 const coursesConstants = require("./courses");
 /** import episodes constants */
 const episodesConstants = require("./episodes");
+/** import permissions constants */
+const permissionsConstants = require("./permissions");
 
 module.exports = {
     userConstants,
     identifierConstants,
     coursesConstants,
-    episodesConstants
+    episodesConstants,
+    permissionsConstants
 }

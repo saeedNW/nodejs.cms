@@ -33,5 +33,15 @@ module.exports = {
             deps: ['paymentModel'],
             isPartial: false
         },
+        permissions: {
+            modelName: 'permissions',
+            deps: ["permissionModel"],
+            isPartial: false
+        },
+        roles: {
+            modelName: 'roles',
+            deps: ["roleModel"],
+            isPartial: false
+        }
     }
 }

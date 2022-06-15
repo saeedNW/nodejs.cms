@@ -8,6 +8,8 @@ const bcrypt = require("bcryptjs");
 const uniqueString = require("unique-string");
 /** import mongoose paginate module */
 const mongoosePaginate = require('mongoose-paginate-v2');
+/** import permissions constant */
+const {permissionsConstants} = require("../constants");
 
 /** define user collection schema */
 const userSchema = new Schema({
@@ -41,6 +43,11 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Course"
     }],
+    role: {
+        type: Schema.Types.ObjectId,
+        ref: 'Role',
+        default: null
+    },
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
@@ -171,8 +178,8 @@ userSchema.virtual("comments", {
  * check if user is a vip user or not
  * @return {boolean}
  */
-userSchema.methods.isVip = function () {
-    if (this.admin)
+userSchema.methods.isVip = async function () {
+    if (await hasPermission(this))
         return true;
 
     return false;
@@ -183,11 +190,35 @@ userSchema.methods.isVip = function () {
  * @param courseId
  * @return {boolean}
  */
-userSchema.methods.haveBought = function (courseId) {
-    if (this.admin)
+userSchema.methods.haveBought = async function (courseId) {
+    if (await hasPermission(this))
         return true;
 
     return this.purchases.indexOf(courseId) !== -1;
+}
+
+async function hasPermission(userInfo) {
+    /**
+     * get user info from request.
+     * populate with user roles
+     */
+    const user = await userInfo.populate({
+        path: "role",
+        /**
+         * populate roles with role permissions
+         */
+        populate: {
+            path: "permissions"
+        }
+    });
+
+    /**
+     * get user access permissions title as an array
+     * @type {*[]}
+     */
+    const userPermissions = user.role.permissions.map(permission => permission.title);
+
+    return userPermissions.includes(permissionsConstants.AccessPermissions.fullAccess);
 }
 
 module.exports = mongoose.model("User", userSchema);
