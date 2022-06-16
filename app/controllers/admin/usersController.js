@@ -10,8 +10,6 @@ const {userValidator} = require("./validator/userValidator");
 const UsersTransform = require("../../transform/usersTransform");
 /** import file system module */
 const fs = require("fs");
-/** import permission constants */
-const {permissionsConstants} = require("../../constants");
 /** import user role validator */
 const {userRolesValidator} = require("./validator/userRolesValidator");
 
@@ -68,50 +66,9 @@ class UsersController extends Controller {
             /** transforming data to remove unneeded info */
             const transformedData = new UsersTransform().withPaginate().transformCollection(users);
 
-            /**
-             * check if admin has access to creating user
-             * @type {boolean}
-             */
-            const canAddUser = await this.hasPermission(req, [
-                permissionsConstants.AccessPermissions.addUsers
-            ]);
-            /**
-             * check if admin has access to edit user
-             * @type {boolean}
-             */
-            const canEditUser = await this.hasPermission(req, [
-                permissionsConstants.AccessPermissions.editUsers
-            ]);
-            /**
-             * check if admin has access to change users admin access
-             * @type {boolean}
-             */
-            const canChangeAdminAccess = await this.hasPermission(req, [
-                permissionsConstants.AccessPermissions.editUsersAdminStatus
-            ]);
-            /**
-             * check if admin has access to change users roles
-             * @type {boolean}
-             */
-            const canChangeRoles = await this.hasPermission(req, [
-                permissionsConstants.AccessPermissions.editUsersRoles
-            ]);
-            /**
-             * check if admin has access to delete users
-             * @type {boolean}
-             */
-            const canDeleteUser = await this.hasPermission(req, [
-                permissionsConstants.AccessPermissions.deleteUsers
-            ]);
-
             res.render("admin/users/index", {
                 title: "مدیریت کاربران",
-                users: transformedData,
-                canAddUser,
-                canEditUser,
-                canChangeAdminAccess,
-                canChangeRoles,
-                canDeleteUser
+                users: transformedData
             });
         } catch (err) {
             next(err);

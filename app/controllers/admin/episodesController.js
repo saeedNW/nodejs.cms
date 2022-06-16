@@ -59,7 +59,7 @@ class EpisodesController extends Controller {
 
 
             /** transforming data to remove unneeded info */
-            const transformedData = new EpisodeTransform().withPaginate().withCourseBasicInfo().transformCollection(episodes);
+            const transformedData = new EpisodeTransform().withPaginate().withCourseFullInfo().transformCollection(episodes);
 
             /** rendering courses page */
             res.render("admin/episodes/index", {
@@ -185,16 +185,25 @@ class EpisodesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read episode data from database based on _id */
-            const episode = await episodeModel.findById(_id).populate({
-                path: "comments",
-                populate: {
-                    path: "answers"
+            const episode = await episodeModel.findById(_id).populate([
+                {
+                    path: "comments",
+                    populate: {
+                        path: "answers"
+                    }
+                },
+                {
+                    path: "course"
                 }
-            });
+            ]);
 
             /** return error if episode was not found */
             if (!episode)
                 this.sendError("چنین جلسه ای وجود ندارد", 404);
+
+            /** return error of course didn't belong to user */
+            if (episode.course.user.toString() !== req.user._id.toString())
+                this.sendError("شما اجازه حذف این جلسه را ندارید", 403);
 
             /** todo@ remove episode video */
 
@@ -295,11 +304,15 @@ class EpisodesController extends Controller {
             this.mongoObjectIdValidation(_id);
 
             /** read course data from database based on _id */
-            const episode = await episodeModel.findById(_id);
+            const episode = await episodeModel.findById(_id).populate("course");
 
             /** return error if course was not found */
             if (!episode)
                 this.sendError("چنین جلسه ای وجود ندارد", 404);
+
+            /** return error of course didn't belong to user */
+            if (episode.course.user.toString() !== req.user._id.toString())
+                this.sendError("شما اجازه حذف این جلسه را ندارید", 403);
 
             /** user input validation */
             const validationResult = await this.episodeValidation(req);

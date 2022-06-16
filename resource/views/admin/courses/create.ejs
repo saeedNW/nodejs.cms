@@ -32,7 +32,7 @@
             <label for="categories" class="control-label font-weight-bold mb-1">دسته بندی ها</label>
             <select name="categories" id="categories" class="form-control form-control-chosen" data-placeholder="انتخاب دسته بندی" required multiple>
                 <% for (const category of categories){ %>
-                    <option value="<%= category._id %>"><%= category.label %></option>
+                    <option value="<%= category._id %>"><%= category.name %></option>
                 <% } %>
             </select>
         </div>

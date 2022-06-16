@@ -1,35 +1,35 @@
 module.exports = {
     AccessPermissions: Object.freeze({
-        /** super admin full permission */
+        /** super admin full permissions */
         fullAccess: "full-access",
-        /** courses manager permission */
+        /** courses manager permissions */
         showCourses: "show-courses",
         editCourses: "edit-courses",
         addCourses: "add-courses",
         deleteCourses: "delete-courses",
-        /** episodes manager permission */
+        /** episodes manager permissions */
         showEpisodes: "show-episodes",
         editEpisodes: "edit-episodes",
         addEpisodes: "add-episodes",
         deleteEpisodes: "delete-episodes",
-        /** comments manager permission */
+        /** comments manager permissions */
         showComments: "show-comments",
         showUnapprovedComments: "show-unapproved-comments",
         deleteComments: "delete-comments",
         approveComments: "approve-comments",
-        /** categories manager permission */
+        /** categories manager permissions */
         showCategories: "show-categories",
         editCategories: "edit-categories",
         deleteCategories: "delete-categories",
         addCategories: "add-categories",
-        /** users manager permission */
+        /** users manager permissions */
         showUsers: "show-users",
         editUsers: "edit-users",
         addUsers: "add-users",
         deleteUsers: "delete-users",
         editUsersAdminStatus: "edit-users-admin-status",
         editUsersRoles: "edit-users-roles",
-        /** roles manager permission */
+        /** roles manager permissions */
         showRoles: "show-roles",
         editRoles: "edit-roles",
         deleteRoles: "delete-roles",

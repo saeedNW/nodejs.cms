@@ -59,7 +59,7 @@ class CoursesController extends Controller {
             })
 
             /** transforming data to remove unneeded info */
-            const transformedData = new CoursesTransform().withPaginate().transformCollection(courses);
+            const transformedData = new CoursesTransform().withFullInfo().withPaginate().transformCollection(courses);
 
 
             /** rendering courses page */
@@ -399,6 +399,10 @@ class CoursesController extends Controller {
             if (!course)
                 this.sendError("چنین دوره ای وجود ندارد", 404);
 
+            /** return error of course didn't belong to user */
+            if (course.user.toString() !== req.user._id.toString())
+                this.sendError("شما اجازه حذف این دوره را ندارید", 403);
+
             /**  delete course episodes */
             if (course.episodes.length > 0)
                 await this.courseEpisodeRemoval(course.episodes);
@@ -507,6 +511,10 @@ class CoursesController extends Controller {
             /** return error if course was not found */
             if (!course)
                 this.sendError("چنین دوره ای وجود ندارد", 404);
+
+            /** return error of course didn't belong to user */
+            if (course.user.toString() !== req.user._id.toString())
+                this.sendError("شما اجازه ویرایش این دوره را ندارید", 403);
 
             /** user input validation */
             const validationResult = await this.courseValidation(req);

@@ -1,8 +1,12 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
     <h2>کاربران</h2>
     <div class="btn-group">
-        <a href="/admin/panel/users/create" class="btn btn-sm btn-primary me-1">افزودن کاربر</a>
-        <a href="/admin/panel/roles" class="btn btn-sm btn-success">مدیریت نقش ها</a>
+        <% if(hasPermission.canAddUser) { %>
+            <a href="/admin/panel/users/create" class="btn btn-sm btn-primary me-1">افزودن کاربر</a>
+        <% } %>
+        <% if (hasPermission.showRoles) { %>
+            <a href="/admin/panel/roles" class="btn btn-sm btn-success">مدیریت نقش ها</a>
+        <% } %>
     </div>
 </div>
 <div class="table-responsive">
@@ -30,30 +34,30 @@
                     <td><%= convertDate(user.createdAt).format('jDD - jMMMM - jYYYY') %></td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <% if(canEditUser) { %>
+                            <% if(hasPermission.canEditUser) { %>
                                 <a href="/admin/panel/users/edit/<%= user._id %>"
-                                   class="btn btn-primary me-1">ویرایش</a>
+                                   class="btn btn-sm btn-primary me-1">ویرایش</a>
                             <% } %>
 
-                            <% if(canChangeAdminAccess) { %>
+                            <% if(hasPermission.canChangeAdminAccess) { %>
                                 <form action="/admin/panel/users/toggle-admin/<%= user._id %>?_method=PATCH"
                                       method="post">
                                     <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                    <button type="submit" class="btn btn-secondary me-1">
+                                    <button type="submit" class="btn btn-sm btn-secondary me-1">
                                         <%= user.admin ? "لغو ادمین" : "دسترسی ادمین" %>
                                     </button>
                                 </form>
                             <% } %>
 
-                            <% if(canChangeRoles && user.admin) { %>
+                            <% if(hasPermission.canChangeRoles && user.admin) { %>
                                 <a href="/admin/panel/users/roles/<%= user._id %>"
-                                   class="btn btn-success me-1">ویرایش نقش کاربر</a>
+                                   class="btn btn-sm btn-success me-1">ویرایش نقش کاربر</a>
                             <% } %>
 
-                            <% if(canDeleteUser) { %>
+                            <% if(hasPermission.canDeleteUser) { %>
                                 <form action="/admin/panel/users/delete/<%= user._id %>?_method=DELETE" method="post">
                                     <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                    <button type="submit" class="btn btn-danger">حذف</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
                                 </form>
                             <% } %>
                         </div>

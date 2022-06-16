@@ -5,7 +5,7 @@ const path = require("path");
 /** import moment-jalaali module */
 const moment = require("moment-jalaali");
 /** import course constants */
-const {coursesConstants} = require("../constants");
+const {coursesConstants, permissionsConstants} = require("../constants");
 /** activate persian language for moment */
 moment.loadPersian({usePersianDigits: true})
 
@@ -29,7 +29,7 @@ module.exports = class ViewsLocalsConfig extends Config {
     /**
      * config global values for ejs views
      */
-    viewsLocals() {
+    async viewsLocals() {
         return {
             auth: this.userData(),
             viewDir: this.viewPath,
@@ -40,6 +40,7 @@ module.exports = class ViewsLocalsConfig extends Config {
             numberWithCommas: this.numberWithCommas,
             canUserUse: this.canUserUse,
             isActive: this.isActive,
+            hasPermission: await this.hasPermission(),
             ...this.flashMessages()
         }
     }
@@ -157,5 +158,164 @@ module.exports = class ViewsLocalsConfig extends Config {
         }
 
         return ""
+    }
+
+    async hasPermission() {
+        return {
+            /**
+             * check if admin has full access permissions
+             */
+            hasFullAccess: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.fullAccess
+            ]),
+            /**
+             * check if admin has courses manager permissions
+             */
+            showCourses: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showCourses
+            ]),
+            canAddCourse: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.addCourses
+            ]),
+            canEditCourse: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editCourses
+            ]),
+            canDeleteCourse: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteCourses
+            ]),
+            /**
+             * check if admin has episodes manager permissions
+             */
+            showEpisodes: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showEpisodes
+            ]),
+            canAddEpisode: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.addEpisodes
+            ]),
+            canEditEpisode: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editEpisodes
+            ]),
+            canDeleteEpisode: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteEpisodes
+            ]),
+            /**
+             * check if admin has comments manager permissions
+             */
+            showComments: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showComments
+            ]),
+            showUnapprovedComments: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showUnapprovedComments
+            ]),
+            canApproveComment: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.approveComments
+            ]),
+            canDeleteComment: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteComments
+            ]),
+            /**
+             * check if admin has categories manager permissions
+             */
+            showCategories: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showCategories
+            ]),
+            canAddCategory: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.addCategories
+            ]),
+            canEditCategory: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editCategories
+            ]),
+            canDeleteCategory: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteCategories
+            ]),
+            /**
+             * check if admin has users manager permissions
+             */
+            showUsers: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showUsers
+            ]),
+            canAddUser: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.addUsers
+            ]),
+            canEditUser: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editUsers
+            ]),
+            canChangeAdminAccess: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editUsersAdminStatus
+            ]),
+            canChangeRoles: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editUsersRoles
+            ]),
+            canDeleteUser: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteUsers
+            ]),
+            /**
+             * check if admin has roles manager permissions
+             */
+            showRoles: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showRoles
+            ]),
+            canAddRole: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.addRoles
+            ]),
+            canEditRole: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editRoles
+            ]),
+            canDeleteRole: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteRoles
+            ]),
+        }
+    }
+
+    /**
+     * check if user has permission to processed or not
+     * @param req
+     * @param {[]} requiredPermissions
+     * @return {Promise<boolean>}
+     */
+    async checkPermission(req, requiredPermissions = []) {
+        /** return false if user was not logged in */
+        if (!req.user)
+            return false;
+
+        /**
+         * get user info from request.
+         * populate with user roles
+         */
+        const user = await req.user.populate({
+            path: "role",
+            /**
+             * populate roles with role permissions
+             */
+            populate: {
+                path: "permissions"
+            }
+        });
+
+        /**
+         * return false if user has no roles
+         */
+        if (!user.role)
+            return false
+
+        /**
+         * get user access permissions title as an array
+         * @type {*[]}
+         */
+        const userPermissions = user.role.permissions.map(permission => permission.title);
+
+        /**
+         * check if user has the required permission
+         * @type {boolean[]}
+         */
+        const hasPermission = requiredPermissions.map(permission => {
+            return userPermissions.includes(permission);
+        })
+
+        /** set permission to true if user has full access */
+        if (userPermissions.includes(permissionsConstants.AccessPermissions.fullAccess))
+            return true;
+
+        return hasPermission.includes(true);
     }
 }

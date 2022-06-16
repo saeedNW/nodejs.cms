@@ -124,8 +124,8 @@ module.exports = class Application {
         app.use(rememberLogin);
 
         /** initialize global values for views */
-        app.use((req, res, next) => {
-            app.locals = new ViewsLocalsConfig(req, res).viewsLocals();
+        app.use(async (req, res, next) => {
+            app.locals = await new ViewsLocalsConfig(req, res).viewsLocals();
             next();
         })
     }

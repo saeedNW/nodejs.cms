@@ -13,17 +13,10 @@
     <title><%- defineContent('title') || 'پنل مدیریت' %></title>
 </head>
 <body>
-<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap">
-    <div class="container-fluid">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">مجله آموزشی راکت</a>
-        <input class="form-control form-control-dark w-100" type="text" placeholder="جستجو" aria-label="Search">
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" href="/auth/logout">خروج</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+
+<!-- admin navbar -->
+<%- include(viewDir("layouts/adminNavbar")) -%>
+<!-- admin navbar -->
 
 <div class="container-fluid mb-4">
     <div class="row dir-ltr">
@@ -32,95 +25,10 @@
             <%- body %>
         </main>
 
+        <!-- admin sidebar -->
+        <%- include(viewDir("layouts/adminSidebar")) -%>
+        <!-- admin sidebar -->
 
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar dir-rtl">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link <%= isActive("/admin/panel", true) %>" href="/admin/panel/">
-                            <span data-feather="home"></span>
-                            داشبورد
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= isActive("/admin/panel/courses") %>"
-                           href="/admin/panel/courses">
-                            <span data-feather="shopping-cart"></span>
-                            دورها
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= isActive("/admin/panel/comments") %>" href="/admin/panel/comments">
-                            <span data-feather="layers"></span>
-                            نظرات
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= isActive("/admin/panel/categories") %>" href="/admin/panel/categories">
-                            <span data-feather="grid"></span>
-                            دسته بندی ها
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= isActive("/admin/panel/users") %>" href="/admin/panel/users">
-                            <span data-feather="users"></span>
-                            کاربران
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= isActive("/admin/panel/roles") %>" href="/admin/panel/roles">
-                            <span data-feather="alert-octagon"></span>
-                            مدیریت نقش ها
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file"></span>
-                            سفارشات
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="bar-chart-2"></span>
-                            گزارشات
-                        </a>
-                    </li>
-                </ul>
-
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                    <span>گزارشات ذخیره شده</span>
-                    <a class="d-flex align-items-center text-muted" href="#">
-                        <span data-feather="plus-circle"></span>
-                    </a>
-                </h6>
-                <ul class="nav flex-column mb-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            این ماه
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            ماه گذشته
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            شبکه های اجتماعی
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file-text"></span>
-                            فروش سالانه
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
     </div>
 </div>
 

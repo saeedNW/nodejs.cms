@@ -1,7 +1,9 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
     <h2>کامنت های تایید شده</h2>
     <div class="btn-group">
-        <a href="/admin/panel/comments/unapproved" class="btn btn-sm btn-primary me-1">کامنت های تایید نشده</a>
+        <% if(hasPermission.showUnapprovedComments) { %>
+            <a href="/admin/panel/comments/unapproved" class="btn btn-sm btn-primary me-1">کامنت های تایید نشده</a>
+        <% } %>
     </div>
 </div>
 <div class="table-responsive">
@@ -30,12 +32,14 @@
                     </td>
                     <th title="<%= comment.comment %>"><%= comment.comment.substr(0, 50) %></th>
                     <td>
-                        <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE" method="post">
-                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                            <div class="btn-group btn-group-sm">
-                                <button type="submit" class="btn btn-danger">حذف</button>
-                            </div>
-                        </form>
+                        <% if(hasPermission.canDeleteComment) { %>
+                            <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE" method="post">
+                                <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                <div class="btn-group btn-group-sm">
+                                    <button type="submit" class="btn btn-danger">حذف</button>
+                                </div>
+                            </form>
+                        <% } %>
                     </td>
                 </tr>
             <%

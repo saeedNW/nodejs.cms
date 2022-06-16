@@ -1,7 +1,9 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
     <h2>کامنت های تایید نشده</h2>
     <div class="btn-group">
-        <a href="/admin/panel/comments" class="btn btn-sm btn-primary me-1">کامنت های تایید شده</a>
+        <% if(hasPermission.showComments) { %>
+            <a href="/admin/panel/comments" class="btn btn-sm btn-primary me-1">کامنت های تایید شده</a>
+        <% } %>
     </div>
 </div>
 <div class="table-responsive">
@@ -31,14 +33,20 @@
                     <th title="<%= comment.comment %>"><%= comment.comment.substr(0, 50) %></th>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <form action="/admin/panel/comments/unapproved/<%= comment._id %>?_method=PATCH" method="post">
-                                <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                <button type="submit" class="btn btn-primary me-1">تایید</button>
-                            </form>
-                            <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE" method="post">
-                                <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                <button type="submit" class="btn btn-danger">حذف</button>
-                            </form>
+                            <% if(hasPermission.canApproveComment) { %>
+                                <form action="/admin/panel/comments/unapproved/<%= comment._id %>?_method=PATCH"
+                                      method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit" class="btn btn-primary me-1">تایید</button>
+                                </form>
+                            <% } %>
+                            <% if(hasPermission.canDeleteComment) { %>
+                                <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE"
+                                      method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit" class="btn btn-danger">حذف</button>
+                                </form>
+                            <% } %>
                         </div>
                     </td>
                 </tr>

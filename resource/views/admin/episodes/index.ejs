@@ -1,8 +1,12 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
     <h2>ویدئو ها</h2>
     <div class="btn-group">
-        <a href="/admin/panel/episodes/create" class="btn btn-sm btn-primary me-1">افزودن جلسه جدید</a>
-        <a href="/admin/panel/courses" class="btn btn-sm btn-danger">بخش دوره ها</a>
+        <% if (hasPermission.canAddEpisode) { %>
+            <a href="/admin/panel/episodes/create" class="btn btn-sm btn-primary me-1">افزودن جلسه جدید</a>
+        <% } %>
+        <% if (hasPermission.showCourses) { %>
+            <a href="/admin/panel/courses" class="btn btn-sm btn-danger">بخش دوره ها</a>
+        <% } %>
     </div>
 </div>
 <div class="table-responsive">
@@ -33,13 +37,22 @@
                         <%= episode.PersianPaymentType %>
                     </td>
                     <td>
-                        <form action="/admin/panel/episodes/delete/<%= episode._id %>?_method=DELETE" method="post">
-                            <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                            <div class="btn-group btn-group-sm">
-                                <a href="/admin/panel/episodes/edit/<%= episode._id %>" class="btn btn-primary me-1">ویرایش</a>
-                                <button type="submit" class="btn btn-danger">حذف</button>
-                            </div>
-                        </form>
+                        <div class="btn-group btn-group-sm">
+                            <% if (hasPermission.canEditEpisode &&
+                                    (episode.course.user.toString() === auth.user._id.toString() || hasPermission.hasFullAccess)) { %>
+                                <a href="/admin/panel/episodes/edit/<%= episode._id %>"
+                                   class="btn btn-sm btn-primary me-1">ویرایش</a>
+                            <% } %>
+
+                            <% if (hasPermission.canDeleteEpisode &&
+                                    (episode.course.user.toString() === auth.user._id.toString() || hasPermission.hasFullAccess)) { %>
+                                <form action="/admin/panel/episodes/delete/<%= episode._id %>?_method=DELETE"
+                                      method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                </form>
+                            <% } %>
+                        </div>
                     </td>
                 </tr>
             <%

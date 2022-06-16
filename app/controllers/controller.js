@@ -162,7 +162,7 @@ module.exports = class Controller {
      * @param comment
      * @return {Promise<void>}
      */
-    async removeComment(comment){
+    async removeComment(comment) {
         /**
          * calculating the count of decreased comments.
          * @type {number}
@@ -202,53 +202,5 @@ module.exports = class Controller {
          * deleting comment from database
          */
         await comment.remove();
-    }
-
-    /**
-     * check if user has permission to processed or not
-     * @param req
-     * @param requiredPermissions
-     * @return {Promise<boolean>}
-     */
-    async hasPermission(req, requiredPermissions = []) {
-        /**
-         * get user info from request.
-         * populate with user roles
-         */
-        const user = await req.user.populate({
-            path: "role",
-            /**
-             * populate roles with role permissions
-             */
-            populate: {
-                path: "permissions"
-            }
-        });
-
-        /**
-         * return false if user has no roles
-         */
-        if (!user.role)
-            return false
-
-        /**
-         * get user access permissions title as an array
-         * @type {*[]}
-         */
-        const userPermissions = user.role.permissions.map(permission => permission.title);
-
-        /**
-         * check if user has the required permission
-         * @type {boolean[]}
-         */
-        const hasPermission = requiredPermissions.map(permission => {
-            return userPermissions.includes(permission);
-        })
-
-        /** set permission to true if user has full access */
-        if (userPermissions.includes(permissionsConstants.AccessPermissions.fullAccess))
-            return true;
-
-        return hasPermission.includes(true);
     }
 }
