@@ -19,10 +19,8 @@ const passport = require("passport");
 
 /** import mongoose connection method */
 const {DBConnection} = require('./config/databaseConfig');
-/** import rest api router initializer */
-const {initializeApiRoutes} = require('./router/api');
-/** import web api router initializer */
-const {initializeWebRoutes} = require('./router/web');
+/** import routers initializer */
+const {initializeRouters} = require('./router');
 /** import view engine and ejs config initializer */
 const {viewEngineInitializer} = require("./config/viewEngineConfig");
 /** import unique identifier collection initializer */
@@ -144,10 +142,8 @@ module.exports = class Application {
      * initialize application routers
      */
     setRouters() {
-        /** Initialize web api */
-        initializeWebRoutes(app);
-        /** Initialize rest api */
-        initializeApiRoutes(app);
+        /** Initialize routers */
+        initializeRouters(app);
         /** initialize error handlers */
         app.use(errorHandler, notfound);
     }
