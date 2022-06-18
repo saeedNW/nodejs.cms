@@ -14,7 +14,7 @@ class ViewEngineConfig extends Config {
      * @param app
      * @param express
      */
-    initializer(app, express) {
+    viewEngineInitializer(app, express) {
         /** initialize static files */
         app.use(express.static('public'));
 

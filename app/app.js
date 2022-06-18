@@ -24,7 +24,7 @@ const {initializeApiRoutes} = require('./router/api');
 /** import web api router initializer */
 const {initializeWebRoutes} = require('./router/web');
 /** import view engine and ejs config initializer */
-const {initializer} = require("./config/viewEngineConfig");
+const {viewEngineInitializer} = require("./config/viewEngineConfig");
 /** import unique identifier collection initializer */
 const {identifierInitializer} = require("./initializer/initIdentifierCollection");
 /** import session configs */
@@ -96,7 +96,7 @@ module.exports = class Application {
         require("./passport/passportGoogle");
 
         /** initialize view engine and ejs config */
-        initializer(app, express);
+        viewEngineInitializer(app, express);
 
         /** initialize bodyparser module */
         app.use(bodyParser.urlencoded({extended: false}));
