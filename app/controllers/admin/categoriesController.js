@@ -64,7 +64,7 @@ class CategoriesController extends Controller {
 
             /** rendering categories page */
             res.render("admin/categories/index", {
-                title: "دسته بندی ها",
+                title: req.t("categories_index_title"),
                 categories
             });
         } catch (err) {
@@ -83,7 +83,7 @@ class CategoriesController extends Controller {
             /** get main categories name */
             const categories = await categoryModel.find({parent: null}, {name: 1});
 
-            res.render("admin/categories/create", {title: "افزودن دسته بندی جدید", categories});
+            res.render("admin/categories/create", {title: req.t("new_category_title"), categories});
         } catch (err) {
             next(err)
         }
@@ -126,14 +126,14 @@ class CategoriesController extends Controller {
              * this feed contains request body, method and query.
              * @type {*&{_method: *, _id}}
              */
-            const validationFields = {
+            const validationFeed = {
                 ...req.body,
                 _method: req.query._method,
                 _id: req.params._id
             }
 
             /** user input validation */
-            await categoryValidator.validate(validationFields, {abortEarly: false});
+            await categoryValidator.validate(validationFeed, {abortEarly: false});
 
             /** escape and trim user input */
             escapeAndTrim(req);
@@ -144,7 +144,7 @@ class CategoriesController extends Controller {
             console.log(err)
 
             /** get validation errors */
-            const errors = err.errors;
+            const errors = err.errors.map(error => req.t(error));
 
             /** set errors in a flash message */
             req.flash("errors", errors);
@@ -205,7 +205,7 @@ class CategoriesController extends Controller {
 
             /** return error if episode was not found */
             if (!category)
-                this.sendError("چنین دسته بندی وجود ندارد", 404);
+                this.sendError(req.t("category_notFound_error"), 404);
 
 
             /** process if there were any childes for chosen category */
@@ -250,14 +250,14 @@ class CategoriesController extends Controller {
 
             /** return error if course was not found */
             if (!category)
-                this.sendError("چنین دسته بندی وجود ندارد", 404);
+                this.sendError(req.t("category_notFound_error"), 404);
 
             /** get main categories name */
             const categories = await categoryModel.find({parent: null}, {name: 1});
 
             /** rendering courses page */
             res.render("admin/categories/edit", {
-                title: "ویرایش دسته بندی",
+                title: req.t("edit_category_title"),
                 category,
                 categories
             });
@@ -286,7 +286,7 @@ class CategoriesController extends Controller {
 
             /** return error if category was not found */
             if (!category)
-                this.sendError("چنین دسته بندی وجود ندارد", 404);
+                this.sendError(req.t("category_notFound_error"), 404);
 
             /** user input validation */
             const validationResult = await this.categoryValidation(req);

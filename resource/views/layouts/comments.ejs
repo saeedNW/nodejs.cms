@@ -2,19 +2,19 @@
     <hr>
 
     <div class="card my-4">
-        <h5 class="card-header">ثبت نظر :</h5>
+        <h5 class="card-header"><%= t("add_comment") %></h5>
         <div class="card-body">
             <%- include(viewDir("layouts/showMessage")) -%>
             <form role="form" action="/comments" method="post">
                 <input type="hidden" name="<%= section %>" value="<%= subject._id %>">
                 <div class="form-group mb-3">
-                    <label for="form-control" class="mb-2">متن نظر</label>
+                    <label for="form-control" class="mb-2"><%= t("comment_content") %></label>
                     <textarea name="comment" id="form-control" class="form-control" rows="3" required></textarea>
                 </div>
                 <div class="form-group mb-3">
                     <%- captcha %>
                 </div>
-                <button type="submit" class="btn btn-primary">ارسال</button>
+                <button type="submit" class="btn btn-primary"><%= t("send_form") %></button>
             </form>
         </div>
     </div>
@@ -32,11 +32,11 @@
                 <% if (auth.loginCheck){ %>
                     <button class="float-left btn-sm btn btn-xs btn-success" data-toggle="modal"
                             data-target="#sendCommentModal" data-parent="<%= comment._id %>">
-                        پاسخ
+                        <%= t("answer") %>
                     </button>
                 <% } %>
             </h5>
-            <span class="d-block mb-2 text-muted">ارسال شده در <%= convertDate(course.createdAt).fromNow() %> </span>
+            <span class="d-block mb-2 text-muted"><%= t("has_been_send") + convertDate(course.createdAt).fromNow() %> </span>
 
             <!-- comment text -->
             <%- comment.comment %>
@@ -49,7 +49,7 @@
                             <!-- answer author -->
                             <%= answer.user.name %>
                         </h5>
-                        <span class="d-block mb-2 text-muted">ارسال شده در <%= convertDate(answer.createdAt).fromNow() %> </span>
+                        <span class="d-block mb-2 text-muted"><%= t("has_been_send") + convertDate(answer.createdAt).fromNow() %> </span>
 
                         <!-- answer text -->
                         <%- answer.comment %>
@@ -67,7 +67,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="exampleModalLabel">ارسال پاسخ</h4>
+                    <h4 class="modal-title" id="exampleModalLabel"><%= t("send_answer") %></h4>
                     <button type="button" class="close btn-close" data-dismiss="modal"
                             aria-label="Close"><span aria-hidden="true"></span></button>
                 </div>
@@ -78,15 +78,16 @@
                         <input type="hidden" name="<%= section %>" value="<%= subject._id %>">
 
                         <div class="form-group">
-                            <label for="message-text" class="control-label mb-2">متن پاسخ:</label>
+                            <label for="message-text" class="control-label mb-2"><%= t("answer_content") %></label>
                             <textarea class="form-control mb-3" id="message-text" name="comment" required></textarea>
                         </div>
                         <div class="form-group mb-3">
                             <%- captcha %>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">ارسال</button>
-                            <button type="button" class="btn btn-default mr-2 ml-0" data-dismiss="modal">انصراف
+                            <button type="submit" class="btn btn-primary"><%= t("send_form") %></button>
+                            <button type="button" class="btn btn-default mr-2 ml-0" data-dismiss="modal">
+                                <%= t("cancel") %>
                             </button>
                         </div>
                     </form>

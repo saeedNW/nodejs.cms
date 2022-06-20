@@ -9,13 +9,13 @@
           integrity="sha384-dc2NSrAXbAkjrdm9IYrX10fQq9SDG6Vjz7nQVKdKcJl3pC+k37e7qJR5MVSCS+wR" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/general.css">
     <%- style %>
-    <title><%- defineContent("title") || "مجله آموزشی راکت" %></title>
+    <title><%- defineContent("title") || t("main_title") %></title>
 </head>
 <body>
 
 <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">مجله آموزشی راکت</a>
+        <a class="navbar-brand" href="/"><%- t("main_title") %></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02"
                 aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -24,27 +24,42 @@
         <div class="collapse navbar-collapse" id="navbarsExample02">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">صفحه اصلی</a>
+                    <a class="nav-link active" aria-current="page" href="/">
+                        <%- t("main_page") %>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/courses">دوره ها</a>
+                    <a class="nav-link" href="/courses">
+                        <%- t("courses") %>
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/about-us">درباره ما</a>
+                    <a class="nav-link" href="/about-us">
+                        <%- t("about_us") %>
+                    </a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <% if(auth.loginCheck){ %>
                     <% if (auth.user.admin){ %>
-                        <li class="nav-item"><a class="btn btn-secondary btn-sm me-3" href="/admin/panel">پنل
-                                مدیریتی</a>
+                        <li class="nav-item"><a class="btn btn-secondary btn-sm me-3" href="/admin/panel">
+                                <%- t("admin_panel") %>
+                            </a>
                         </li>
                     <% } %>
-                    <li class="nav-item"><a class="btn btn-success btn-sm me-3" href="/user/panel">پنل کاربری</a></li>
-                    <li class="nav-item"><a class="btn btn-danger btn-sm" href="/auth/logout">خروج</a></li>
+                    <li class="nav-item"><a class="btn btn-success btn-sm me-3" href="/user/panel">
+                            <%- t("user_panel") %>
+                        </a></li>
+                    <li class="nav-item"><a class="btn btn-danger btn-sm" href="/auth/logout">
+                            <%- t("logout") %>
+                        </a></li>
                 <% }else { %>
-                    <li class="nav-item"><a class="btn btn-success btn-sm me-3" href="/auth/login">ورود</a></li>
-                    <li class="nav-item"><a class="btn btn-primary btn-sm" href="/auth/register">ثبت نام</a></li>
+                    <li class="nav-item"><a class="btn btn-success btn-sm me-3" href="/auth/login">
+                            <%- t("login") %>
+                        </a></li>
+                    <li class="nav-item"><a class="btn btn-primary btn-sm" href="/auth/register">
+                            <%- t("register") %>
+                        </a></li>
                 <% } %>
             </ul>
         </div>

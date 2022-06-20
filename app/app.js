@@ -16,6 +16,13 @@ const app = express();
 const session = require("express-session");
 /** import passport module */
 const passport = require("passport");
+/** import i18next module */
+const i18next = require("i18next");
+/** import i18next-fs-backend module */
+const i18nextBackend = require("i18next-fs-backend");
+/** import i18next-http-middleware module */
+const i18nextMiddleware = require("i18next-http-middleware");
+
 
 /** import mongoose connection method */
 const {DBConnection} = require('./config/databaseConfig');
@@ -37,6 +44,8 @@ const {errorHandler, notfound} = require("./middleware/errorHandler");
 const {permissionsInitializer} = require("./initializer/initPermissionCollecion");
 /** import super admin account initializer */
 const {adminAccountInitializer} = require("./initializer/initAdminUser");
+/** import i18next initialization configs */
+const {localizationConfigs, setDefaultLanguage} = require("./config/localizationConfig");
 
 /**
  * define server port
@@ -120,6 +129,23 @@ module.exports = class Application {
 
         /** initialize remember login */
         app.use(rememberLogin);
+
+        /** initialize default language for i18next */
+        app.use(async (req, res, next) => {
+            setDefaultLanguage(req);
+            await i18next.reloadResources();
+            next();
+        })
+
+        /**
+         * internationalization (i18next)
+         * configuration and initialization
+         */
+        i18next.use(i18nextBackend).use(i18nextMiddleware.LanguageDetector)
+            .init({...localizationConfigs()}).then();
+
+        /** initialize i18nextMiddleware */
+        app.use(i18nextMiddleware.handle(i18next));
 
         /** initialize global values for views */
         app.use(async (req, res, next) => {

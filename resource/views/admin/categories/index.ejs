@@ -1,8 +1,9 @@
 <div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
-    <h2>دسته ها</h2>
+    <h2><%= t("categories_index_title") %></h2>
     <div class="btn-group">
         <% if(hasPermission.canAddCategory) { %>
-            <a href="/admin/panel/categories/create" class="btn btn-sm btn-primary me-1">افزودن دسته جدید</a>
+            <a href="/admin/panel/categories/create"
+               class="btn btn-sm btn-primary me-1"><%= t("new_category_title") %></a>
         <% } %>
     </div>
 </div>
@@ -11,10 +12,10 @@
         <thead>
         <tr>
             <th>#</th>
-            <th>کد شناسایی</th>
-            <th>عنوان</th>
-            <th>والد</th>
-            <th>تنظیمات</th>
+            <th><%= t("form_hashId") %></th>
+            <th><%= t("form_title") %></th>
+            <th><%= t("category_parent") %></th>
+            <th><%= t("form_settings") %></th>
         </tr>
         </thead>
         <tbody>
@@ -29,14 +30,15 @@
                         <div class="btn-group btn-group-sm">
                             <% if(hasPermission.canEditCategory) { %>
                                 <a href="/admin/panel/categories/edit/<%= category._id %>"
-                                   class="btn btn-sm btn-primary me-1">ویرایش</a>
+                                   class="btn btn-sm btn-primary me-1"><%= t("edit_setting") %></a>
                             <% } %>
 
                             <% if(hasPermission.canDeleteCategory) { %>
                                 <form action="/admin/panel/categories/delete/<%= category._id %>?_method=DELETE"
                                       method="post">
                                     <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
-                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger"><%= t("delete_setting") %></button>
                                 </form>
                             <% } %>
                         </div>
@@ -47,7 +49,7 @@
             }
             %>
         <% }else { %>
-            <tr>دسته ای برای نمایش وجود ندارد</tr>
+            <tr><%= t("nothing_tobe_shown") %></tr>
         <% } %>
         </tbody>
     </table>

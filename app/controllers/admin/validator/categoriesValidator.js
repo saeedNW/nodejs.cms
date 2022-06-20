@@ -11,10 +11,10 @@ exports.categoryValidator = yup.object().shape({
     _id: yup.string()   // will be used for category update validation
         .nullable(),
     name: yup.string()
-        .min(3, "عنوان نمیتواند کمتر از 3 کاراکتر باشد")
+        .min(3, "name_length_error")
         .test(
             "is-unique",
-            "عنوان نمی تواند تکراری باشد",
+            "name_unique_error",
             async function (name) {
                 /** check category slug existence in database */
                 const existence = await categoryModel.findOne({slug: createSlug(name)});
@@ -42,5 +42,5 @@ exports.categoryValidator = yup.object().shape({
             }
         ),
     parent: yup.string()
-        .required("فیلد والد نمیتواند خالی باشد")
+        .required("name_required_error")
 });

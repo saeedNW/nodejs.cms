@@ -8,6 +8,10 @@ const {adminAccessManager: AAM} = require("../../middleware/adminAccessManager")
 /** import user access manager middleware */
 const {userAccessManager: UAM} = require("../../middleware/userAccessManager");
 
+/** import and initialize user language cookie manager */
+const {changeLanguage} = require("../../config/localizationConfig");
+router.get('/language/:language', changeLanguage);
+
 /** import and initialize home router */
 const publicRouter = require('./public');
 router.use('/', publicRouter);
