@@ -16,10 +16,6 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
     <div class="container-fluid">
         <a class="navbar-brand" href="/"><%- t("main_title") %></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02"
-                aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
         <div class="collapse navbar-collapse" id="navbarsExample02">
             <ul class="navbar-nav me-auto">
@@ -39,6 +35,9 @@
                     </a>
                 </li>
             </ul>
+
+            <%- include(viewDir("layouts/languageBTN")) -%>
+
             <ul class="nav navbar-nav navbar-right">
                 <% if(auth.loginCheck){ %>
                     <% if (auth.user.admin){ %>
