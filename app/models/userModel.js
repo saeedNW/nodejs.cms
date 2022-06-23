@@ -48,6 +48,14 @@ const userSchema = new Schema({
         ref: 'Role',
         default: null
     },
+    vipTime: {
+        type: Date,
+        default: new Date().toISOString()
+    },
+    vipType: {
+        type: String,
+        default: "month"
+    },
 }, {timestamps: true, toJSON: {virtuals: true}});
 
 /** define collection indexes */
@@ -178,11 +186,8 @@ userSchema.virtual("comments", {
  * check if user is a vip user or not
  * @return {boolean}
  */
-userSchema.methods.isVip = async function () {
-    if (await hasPermission(this))
-        return true;
-
-    return false;
+userSchema.methods.isVip = function () {
+    return new Date(this.vipTime) > new Date;
 }
 
 /**
@@ -190,35 +195,8 @@ userSchema.methods.isVip = async function () {
  * @param courseId
  * @return {boolean}
  */
-userSchema.methods.haveBought = async function (courseId) {
-    if (await hasPermission(this))
-        return true;
-
+userSchema.methods.haveBought = function (courseId) {
     return this.purchases.indexOf(courseId) !== -1;
-}
-
-async function hasPermission(userInfo) {
-    /**
-     * get user info from request.
-     * populate with user roles
-     */
-    const user = await userInfo.populate({
-        path: "role",
-        /**
-         * populate roles with role permissions
-         */
-        populate: {
-            path: "permissions"
-        }
-    });
-
-    /**
-     * get user access permissions title as an array
-     * @type {*[]}
-     */
-    const userPermissions = user.role.permissions.map(permission => permission.title);
-
-    return userPermissions.includes(permissionsConstants.AccessPermissions.fullAccess);
 }
 
 module.exports = mongoose.model("User", userSchema);

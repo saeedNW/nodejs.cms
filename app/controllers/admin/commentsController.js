@@ -70,7 +70,7 @@ class CommentsController extends Controller {
 
             /** rendering courses page */
             res.render("admin/comments/index", {
-                title: "کامنت ها",
+                title: req.t("comments_index_title"),
                 comments: transformedData
             });
         } catch (err) {
@@ -143,7 +143,7 @@ class CommentsController extends Controller {
 
             /** rendering courses page */
             res.render("admin/comments/unapproved", {
-                title: "کامنت های تایید نشده",
+                title: req.t("comments_unapproved_title"),
                 comments: transformedData
             });
         } catch (err) {
@@ -171,7 +171,7 @@ class CommentsController extends Controller {
 
             /** return error if comments was not found */
             if (!comment)
-                this.sendError("چنین نظری وجود ندارد", 404);
+                this.sendError(req.t("comment_notFound_error"), 404);
 
             /**
              * increase course/episode comment count
@@ -212,7 +212,7 @@ class CommentsController extends Controller {
 
             /** return error if comment was not found */
             if (!comment)
-                this.sendError("چنین نظری وجود ندارد", 404);
+                this.sendError(req.t("comment_notFound_error"), 404);
 
             /**
              * remove comment and its answers

@@ -16,7 +16,7 @@ class AccountRecoveryController extends Controller {
      */
     recoveryForm(req, res) {
         res.render("auth/accountRecovery", {
-            captcha: this.recaptcha.render(),
+            captcha: this.recaptcha.renderWith(this.recaptchaLocalization(req)),
             title: "بازیابی حساب"
         });
     }

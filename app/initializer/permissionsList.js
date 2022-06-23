@@ -79,4 +79,19 @@ module.exports = [{
 }, {
     "title": "add-roles",
     "label": "افزودن نقش جدید"
+}, {
+    "title": "show-vips",
+    "label": "نمایش نوع های اکانت ویژه"
+}, {
+    "title": "edit-vips",
+    "label": "ویرایش نوع اکانت ویژه"
+}, {
+    "title": "delete-vips",
+    "label": "حذف نوع اکانت ویژه"
+}, {
+    "title": "add-vips",
+    "label": "افزودن نوع اکانت ویژه"
+}, {
+    "title": "edit-vip-status",
+    "label": "فعال/غیرفعال سازی اکانت ویژه"
 }]

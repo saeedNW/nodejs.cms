@@ -42,6 +42,11 @@ module.exports = {
             modelName: 'roles',
             deps: ["roleModel"],
             isPartial: false
+        },
+        vips: {
+            modelName: 'vips',
+            deps: ["vipModel"],
+            isPartial: false
         }
     }
 }

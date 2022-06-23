@@ -133,6 +133,11 @@ module.exports = class Application {
         /** initialize default language for i18next */
         app.use(async (req, res, next) => {
             setDefaultLanguage(req);
+            /**
+             * reload language json files for every request .
+             * which allows you to edit language json files or
+             * create new files without restarting application
+             */
             await i18next.reloadResources();
             next();
         })
@@ -151,7 +156,7 @@ module.exports = class Application {
         app.use(async (req, res, next) => {
             app.locals = await new ViewsLocalsConfig(req, res).viewsLocals();
             next();
-        })
+        });
     }
 
     /**

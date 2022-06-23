@@ -10,6 +10,10 @@ const {sendError: error} = require("../utils/sendError");
 const {sprintf} = require("sprintf-js");
 /** import permission constants */
 const {permissionsConstants} = require("../constants");
+/** import path module */
+const path = require("path");
+/** import fs module */
+const fs = require("fs");
 
 module.exports = class Controller {
     constructor() {
@@ -29,6 +33,22 @@ module.exports = class Controller {
                 callback: 'cb'
             }
         );
+    }
+
+    /**
+     * google captcha localization
+     * @param req
+     * @return {{hl: *}|{hl: string}}
+     */
+    recaptchaLocalization(req) {
+        /** get language cookie */
+        const {language} = req.cookies
+
+        /** check if language is an acceptable language or not */
+        if (language && fs.existsSync(path.resolve(`./resource/languages/${language}.json`)))
+            return {hl: language};
+        else
+            return {hl: "fa"};
     }
 
     /**

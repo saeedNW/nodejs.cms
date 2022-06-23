@@ -27,6 +27,12 @@ class PermissionGuard extends Middleware {
                 });
 
                 /**
+                 * throw error if user doesn't have any roles
+                 */
+                if (!user.role)
+                    this.sendError("شما اجازه دسترسی به این بخش را ندارید", 403);
+
+                /**
                  * get user access permissions title as an array
                  * @type {*[]}
                  */
@@ -38,7 +44,7 @@ class PermissionGuard extends Middleware {
                  */
                 const hashPermission = requiredPermissions.map(permission => {
                     return userPermissions.includes(permission);
-                })
+                });
 
                 /**
                  * let user access to the route if he has full access

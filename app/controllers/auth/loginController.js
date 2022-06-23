@@ -16,7 +16,7 @@ class LoginController extends Controller {
      */
     loginForm(req, res) {
         res.render("auth/login", {
-            captcha: this.recaptcha.render(),
+            captcha: this.recaptcha.renderWith(this.recaptchaLocalization(req)),
             title: "ورود"
         })
     }

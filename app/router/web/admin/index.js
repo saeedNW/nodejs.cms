@@ -22,6 +22,8 @@ const categoriesRouter = require("./categories");
 const usersRouter = require("./users");
 /** import roles manager router */
 const rolesRouter = require("./roles");
+/** import vip account manager router */
+const vipRouter = require("./vipAccounts");
 
 /** initialize admin panel router */
 router.use(homeRouter);
@@ -37,5 +39,7 @@ router.use("/categories", categoriesRouter);
 router.use("/users", usersRouter);
 /** initialize users manager router */
 router.use("/roles", rolesRouter);
+/** initialize vip manager router */
+router.use("/vips", vipRouter);
 
 module.exports = router;

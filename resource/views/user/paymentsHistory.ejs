@@ -17,7 +17,7 @@
             <tr>
                 <td><%= payment.hashId %></td>
                 <td><%= payment.price %> تومان</td>
-                <td><%= payment.vip ? ' خریداری عضویت ویژه' : `خرید دوره ${payment.course.title}` %></td>
+                <td><%= payment.vip ? `خریداری عضویت ویژه ${payment.vip.name}` : `خرید دوره ${payment.course.title}` %></td>
                 <td><%= payment.paymentStatus ? 'موفق' : 'ناموفق' %></td>
             </tr>
         <% } %>

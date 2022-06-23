@@ -48,12 +48,14 @@
                     </a>
                 </li>
             <% } %>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <span data-feather="file"></span>
-                    <%= t("orders") %>
-                </a>
-            </li>
+            <% if (hasPermission.showVips) { %>
+                <li class="nav-item">
+                    <a class="nav-link <%= isActive("/admin/panel/vips") %>" href="/admin/panel/vips">
+                        <span data-feather="star"></span>
+                        <%= t("vips_index_title") %>
+                    </a>
+                </li>
+            <% } %>
         </ul>
     </div>
 </nav>

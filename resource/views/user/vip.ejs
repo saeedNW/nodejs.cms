@@ -1,0 +1,15 @@
+<%- include(viewDir("user/navbar")) -%>
+
+
+<div class="mt-4">
+    <form action="/payment/vip" method="post" class="w-25">
+        <label for="plan" class="mb-2"><%= t("vip_account_type") %></label>
+        <select name="plan" id="plan" class="form-control">
+            <option><%= t("chooses_vip_account_type") %></option>
+            <% for (const type of vipTypes) { %>
+                <option value="<%= type._id %>"><%= type.name %> - <%= type.price %> <%= t("rial") %></option>
+            <% } %>
+        </select>
+        <button type="submit" class="btn btn-danger mt-3"><%= t("charge_account") %></button>
+    </form>
+</div>

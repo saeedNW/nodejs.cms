@@ -64,7 +64,7 @@ class CoursesController extends Controller {
 
             /** rendering courses page */
             res.render("admin/courses/index", {
-                title: "مدیریت دوره ها",
+                title: req.t("course_index_title"),
                 courses: transformedData
             });
         } catch (err) {
@@ -83,7 +83,7 @@ class CoursesController extends Controller {
             /** get categories from database */
             const categories = await categoryModel.find({}, {name: 1});
 
-            res.render("admin/courses/create", {title: "ایجاد دوره جدید", categories});
+            res.render("admin/courses/create", {title: req.t("new_course_title"), categories});
         } catch (err) {
             next(err)
         }
@@ -109,7 +109,7 @@ class CoursesController extends Controller {
 
             /** return error if course was not found */
             if (!course)
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+                this.sendError(req.t("course_notFound_error"), 404);
 
             /** transforming data to remove unneeded info */
             const transformedData = new CoursesTransform().withFullInfo().transform(course);
@@ -119,7 +119,7 @@ class CoursesController extends Controller {
 
             /** rendering courses page */
             res.render("admin/courses/edit", {
-                title: "ویرایش دوره",
+                title: req.t("edit_course_title"),
                 course: transformedData,
                 categories
             });
@@ -208,7 +208,7 @@ class CoursesController extends Controller {
             console.log(err)
 
             /** get validation errors */
-            const errors = err.errors;
+            const errors = err.errors.map(error => req.t(error));
 
             /** set errors in a flash message */
             req.flash("errors", errors);
@@ -254,9 +254,9 @@ class CoursesController extends Controller {
 
             /** return error if slug already exists */
             if (findSlug)
-                this.sendError("آدرس نامک تکراری می باشد", 422);
+                this.sendError(req.t("course_unique_slug_error"), 422);
 
-            res.json({message: "نامک قابل استفاده می باشد"});
+            res.json({message: req.t("course_slug_is_usable")});
         } catch (err) {
             res.status(err.status).json({...err.message});
         }
@@ -397,11 +397,11 @@ class CoursesController extends Controller {
 
             /** return error if course was not found */
             if (!course)
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+                this.sendError(req.t("course_notFound_error"), 404);
 
             /** return error of course didn't belong to user */
             if (course.user.toString() !== req.user._id.toString())
-                this.sendError("شما اجازه حذف این دوره را ندارید", 403);
+                this.sendError(req.t("delete_not_allowed"), 403);
 
             /**  delete course episodes */
             if (course.episodes.length > 0)
@@ -510,11 +510,11 @@ class CoursesController extends Controller {
 
             /** return error if course was not found */
             if (!course)
-                this.sendError("چنین دوره ای وجود ندارد", 404);
+                this.sendError(req.t("course_notFound_error"), 404);
 
             /** return error of course didn't belong to user */
             if (course.user.toString() !== req.user._id.toString())
-                this.sendError("شما اجازه ویرایش این دوره را ندارید", 403);
+                this.sendError(req.t("delete_not_allowed"), 403);
 
             /** user input validation */
             const validationResult = await this.courseValidation(req);

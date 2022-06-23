@@ -4,5 +4,9 @@
     <li><b>نام کاربری</b> : <%= auth.user.name %></li>
     <li><b>شناسه کاربری</b> : <%= auth.user.hashId %></li>
     <li><b>ایمیل کاربری</b> : <%= auth.user.email %></li>
-    <li> <b>زمان پایان اعتبار ویژه</b> : ۱ ماه پیش دیگر</li>
+    <% if (auth.user.isVip()) { %>
+        <li><b>زمان پایان اعتبار ویژه</b> : <%= convertDate(auth.user.vipTime).fromNow() %></li>
+    <% } else { %>
+        <li><b>شما کاربر ویژه نیستید</b></li>
+    <% } %>
 </ul>

@@ -17,6 +17,12 @@ module.exports = class PaymentsTransform extends Transform {
      * @type {boolean}
      */
     #courseInfo = false;
+    /**
+     * this private variable will be used to determined
+     * which info of the vip plan is requested or not
+     * @type {boolean}
+     */
+    #vipPlanInfo = false;
 
     /**
      * transforming payments data
@@ -26,13 +32,13 @@ module.exports = class PaymentsTransform extends Transform {
         return {
             _id: item._id,
             hashId: item.hashId,
-            vip: item.vip,
             price: item.price,
             paymentStatus: item.paymentStatus,
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
             ...this.showUserInfo(item),
             ...this.showCourseInfo(item),
+            ...this.showVipPlanInfo(item),
         }
     }
 
@@ -80,6 +86,27 @@ module.exports = class PaymentsTransform extends Transform {
 
             if (this.#courseInfo)
                 return {course: new CoursesTransform().transform(item.course)}
+        }
+    }
+
+    /**
+     * this method will be called from outside the transform file to
+     * determined which vip plan info is requested or not
+     */
+    withVipPlanInfo() {
+        this.#vipPlanInfo = true;
+        return this;
+    }
+
+    /**
+     * return course info if it was requested
+     * @param item
+     * @return {{images: (string|HTMLCollectionOf<HTMLImageElement>|*), description, title: *, PersianPaymentType: *, hashId: *, commentCount: *, tags, createdAt: *, price: (number|*), _id: *, viewCount: *, time, user, slug: *, updatedAt: *}}
+     */
+    showVipPlanInfo(item) {
+        if (item.vip) {
+            if (this.#vipPlanInfo)
+                return {vip: item.vip}
         }
     }
 }

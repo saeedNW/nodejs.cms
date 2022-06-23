@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-between align-items-center mb-3 border-bottom-1">
+    <h2><%= t("vips_index_title") %></h2>
+    <div class="btn-group">
+        <% if(hasPermission.canAddVips) { %>
+            <a href="/admin/panel/vips/create"
+               class="btn btn-sm btn-primary me-1"><%= t("new_vip_title") %></a>
+        <% } %>
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th><%= t("form_hashId") %></th>
+            <th><%= t("form_title") %></th>
+            <th><%= t("form_Price") %> (<%= t("rial") %>)</th>
+            <th><%= t("form_settings") %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if (vipTypes.docs.length > 0){ %>
+            <% for (const type of vipTypes.docs) { %>
+                <tr>
+                    <th scope="row"><%= vipTypes.pagingCounter %></th>
+                    <th><%= type.hashId %></th>
+                    <td><%= type.name %></td>
+                    <td><%= type.price %></td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <% if(hasPermission.canEditVips) { %>
+                                <a href="/admin/panel/vips/edit/<%= type._id %>"
+                                   class="btn btn-sm btn-primary me-1"><%= t("edit_setting") %></a>
+                            <% } %>
+
+                            <% if(hasPermission.canEditVipStatus) { %>
+                                <form action="/admin/panel/vips/toggle-status/<%= type._id %>?_method=PATCH"
+                                      method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit" class="btn btn-sm btn-secondary me-1">
+                                        <%= type.status ? t("disable") : t("enable") %>
+                                    </button>
+                                </form>
+                            <% } %>
+
+                            <% if(hasPermission.canDeleteVips) { %>
+                                <form action="/admin/panel/vips/delete/<%= type._id %>?_method=DELETE"
+                                      method="post">
+                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger"><%= t("delete_setting") %></button>
+                                </form>
+                            <% } %>
+                        </div>
+                    </td>
+                </tr>
+            <%
+                +vipTypes.pagingCounter++
+            }
+            %>
+        <% }else { %>
+            <tr><%= t("nothing_tobe_shown") %></tr>
+        <% } %>
+        </tbody>
+    </table>
+
+    <%- include(viewDir("layouts/pagination"), {pagination:vipTypes}) -%>
+
+</div>
+

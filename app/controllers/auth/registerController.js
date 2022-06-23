@@ -16,7 +16,7 @@ class RegisterController extends Controller {
      */
     registerForm(req, res) {
         res.render("auth/register", {
-            captcha: this.recaptcha.render(),
+            captcha: this.recaptcha.renderWith(this.recaptchaLocalization(req)),
             title: "عضویت"
         })
     }

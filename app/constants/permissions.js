@@ -34,5 +34,11 @@ module.exports = {
         editRoles: "edit-roles",
         deleteRoles: "delete-roles",
         addRoles: "add-roles",
+        /** vip types manager permissions */
+        showVips: "show-vips",
+        editVips: "edit-vips",
+        deleteVips: "delete-vips",
+        addVips: "add-vips",
+        editVipStatus: "edit-vip-status",
     })
 };

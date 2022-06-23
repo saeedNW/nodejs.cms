@@ -27,7 +27,7 @@ class ResetPasswordController extends Controller {
                 this.sendError("صفحه پیدا نشد", 404);
 
             res.render("auth/resetPassword", {
-                captcha: this.recaptcha.render(),
+                captcha: this.recaptcha.renderWith(this.recaptchaLocalization(req)),
                 title: "بازیابی رمز عبور",
                 token
             });

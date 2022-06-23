@@ -47,11 +47,19 @@ class PaymentsController extends Controller {
                  * populate option:
                  * Paths which should be populated with other documents
                  */
-                populate: {path: "course"}
+                populate: [
+                    {
+                        path: "course"
+                    },
+                    {
+                        path: "vip"
+                    }
+                ]
             });
 
             /** transforming data to remove unneeded info */
-            const transformedData = new PaymentsTransform().withCourseInfo().withPaginate().transformCollection(payments);
+            const transformedData = new PaymentsTransform().withCourseInfo().withVipPlanInfo()
+                .withPaginate().transformCollection(payments);
 
             res.render("user/paymentsHistory", {title: "پرداختی ها", payments: transformedData});
         } catch (err) {

@@ -18,6 +18,8 @@ const paymentModel = require("./paymentModel");
 const permissionModel = require("./permissionModel");
 /** import role model */
 const roleModel = require("./roleModel");
+/** import vip model */
+const vipModel = require("./vipModel");
 
 exports.model = {
     userModel,
@@ -29,5 +31,6 @@ exports.model = {
     categoryModel,
     paymentModel,
     permissionModel,
-    roleModel
+    roleModel,
+    vipModel
 }

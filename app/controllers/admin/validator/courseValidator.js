@@ -14,29 +14,29 @@ exports.courseValidator = yup.object().shape({
     _id: yup.string()   // will be used for course update validation
         .nullable(),
     title: yup.string()
-        .min(5, "عنوان نمیتواند کمتر از 5 کاراکتر باشد"),
+        .min(5, "course_title_length_error"),
     paymentType: yup.string()
-        .oneOf(Object.values(PaymentType), "لطفا یکی از مقادیر مشخص شده را برای نوع دوره انتخاب کنید"),
+        .oneOf(Object.values(PaymentType), "course_payment_error"),
     description: yup.string()
-        .min(20, "توضیحات نمیتواند کمتر از 20 کاراکتر باشد"),
+        .min(20, "course_description_length_error"),
     price: yup.string()
-        .required("فیلد قیمت نمیتواند خالی باشد"),
+        .required("course_price_required_error"),
     categories: yup.lazy(
         val => (
             Array.isArray(val) ? yup.array().of(
                 yup.string()
-                    .required("فیلد دسته بندی نمیتواند خالی باشد"),
-            ) : yup.string()
-                .required("فیلد دسته بندی نمیتواند خالی باشد")
+                    .required(),
+            ) : yup.string("course_category_required_error")
+                .required("course_category_required_error")
         )
     ),
     tags: yup.string()
-        .required("فیلد تگ ها نمیتواند خالی باشد"),
+        .required("course_tag_required_error"),
     slug: yup.string()
-        .min(5, "نامک نمیتواند کمتر از 5 کاراکتر باشد")
+        .min(5, "course_slug_length_error")
         .test(
             "is-unique",
-            "نامک وارد شده تکراری می باشد",
+            "course_unique_slug_error",
             async function (slug) {
                 /** check database for same slug existence */
                 let findCourse = await courseModel.findOne({slug});
@@ -71,7 +71,7 @@ exports.courseValidator = yup.object().shape({
         originalname: yup.string()
             .test(
                 "is-require",
-                "تصویر دوره الزامی می باشد",
+                "course_image_required_error",
                 async function (originalname) {
                     /**
                      * check file original name existence if request method wasn't put.
@@ -87,7 +87,7 @@ exports.courseValidator = yup.object().shape({
         size: yup.number()
             .test(
                 "is-large",
-                "تصویر نباید بیشتر از 3 مگابایت باشد",
+                "course_image_size_error",
                 async function (size) {
                     /**
                      * check file size if request method wasn't put.
@@ -103,7 +103,7 @@ exports.courseValidator = yup.object().shape({
         mimetype: yup.mixed()
             .test(
                 "is-image",
-                "تنها پسوندهای jpeg, png, jpg و svg پشتیبانی می شوند",
+                "course_image_mimetype_error",
                 async function (mimetype) {
                     /**
                      * check file mimetype if request method wasn't put.

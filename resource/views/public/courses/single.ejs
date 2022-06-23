@@ -101,7 +101,7 @@
                         <% if (!canUserUse(course)){ %>
                             <div class="card my-4">
                                 <div class="card-body">
-                                    <p>برای مشاهده این دوره نیاز است <a href="#">عضویت ویژه</a> را تهیه کنید</p>
+                                    <p>برای مشاهده این دوره نیاز است <a href="/user/panel/vip">عضویت ویژه</a> را تهیه کنید</p>
                                 </div>
                             </div>
                         <% } else { %>
@@ -117,7 +117,7 @@
                                 <div class="card-body">
                                     <p>برای استفاده از این دوره نیاز است این دوره را با
                                         مبلغ <%= numberWithCommas(course.price) %>تومان خریداری کنید</p>
-                                    <form action="/courses/payment" method="POST">
+                                    <form action="/payment/course" method="POST">
                                         <input type="hidden" name="course" value="<%= course._id %>">
                                         <button type="submit" class="btn btn-success">خرید دوره</button>
                                     </form>

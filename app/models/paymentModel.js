@@ -22,8 +22,9 @@ const paymentSchema = new Schema({
         default: null
     },
     vip: {
-        type: Boolean,
-        default: false
+        type: Schema.Types.ObjectId,
+        ref: "Vip",
+        default: null
     },
     resNumber: {
         type: String,

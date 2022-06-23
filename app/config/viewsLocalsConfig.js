@@ -265,6 +265,24 @@ module.exports = class ViewsLocalsConfig extends Config {
             canDeleteRole: await this.checkPermission(this.req, [
                 permissionsConstants.AccessPermissions.deleteRoles
             ]),
+            /**
+             * check if admin has vip types manager permissions
+             */
+            showVips: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.showVips
+            ]),
+            canAddVips: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.addVips
+            ]),
+            canEditVips: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editVips
+            ]),
+            canDeleteVips: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.deleteVips
+            ]),
+            canEditVipStatus: await this.checkPermission(this.req, [
+                permissionsConstants.AccessPermissions.editVipStatus
+            ])
         }
     }
 
@@ -297,7 +315,7 @@ module.exports = class ViewsLocalsConfig extends Config {
          * return false if user has no roles
          */
         if (!user.role)
-            return false
+            return false;
 
         /**
          * get user access permissions title as an array
