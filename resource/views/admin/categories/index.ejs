@@ -36,7 +36,7 @@
                             <% if(hasPermission.canDeleteCategory) { %>
                                 <form action="/admin/panel/categories/delete/<%= category._id %>?_method=DELETE"
                                       method="post">
-                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <button type="submit"
                                             class="btn btn-sm btn-danger"><%= t("delete_setting") %></button>
                                 </form>

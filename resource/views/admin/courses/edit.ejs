@@ -3,6 +3,7 @@
 </div>
 <form class="form-horizontal" action="/admin/panel/courses/edit/<%= course._id %>?_method=put" method="post"
       enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <%- include(viewDir("layouts/showMessage")) -%>
 

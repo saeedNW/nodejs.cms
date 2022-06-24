@@ -29,6 +29,7 @@ class SessionConfig extends Config {
      */
     sessionConfig() {
         return {
+            name: process.env.SESSION_NAME,
             secret: process.env.SESSION_SECRET,
             resave: true,
             saveUninitialized: true,

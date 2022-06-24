@@ -118,6 +118,7 @@
                                     <p>برای استفاده از این دوره نیاز است این دوره را با
                                         مبلغ <%= numberWithCommas(course.price) %>تومان خریداری کنید</p>
                                     <form action="/payment/course" method="POST">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                         <input type="hidden" name="course" value="<%= course._id %>">
                                         <button type="submit" class="btn btn-success">خرید دوره</button>
                                     </form>
@@ -153,6 +154,7 @@
             <h5 class="card-header">جستجو</h5>
             <div class="card-body">
                 <form class="input-group" action="/courses" method="GET">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <input type="text" class="form-control" name="search" placeholder="دنبال چی میگردی ؟">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit">جستجو!</button>

@@ -24,6 +24,9 @@ class ErrorHandler extends Middleware {
         const message = error.message || "فرایند با مشکل مواجه شد";
         const stack = error.stack || "";
 
+        /**
+         * send error for api routes
+         */
         if (req.url.includes('/api')) {
             console.log(error)
             return res.status(status).json({message, status});

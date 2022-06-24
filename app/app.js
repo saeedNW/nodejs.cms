@@ -22,7 +22,8 @@ const i18next = require("i18next");
 const i18nextBackend = require("i18next-fs-backend");
 /** import i18next-http-middleware module */
 const i18nextMiddleware = require("i18next-http-middleware");
-
+/** import helmet */
+const helmet = require("helmet");
 
 /** import mongoose connection method */
 const {DBConnection} = require('./config/databaseConfig');
@@ -101,6 +102,15 @@ module.exports = class Application {
         /** initialize passport local strategy */
         require("./passport/passportLocal");
         require("./passport/passportGoogle");
+
+        /** active trust proxy */
+        app.enable("trust proxy");
+
+        /** initialize helmet */
+        app.use(helmet({
+            crossOriginEmbedderPolicy: false,
+            contentSecurityPolicy: false,
+        }));
 
         /** initialize view engine and ejs config */
         viewEngineInitializer(app, express);

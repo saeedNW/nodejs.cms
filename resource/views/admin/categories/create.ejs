@@ -2,6 +2,7 @@
     <h2><%= t("new_category_title") %></h2>
 </div>
 <form class="form-horizontal" action="/admin/panel/categories/create" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <%- include(viewDir("layouts/showMessage")) -%>
 

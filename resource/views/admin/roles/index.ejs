@@ -42,7 +42,7 @@
                             <% if (hasPermission.canDeleteRole) { %>
                                 <form action="/admin/panel/roles/delete/<%= role._id %>?_method=DELETE"
                                       method="post">
-                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <button type="submit" class="btn btn-danger">حذف</button>
                                 </form>
                             <% } %>

@@ -4,6 +4,7 @@
             <div class="card-header"><h5>بازیابی حساب کاربری</h5></div>
             <div class="card-body">
                 <form class="form-horizontal" role="form" method="POST" action="/auth/recovery/process">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
                     <%- include(viewDir("layouts/showMessage")) -%>
 

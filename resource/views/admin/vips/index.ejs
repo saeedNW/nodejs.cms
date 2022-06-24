@@ -36,7 +36,7 @@
                             <% if(hasPermission.canEditVipStatus) { %>
                                 <form action="/admin/panel/vips/toggle-status/<%= type._id %>?_method=PATCH"
                                       method="post">
-                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <button type="submit" class="btn btn-sm btn-secondary me-1">
                                         <%= type.status ? t("disable") : t("enable") %>
                                     </button>
@@ -46,7 +46,7 @@
                             <% if(hasPermission.canDeleteVips) { %>
                                 <form action="/admin/panel/vips/delete/<%= type._id %>?_method=DELETE"
                                       method="post">
-                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <button type="submit"
                                             class="btn btn-sm btn-danger"><%= t("delete_setting") %></button>
                                 </form>

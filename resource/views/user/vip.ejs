@@ -3,6 +3,7 @@
 
 <div class="mt-4">
     <form action="/payment/vip" method="post" class="w-25">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <label for="plan" class="mb-2"><%= t("vip_account_type") %></label>
         <select name="plan" id="plan" class="form-control">
             <option><%= t("chooses_vip_account_type") %></option>

@@ -14,6 +14,7 @@ const {search, paymentType, order, category} = query;
 %>
 
 <form action="/courses" method="GET">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <% if(search) { %>
         <div class="form-group col-md-3 mb-3">

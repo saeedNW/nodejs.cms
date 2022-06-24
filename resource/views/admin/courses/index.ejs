@@ -45,7 +45,7 @@
                             <% if (hasPermission.canDeleteCourse && (course.user.toString() === auth.user._id.toString() || hasPermission.hasFullAccess)) { %>
                                 <form action="/admin/panel/courses/delete/<%= course._id %>?_method=DELETE"
                                       method="post">
-                                    <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <button type="submit" class="btn btn-sm btn-danger">حذف</button>
                                 </form>
                             <% } %>

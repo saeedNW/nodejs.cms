@@ -34,7 +34,7 @@
                     <td>
                         <% if(hasPermission.canDeleteComment) { %>
                             <form action="/admin/panel/comments/delete/<%= comment._id %>?_method=DELETE" method="post">
-                                <input type="hidden" name="_token" value="Dso45XzqoXsAkRC8BBMQ63ZsOFS0c2tELkxR4i3Y">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                 <div class="btn-group btn-group-sm">
                                     <button type="submit" class="btn btn-danger">حذف</button>
                                 </div>

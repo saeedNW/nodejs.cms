@@ -2,6 +2,7 @@
     <h2>ویرایش جلسه</h2>
 </div>
 <form class="form-horizontal" action="/admin/panel/episodes/edit/<%= episode._id %>?_method=put" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <%- include(viewDir("layouts/showMessage")) -%>
 

@@ -2,6 +2,7 @@
     <h2>افزودن نقش جدید</h2>
 </div>
 <form class="form-horizontal" action="/admin/panel/roles/create" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
     <%- include(viewDir("layouts/showMessage")) -%>
 

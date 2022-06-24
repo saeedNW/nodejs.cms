@@ -3,6 +3,8 @@
 </div>
 <form class="form-horizontal" action="/admin/panel/roles/edit/<%= role._id %>?_method=put" method="post">
 
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
     <%- include(viewDir("layouts/showMessage")) -%>
 
 
