@@ -6,6 +6,8 @@ const router = express.Router();
 const {permissionGuard} = require("../../../middleware/permissionGuard");
 /** import permission constant */
 const {permissionsConstants} = require("../../../constants");
+/** import image uploader middleware */
+const {videoUploader} = require("../../../middleware/videoUploader");
 
 /** import controllers */
 const episodesController = require("../../../controllers/admin/episodesController");
@@ -19,6 +21,12 @@ router.get('/',
 router.get("/create",
     permissionGuard([permissionsConstants.AccessPermissions.addEpisodes]),
     episodesController.newEpisodeForm);
+
+/** episode video uploader */
+router.post("/upload",
+    videoUploader.single("video"),
+    permissionGuard([permissionsConstants.AccessPermissions.addEpisodes]),
+    episodesController.episodeFileUploadProcess);
 
 /** new episode process route */
 router.post("/create",

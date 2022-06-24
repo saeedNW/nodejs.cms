@@ -9,7 +9,7 @@ exports.episodeValidator = yup.object().shape({
     course: yup.string()
         .required("فیلد دوره نمیتواند خالی باشد"),
     time: yup.string()
-        .required("فیلد دوره نمیتواند خالی باشد"),
+        .required("فیلد زمان نمیتواند خالی باشد"),
     episodeUrl: yup.string()
         .required("لینک دانلود نمیتواند خالی باشد"),
     description: yup.string()

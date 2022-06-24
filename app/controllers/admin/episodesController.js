@@ -10,6 +10,16 @@ const {courseModel, episodeModel} = require("../../models").model;
 const {episodeValidator} = require("./validator/episodeValidator");
 /** import transform */
 const EpisodeTransform = require("../../transform/episodesTransform");
+/** import get-video-duration module */
+const {getVideoDurationInSeconds} = require('get-video-duration');
+/** import mkdirp module */
+const mkdirp = require('mkdirp');
+/** import path module */
+const path = require("path");
+/** import fs module */
+const fs = require("fs");
+/** import sprintf module */
+const {sprintf} = require("sprintf-js");
 
 /** import main controller class */
 const Controller = require("../controller");
@@ -124,7 +134,7 @@ class EpisodesController extends Controller {
             await episodeValidator.validate(req.body, {abortEarly: false});
 
             /** escape and trim user input */
-            escapeAndTrim(req, ["title", "course", "description", "paymentType", "episodeNumber"]);
+            escapeAndTrim(req, ["title", "course", "paymentType", "episodeNumber"]);
 
             /** return true if there wasn't any validation errors */
             return true
@@ -151,9 +161,15 @@ class EpisodesController extends Controller {
      */
     async createEpisode(req, res, next) {
         /** extract course id from request body */
-        const {course} = req.body;
+        const {course, episodeUrl} = req.body;
 
         try {
+            /** get episode video file absolute path */
+            const episodeVideoPath = path.resolve(`./public/downloads/${episodeUrl}`);
+
+            /** get episode's video duration */
+            req.body.time = this.getEpisodeTime(await getVideoDurationInSeconds(episodeVideoPath));
+
             /** generate new episode hash id */
             const hashId = await getHashId(identifierModels.episodes.modelName);
 
@@ -205,7 +221,11 @@ class EpisodesController extends Controller {
             if (episode.course.user.toString() !== req.user._id.toString())
                 this.sendError("شما اجازه حذف این جلسه را ندارید", 403);
 
-            /** todo@ remove episode video */
+            /** get episode video file absolute path */
+            const episodeVideoPath = path.resolve(`./public/downloads/${episode.episodeUrl}`);
+
+            /** remove episode video file */
+            fs.unlinkSync(episodeVideoPath);
 
             /** remove episode comments */
             if (episode.comments.length > 0)
@@ -323,6 +343,12 @@ class EpisodesController extends Controller {
             if (!validationResult)
                 return this.redirectURL(req, res);
 
+            /** get episode video file absolute path */
+            const episodeVideoPath = path.resolve(`./public/downloads/${req.body.episodeUrl}`);
+
+            /** get episode's video duration */
+            req.body.time = this.getEpisodeTime(await getVideoDurationInSeconds(episodeVideoPath));
+
             /** update course in database */
             await episodeModel.findByIdAndUpdate(_id, {...req.body});
 
@@ -349,6 +375,60 @@ class EpisodesController extends Controller {
         course.time = this.getTime(course.episodes);
         await course.save();
     }
+
+    /**
+     * episode video uploader
+     * @param req
+     * @param res
+     * @return {Promise<void>}
+     */
+    async episodeFileUploadProcess(req, res) {
+        try {
+            /** extract file from request file */
+            let file = req.file;
+
+            const filePath = `./public/downloads/${req.body.course}`
+
+            /** create upload directory */
+            mkdirp.manualSync(filePath);
+
+            if (fs.existsSync(`${filePath}/${file.filename}`))
+                this.sendError("فایلی با این نام از پیش وجود دارد", 422);
+
+            fs.renameSync(`./${file.path}`, `${filePath}/${file.filename}`)
+
+            const duration = this.getEpisodeTime(await getVideoDurationInSeconds(`${filePath}/${file.filename}`));
+
+            res.status(200).json({
+                filePath: `${req.body.course}/${file.filename}`,
+                duration
+            })
+        } catch (err) {
+            console.log(err)
+            res.status(err.status || 500).json({...err.message});
+        }
+    }
+
+    /**
+     * get episode time
+     * @param seconds
+     * @return {string}
+     */
+    getEpisodeTime(seconds) {
+        let total = Math.round(seconds) / 60;
+        let [minutes, second] = String(total).split(".");
+        second = Math.round((second * 60) / 100).toString().substring(0, 2);
+        let hour = 0;
+        if (minutes > 60) {
+            total = minutes / 60
+            let [h1, m1] = String(total).split(".");
+            hour = h1
+            minutes = Math.round((m1 * 60) / 100).toString().substring(0, 2);
+        }
+
+        return sprintf("%02d:%02d:%02d", hour, minutes, second);
+    }
+
 }
 
 module.exports = new EpisodesController();

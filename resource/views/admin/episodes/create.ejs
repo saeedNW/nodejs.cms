@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
     <h2>افزودن جلسه</h2>
 </div>
-<form class="form-horizontal" action="/admin/panel/episodes/create" method="post">
+<form class="form-horizontal" id="myForm" action="/admin/panel/episodes/create" method="post" novalidate>
 
     <%- include(viewDir("layouts/showMessage")) -%>
 
@@ -12,6 +12,8 @@
                    value="<%= oldData('title') %>" required>
         </div>
     </div>
+
+
     <div class="form-group row mb-3">
         <div class="col">
             <label for="course" class="control-label font-weight-bold mb-1">دوره مربوطه</label>
@@ -22,20 +24,46 @@
                 <% } %>
             </select>
         </div>
+
         <div class="col">
-            <label for="time" class="control-label font-weight-bold mb-1">زمان جلسه</label>
-            <input type="text" class="form-control" name="time" id="time" placeholder="02:15:35"
-                   value="<%= oldData('time') %>" required>
+            <div class="d-grid align-items-baseline align-content-center" id="uploadFiled"
+                 style="grid-template-columns: 70% 30%;">
+                <div>
+                    <label for="file" class="control-label font-weight-bold mb-1">انتخاب فایل</label>
+                    <input type="file" accept="video/*" class="form-control" name="file" id="file">
+                </div>
+                <button type="button" class="btn btn-primary" id="uploadFile"
+                        style="margin: auto 7% 0 0;">آپلود فایل
+                </button>
+            </div>
+            <div id="progressDiv" class="mt-2" style="display: none">
+                <div class="progress">
+                    <div
+                            id="progressBar"
+                            class="progress-bar progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                    ></div>
+                </div>
+            </div>
         </div>
     </div>
+
     <div class="form-group row mb-3">
         <div class="col">
-            <label for="episodeUrl" class="control-label font-weight-bold mb-1">لینک دانلود</label>
-            <input type="text" class="form-control dir-ltr text-end" name="episodeUrl" id="episodeUrl"
-                   placeholder="لینک دانلود جلسه"
+            <label for="time" class="control-label font-weight-bold mb-1">زمان جلسه</label>
+            <input type="text" class="form-control" name="time" id="time" readonly placeholder="02:15:35"
+                   value="<%= oldData('time') %>" required>
+        </div>
+
+        <div class="col">
+            <label for="episodeUrl" class="control-label font-weight-bold mb-1">آدرس فایل</label>
+            <input type="text" readonly class="form-control dir-ltr text-end" name="episodeUrl" id="episodeUrl"
                    value="<%= oldData('episodeUrl') %>" required>
         </div>
     </div>
+
     <div class="form-group row mb-3">
         <div class="col">
             <label for="description" class="control-label font-weight-bold mb-1">توضیحات</label>
@@ -68,10 +96,62 @@
 
 
 <script>
-    // Replace the <textarea> with a CKEditor 4
-    // instance, using default configuration.
-    CKEDITOR.replace('description', {
-        filebrowserUploadUrl: '/admin/panel/ckEditor-uploader',
-        contentsLangDirection:"rtl"
+    $(document).ready(function () {
+        // Replace the <textarea> with a CKEditor 4
+        // instance, using default configuration.
+        CKEDITOR.replace('description', {
+            filebrowserUploadUrl: '/admin/panel/ckEditor-uploader',
+            contentsLangDirection: "rtl"
+        });
+
+        $("#uploadFile").on("click", () => {
+            const course = $("#course");
+
+            if (course.val() === "none")
+                return alert("ابتدا یک دوره را انتخاب کنید");
+
+            let xHttp = new XMLHttpRequest();
+
+            const files = $('#file')[0].files;
+            const progressDiv = $("#progressDiv");
+            const progressBar = $("#progressBar");
+            const timeFiles = $("#time");
+            const episodeUrlFiles = $("#episodeUrl");
+
+            if (files.length > 0) {
+                xHttp.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        const response = JSON.parse(this.response);
+                        timeFiles.val(response.duration);
+                        episodeUrlFiles.val(response.filePath);
+
+                    } else if (this.readyState === XMLHttpRequest.DONE && this.status !== 200) {
+                        alert(this.responseText)
+                    }
+                };
+
+                xHttp.open("POST", "/admin/panel/episodes/upload");
+
+                xHttp.upload.onprogress = function (e) {
+                    if (e.lengthComputable) {
+                        let result = Math.floor((e.loaded / e.total) * 100);
+                        if (result !== 100) {
+                            progressBar.html(result + "%");
+                            progressBar.css("width", result + "%");
+                        } else {
+                            progressDiv.hide();
+                        }
+                    }
+                };
+
+                let formData = new FormData();
+                formData.append('video', files[0]);
+                formData.append('course', course.val());
+                progressDiv.show();
+                xHttp.send(formData);
+            } else {
+                alert("ابتدا فایلی را جهت آپلود انتخاب کنید")
+            }
+        });
     });
 </script>

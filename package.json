@@ -23,6 +23,7 @@
     "express-ejs-layouts": "^2.5.1",
     "express-recaptcha": "^5.1.0",
     "express-session": "^1.17.2",
+    "get-video-duration": "^4.1.0",
     "i18next": "^21.8.10",
     "i18next-fs-backend": "^1.1.4",
     "i18next-http-middleware": "^3.2.1",

@@ -8,8 +8,6 @@ const mongoose = require("mongoose");
 const {sendError: error} = require("../utils/sendError");
 /** import sprintf module */
 const {sprintf} = require("sprintf-js");
-/** import permission constants */
-const {permissionsConstants} = require("../constants");
 /** import path module */
 const path = require("path");
 /** import fs module */

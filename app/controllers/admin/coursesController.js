@@ -443,7 +443,11 @@ class CoursesController extends Controller {
         /** loop over episodes */
         for (const episode of episodes) {
 
-            /** todo@ remove episodes video */
+            /** get episode video file absolute path */
+            const episodeVideoPath = path.resolve(`./public/downloads/${episode.episodeUrl}`);
+
+            /** remove episode video file */
+            fs.unlinkSync(episodeVideoPath);
 
             /** remove episode comments */
             if (episode.comments.length > 0) {

@@ -272,7 +272,11 @@ class UsersController extends Controller {
              */
             for (const episode of course.episodes) {
 
-                /** todo@ remove episodes video */
+                /** get episode video file absolute path */
+                const episodeVideoPath = path.resolve(`./public/downloads/${episode.episodeUrl}`);
+
+                /** remove episode video file */
+                fs.unlinkSync(episodeVideoPath);
 
                 /** remove episode comments */
                 if (episode.comments.length > 0) {
