@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 /** import rate limiter */
 const {rateLimitHandler} = require("../../config/rateLimitConfig");
+/** import cors */
+const cors = require('cors');
 
 /** import public routes */
 const publicRouter = require('./public');
@@ -14,6 +16,9 @@ const userRouter = require('./user');
 
 /** initialize rate limiter */
 router.use(rateLimitHandler());
+
+/** initialize cors */
+router.use(cors());
 
 /** initialize home router */
 router.use('/', publicRouter);
