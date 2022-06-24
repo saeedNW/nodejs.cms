@@ -103,7 +103,9 @@ class AccountRecoveryController extends Controller {
             /** create new account recovery request */
             const newRecovery = await accountRecoveryModel.create({email});
 
-            /** todo@ send account recovery email */
+            const {sendEmail} = require("../../utils/mailer");
+
+           await sendEmail(user.email, "بازِ یابی رمز عبور", "بازِ یابی رمز عبور", newRecovery.token)
 
             /** send back success message */
             req.flash("success", "ایمیل بازیابی اکانت با موفقیت ارسال گردید");
