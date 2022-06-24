@@ -2,6 +2,8 @@
 const express = require('express');
 /** create express Router instance */
 const router = express.Router();
+/** import rate limiter */
+const {rateLimitHandler} = require("../../config/rateLimitConfig");
 
 /** import public routes */
 const publicRouter = require('./public');
@@ -9,6 +11,9 @@ const publicRouter = require('./public');
 const adminRouter = require('./admin');
 /** import user routes */
 const userRouter = require('./user');
+
+/** initialize rate limiter */
+router.use(rateLimitHandler());
 
 /** initialize home router */
 router.use('/', publicRouter);

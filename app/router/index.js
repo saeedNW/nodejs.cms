@@ -4,11 +4,9 @@ const webRouter = require('./web');
 const apiRouter = require('./api');
 /** import csrf module */
 const csrf = require('csurf');
-/** import rate limiter */
-const {rateLimitHandler} = require("../config/rateLimitConfig");
 
 exports.initializeRouters = (app) => {
-    app.use('/api', rateLimitHandler(), apiRouter);
+    app.use('/api', apiRouter);
 
     /**
      * initialize csrf.
