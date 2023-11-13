@@ -7,7 +7,7 @@ const {identifierModels} = require("../../constants").identifierConstants;
 /** import models */
 const {categoryModel, vipModel} = require("../../models").model;
 /** import new episode creation validator */
-const {vipValidator} = require("./validator/vipsValidator");
+const {vipValidator} = require("./validator/VipsValidator");
 /** import slug creator tool */
 const {createSlug} = require("../../utils/createSlug");
 
